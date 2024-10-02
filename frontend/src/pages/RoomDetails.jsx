@@ -4,11 +4,12 @@ import axios from 'axios';
 import { FaWifi, FaSwimmingPool, FaParking, FaCoffee, FaDog, FaStar, FaUsers, FaCalendarAlt, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { MdSmokeFree, MdOutlinePets } from 'react-icons/md';
 import StepCarousel from '../components/PackageCarousel';
+import Loader from '../components/Loader';
 
 const RoomDetails = () => {
     const { roomId } = useParams();
     const [room, setRoom] = useState(null);
-    const [rooms, setRooms] = useState(null);
+    const [rooms, setRooms] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -70,7 +71,7 @@ const RoomDetails = () => {
         }
     };
 
-    if (loading) return <div className="text-center py-10">Loading...</div>;
+    if (loading) return <div className="text-center py-10"><Loader /></div>;
     if (error) return (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
             <strong className="font-bold">Error!</strong>
@@ -321,13 +322,14 @@ const RoomDetails = () => {
 
             {/* ROOMS packages cards */}
             <div className='py-10'>
-
                 <h2 className="text-left px-24 text-4xl font-serif text-gray-800 mb-10">Other Room Types</h2>
                 <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 px-20">
-                    {error ? (
-                        <div className="col-span-full text-center text-red-500">
-                            {error}
-                        </div>
+                    {loading ? (
+                        <div className="col-span-full text-center"><Loader /></div>
+                    ) : error ? (
+                        <div className="col-span-full text-center text-red-500">{error}</div>
+                    ) : !rooms || rooms.length === 0 ? (
+                        <div className="col-span-full text-center">No other room types available at the moment.</div>
                     ) : (
                         rooms.map((room) => (
                             <div key={room._id} className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden">

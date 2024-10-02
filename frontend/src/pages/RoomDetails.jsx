@@ -358,6 +358,7 @@ const RoomDetails = () => {
             <div className='py-20'>
                 <h2 className="text-left px-24 text-3xl font-serif text-gray-800 mb-10">CUSTOMIZE YOUR OWN PACKAGE HERE</h2>
                 <StepCarousel />
+                <></>
 
             </div>
 

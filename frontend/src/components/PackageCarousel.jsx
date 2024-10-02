@@ -4,6 +4,9 @@ import RoomSelect from './Step1';
 import AddOns from './Step2';
 import PersonalDetails from './Step3';
 import Payment from './Step4';
+import BookingConfirmation from './step5';
+
+
 
 const StepCarousel = () => {
   const [currentStep, setCurrentStep] = React.useState(0);
@@ -12,6 +15,7 @@ const StepCarousel = () => {
     { title: 'Choose Add-ons', component: <AddOns /> },
     { title: 'Personal Details', component: <PersonalDetails /> },
     { title: 'Payment', component: <Payment /> },
+    { title: 'BookingConfirmation', component: <BookingConfirmation /> },
   ];
 
   const handleNext = () => {

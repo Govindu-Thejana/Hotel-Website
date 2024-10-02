@@ -31,7 +31,6 @@ router.get('/:id', async (req, res) => {
         if (!booking) {
             return res.status(404).json({ message: 'Booking not found' });
         }
-
         return res.status(200).json(booking);
     } catch (error) {
         console.log(error.message);

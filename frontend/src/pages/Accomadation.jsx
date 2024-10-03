@@ -1,17 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"
 import Testimonials from "../components/Testimonials";
 import AvailabilityCheck from "../components/BookingAvailability";
-import RoomCard from "../components/RoomCard";
-import { useNavigate } from "react-router-dom";
 
 const Accommodation = () => {
     const [rooms, setRooms] = useState([]);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
-    const handleFindOutMore = () => {
-        navigate(`/roomDetails/${rooms._id}`); // Navigate to room details page
-    };
 
     useEffect(() => {
         axios
@@ -25,6 +21,9 @@ const Accommodation = () => {
             });
     }, []);
 
+    const handleFindOutMore = (roomId) => {
+        navigate(`/roomDetails/${roomId}`); // Navigate to the room details page
+    };
 
     return (
         <div className="bg-gray-100">
@@ -113,7 +112,7 @@ const Accommodation = () => {
 
                         {/* Text section */}
                         <div className="md:w-1/3 p-6 flex flex-col justify-center">
-                            <h2 className="text-3xl font-serif mb-4 text-gray-800">PREMIUM SUITE</h2>
+                            <h2 className="text-3xl font-serif mb-4 text-gray-800">A Slice of Heaven!</h2>
                             <p className="text-gray-600 mb-6">
                                 At The Hotel Nirvana in our region, Hotel Somewhere offers a variety of accommodation
                                 options to cater to both leisure travelers and business professionals alike.
@@ -127,33 +126,47 @@ const Accommodation = () => {
                                 or exploring the local attractions.
                             </p>
                             <button className="bg-scolor text-white py-2 px-4  hover:bg-pcolor transition duration-300">
-                                FIND OUT MORE                            </button>
+                                BOOK NOW
+                            </button>
                         </div>
                     </div>
                 </div>
 
             </section>
 
-            {/* Room Cards Section */}
+            {/* ROOMS packages cards */}
             <h2 className="text-center text-4xl font-serif text-gray-800 mb-10">ROOMS & RATES</h2>
             <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 px-20">
                 {error ? (
-                    <div className="col-span-full text-center text-red-500">{error}</div>
+                    <div className="col-span-full text-center text-red-500">
+                        {error}
+                    </div>
                 ) : (
-                    rooms.map((room) =>
-                        <RoomCard
-                            key={room._id}
-                            room={room}
-                            onFindOutMore={handleFindOutMore} // Pass the function here
-                        />)
+                    rooms.map((room) => (
+                        <div key={room._id} className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+                            <img
+                                className="w-full h-48 object-cover"
+                                src={room.images[0]} // Assuming the first image in the array
+                                alt={room.roomType}
+                            />
+                            <div className="p-6">
+                                <h2 className="text-2xl font-serif text-pcolor mb-2">{room.roomType}</h2>
+                                <p className="text-gray-600 mb-6">{room.description}</p>
+                                <div className="flex justify-between text-gray-800 mb-4">
+                                    {/* ... [occupancy and size info code] ... */}
+                                </div>
+                                <button
+                                    className="font-sans w-full bg-transparent border border-gray-500 text-scolor py-2 px-4 rounded hover:bg-scolor hover:text-white hover:border-white"
+                                    onClick={() => handleFindOutMore(room._id)} // Call function on button click
+                                >
+                                    Find Out More
+                                </button>
+                            </div>
+                        </div>
+                    ))
                 )}
             </section>
-            <div>
-                <Testimonials />
-            </div>
-
-
-
+            <Testimonials />
         </div>
     );
 };

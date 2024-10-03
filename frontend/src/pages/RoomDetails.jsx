@@ -11,7 +11,7 @@ import Loader from '../components/Loader';
 const RoomDetails = () => {
     const { roomId } = useParams();
     const [room, setRoom] = useState(null);
-    const [rooms, setRooms] = useState([]);  // Initialize as an empty array
+    const [rooms, setRooms] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -235,26 +235,37 @@ const RoomDetails = () => {
             </div>
 
             {/* ROOMS packages cards */}
-            <div className='py-10'>
-                <h2 className="text-left px-20 text-4xl font-serif text-gray-800 mb-10">OTHER ROOMS & RATES</h2>
-                <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 px-20">
-                    {loading ? (
-                        <div className="col-span-full text-center">Loading rooms...</div>
-                    ) : error ? (
-                        <div className="col-span-full text-center text-red-500">{error}</div>
-                    ) : rooms.length === 0 ? (
-                        <div className="col-span-full text-center">No rooms available at the moment.</div>
-                    ) : (
-                        rooms.map((room) => (
-                            <RoomCard
-                                key={room._id}
-                                room={room}
-                                onFindOutMore={handleFindOutMore}
+            <h2 className="text-center text-4xl font-serif text-gray-800 mb-10">ROOMS & RATES</h2>
+            <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 px-20">
+                {error ? (
+                    <div className="col-span-full text-center text-red-500">
+                        {error}
+                    </div>
+                ) : (
+                    rooms.map((room) => (
+                        <div key={room._id} className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+                            <img
+                                className="w-full h-48 object-cover"
+                                src={room.images[0]} // Assuming the first image in the array
+                                alt={room.roomType}
                             />
-                        ))
-                    )}
-                </section>
-            </div>
+                            <div className="p-6">
+                                <h2 className="text-2xl font-serif text-pcolor mb-2">{room.roomType}</h2>
+                                <p className="text-gray-600 mb-6">{room.description}</p>
+                                <div className="flex justify-between text-gray-800 mb-4">
+                                    {/* ... [occupancy and size info code] ... */}
+                                </div>
+                                <button
+                                    className="font-sans w-full bg-transparent border border-gray-500 text-scolor py-2 px-4 rounded hover:bg-scolor hover:text-white hover:border-white"
+                                    onClick={() => handleFindOutMore(room._id)} // Call function on button click
+                                >
+                                    Find Out More
+                                </button>
+                            </div>
+                        </div>
+                    ))
+                )}
+            </section>
 
             <section className='py-20'>
 

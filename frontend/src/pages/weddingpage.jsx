@@ -26,8 +26,8 @@ const WeddingPage = () => {
 
       <section className="container mx-auto py-12">
         <div className="text-center mb-12">
-          <h2 className="text-2xl font-serif mb-2 text-pcolor">OUR STORY</h2>
-          <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
+          <h2 className="text-3xl font-serif mb-2 text-pcolor">OUR STORY</h2>
+          <p className="mt-4 text-gray-600 max-w-7xl mx-auto">
             Your perfect event starts here. We are leading event and wedding
             planner in Sri Lanka, or wherever else your special day is taking
             place. Oue team designs, plans and creates Budget as well as
@@ -38,17 +38,6 @@ const WeddingPage = () => {
           </p>
         </div>
 
-        <div className="text-center mb-12">
-          <h2 className="text-2xl font-serif mb-2 text-gray-800">
-            OUR SERVICES
-          </h2>
-          <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
-            Quality services are key to our success
-          </p>
-        </div>
-
-        <WeddingServices />
-
         {/* masive room card */}
         <section>
           <div className="container py-20 scroll-px-px mx-auto p-4">
@@ -56,7 +45,7 @@ const WeddingPage = () => {
               {/* Image section */}
               <div className="md:w-2/3 ">
                 <img
-                  src="https://scontent.fcmb2-2.fna.fbcdn.net/v/t39.30808-6/364030962_679494750881047_6678993755246771942_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=f727a1&_nc_ohc=fc3_JTSrYlIQ7kNvgHNOSM_&_nc_ht=scontent.fcmb2-2.fna&_nc_gid=AIzq-qjcMHNzJUyYnXD0qbM&oh=00_AYBzg5BOAlSfXzvzN-KBPz-KeHOmM5zWT7lAu3iump97rw&oe=6701C5EA"
+                  src="https://banuphotography.com/wp-content/uploads/2021/06/mannar-wedding-77.jpg"
                   alt="Luxurious hotel room"
                   className="w-full h-full object-cover"
                 />
@@ -65,7 +54,7 @@ const WeddingPage = () => {
               {/* Text section */}
               <div className="md:w-1/3 p-6 flex flex-col justify-center">
                 <h2 className="text-3xl font-serif mb-4 text-gray-800">
-                  PREMIUM SUITE
+                  WE MAKE YOUR DREAM DAY COME TRUE
                 </h2>
                 <p className="text-gray-600 mb-6">
                   At The Hotel Nirvana in our region, Hotel Somewhere offers a
@@ -89,12 +78,21 @@ const WeddingPage = () => {
           </div>
         </section>
 
+        <div className="text-center mb-12">
+          <h2 className="text-sm uppercase text-scolor italic tracking-widest">
+            QUALITY SERVICES ARE KEY TO OUR SUCCESS
+          </h2>
+          <h2 className="text-4xl font-serif">Our Services</h2>
+        </div>
+
+        <WeddingServices />
+
         <WeddingPackages />
 
         <section className="container mx-auto py-12">
           <div className="text-center mb-12">
             <h2 className="text-sm uppercase text-scolor italic tracking-widest">
-              Past Events
+              OUR TEAM
             </h2>
             <h2 className="text-4xl font-serif">Meet Our Planners</h2>
           </div>
@@ -105,8 +103,10 @@ const WeddingPage = () => {
         {/* Past Weddings Section */}
         <section className="container mx-auto py-16 px-4 md:px-0">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-800">Past Weddings</h2>
-            <p className="text-gray-600 text-lg mt-2">Visit Our Galleries</p>
+            <h2 className="text-sm uppercase text-scolor italic tracking-widest">
+              PAST WEDDINGS
+            </h2>
+            <h2 className="text-4xl font-serif">Visit Our Gallery</h2>
           </div>
 
           <PastWeddings />
@@ -114,7 +114,7 @@ const WeddingPage = () => {
           <div className="text-center mt-12">
             <a
               href="/gallery"
-              className="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 px-6 rounded-md shadow-lg hover:bg-gradient-to-l hover:from-indigo-600 hover:to-purple-600 transition duration-300"
+              className="bg-scolor text-white py-3 px-6 rounded-md shadow-lg hover:bg-gradient-to-l transition duration-300"
             >
               View Full Gallery
             </a>
@@ -126,7 +126,7 @@ const WeddingPage = () => {
             <h3 className="text-sm uppercase tracking-widest text-[#d7bfa3] mb-2">
               Our Customer Review
             </h3>
-            <h2 className="text-4xl font-semibold text-[#333] mb-6">
+            <h2 className="text-4xl font-serif text-[#333] mb-6">
               What Our Client Says
             </h2>
 
@@ -181,13 +181,13 @@ const WeddingPage = () => {
 
         <section className="bg-white py-16">
           <div className="container mx-auto text-center">
-            <h2 className="text-2xl font-serif mb-2 text-gray-800">
-              Schedule & Appointments
-            </h2>
-            <p className="text-gray-600 text-lg mb-12">
-              Let’s set a date and start planning your dream event. Book a
-              meeting with us!
-            </p>
+            <div className="text-center mb-12">
+              <h2 className="text-sm uppercase text-scolor italic tracking-widest">
+                LET SET A DATE AND START PLANNING YOUR DREAM EVENT.BOOK A
+                MEETING WITH US <div className="B"></div>
+              </h2>
+              <h2 className="text-4xl font-serif">Schedule & Appointments</h2>
+            </div>
 
             {/* Appointment Scheduling Form */}
             <form className="max-w-lg mx-auto bg-gray-100 p-8 rounded-lg shadow-lg">
@@ -251,7 +251,7 @@ const WeddingPage = () => {
 
               <button
                 type="submit"
-                className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 px-6 rounded-md shadow-lg hover:bg-gradient-to-l transition duration-300"
+                className="bg-scolor text-white py-3 px-6 rounded-md shadow-lg hover:bg-gradient-to-l transition duration-300"
               >
                 Book Appointment
               </button>
@@ -268,10 +268,10 @@ const WeddingPage = () => {
 
         <section className="bg-gray-100 py-16">
           <div className="container mx-auto text-center">
-            <h2 className="text-4xl font-bold mb-6">
+            <h2 className="text-4xl font-serif mb-6">
               Handling Stress for Event Success
             </h2>
-            <p className="text-lg text-gray-700 mb-12">
+            <p className="text-lg text-scolor-700 mb-12">
               Planning an event can be stressful, but were here to make the
               process as smooth and stress-free as possible.
             </p>
@@ -279,7 +279,7 @@ const WeddingPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
               {/* Stress Handling Tips */}
               <div className="bg-white p-8 rounded-lg shadow-lg">
-                <h3 className="text-2xl font-semibold text-indigo-600 mb-4">
+                <h3 className="text-2xl font-semibold text-scolor-600 mb-4">
                   Professional Coordination
                 </h3>
                 <p className="text-gray-600 mb-4">
@@ -289,14 +289,14 @@ const WeddingPage = () => {
                 </p>
                 <a
                   href="/contact"
-                  className="text-indigo-600 font-semibold hover:underline"
+                  className="text-scolor-600 font-semibold hover:underline"
                 >
                   Contact us for more details
                 </a>
               </div>
 
               <div className="bg-white p-8 rounded-lg shadow-lg">
-                <h3 className="text-2xl font-semibold text-indigo-600 mb-4">
+                <h3 className="text-2xl font-semibold text-scolor-600 mb-4">
                   Stress-Free Packages
                 </h3>
                 <p className="text-gray-600 mb-4">
@@ -306,14 +306,14 @@ const WeddingPage = () => {
                 </p>
                 <a
                   href="/packages"
-                  className="text-indigo-600 font-semibold hover:underline"
+                  className="text-scolor-600 font-semibold hover:underline"
                 >
                   Explore our packages
                 </a>
               </div>
 
               <div className="bg-white p-8 rounded-lg shadow-lg">
-                <h3 className="text-2xl font-semibold text-indigo-600 mb-4">
+                <h3 className="text-2xl font-semibold text-scolor-600 mb-4">
                   Mindfulness & Relaxation
                 </h3>
                 <p className="text-gray-600 mb-4">
@@ -323,14 +323,14 @@ const WeddingPage = () => {
                 </p>
                 <a
                   href="/mindfulness"
-                  className="text-indigo-600 font-semibold hover:underline"
+                  className="text-scolor-600 font-semibold hover:underline"
                 >
                   Learn more
                 </a>
               </div>
 
               <div className="bg-white p-8 rounded-lg shadow-lg">
-                <h3 className="text-2xl font-semibold text-indigo-600 mb-4">
+                <h3 className="text-2xl font-semibold text-scolor-600 mb-4">
                   Emergency Backup Plans
                 </h3>
                 <p className="text-gray-600 mb-4">
@@ -340,7 +340,7 @@ const WeddingPage = () => {
                 </p>
                 <a
                   href="/emergency-plan"
-                  className="text-indigo-600 font-semibold hover:underline"
+                  className="text-scolor-600 font-semibold hover:underline"
                 >
                   Read about our contingency plans
                 </a>
@@ -349,26 +349,26 @@ const WeddingPage = () => {
 
             {/* Contact Information with Icons */}
             <div className="mt-12">
-              <h3 className="text-2xl font-semibold text-indigo-600 mb-4">
+              <h3 className="text-2xl font-semibold text-scolor-600 mb-4">
                 Get in Touch
               </h3>
               <div className="flex flex-col items-center">
                 <p className="text-gray-600 mb-2 flex items-center">
-                  <FaPhoneAlt className="text-indigo-600 mr-2" />
+                  <FaPhoneAlt className="text-scolor-600 mr-2" />
                   Phone:{" "}
                   <a
                     href="tel:+1234567890"
-                    className="text-indigo-600 font-semibold hover:underline"
+                    className="text-scolor-600 font-semibold hover:underline"
                   >
                     +1 (234) 567-890
                   </a>
                 </p>
                 <p className="text-gray-600 mb-2 flex items-center">
-                  <FaEnvelope className="text-indigo-600 mr-2" />
+                  <FaEnvelope className="text-scolor-600 mr-2" />
                   Email:{" "}
                   <a
                     href="mailto:info@example.com"
-                    className="text-indigo-600 font-semibold hover:underline"
+                    className="text-scolor-600 font-semibold hover:underline"
                   >
                     info@example.com
                   </a>
@@ -380,7 +380,7 @@ const WeddingPage = () => {
 
         <section className="bg-white py-16 px-4 md:px-8 lg:px-16">
           <div className="container mx-auto text-center">
-            <h2 className="text-4xl font-bold mb-12">What Our Clients Say</h2>
+            <h2 className="text-4xl font-serif mb-12">What Our Clients Say</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Testimonial 1 */}
@@ -392,7 +392,7 @@ const WeddingPage = () => {
                     className="w-16 h-16 rounded-full mx-auto"
                   />
                 </div>
-                <h3 className="text-xl font-semibold text-indigo-600 mb-2">
+                <h3 className="text-xl font-semibold text-scolor-600 mb-2">
                   John Doe
                 </h3>
                 <p className="text-gray-600 mb-4">
@@ -411,7 +411,7 @@ const WeddingPage = () => {
                     className="w-16 h-16 rounded-full mx-auto"
                   />
                 </div>
-                <h3 className="text-xl font-semibold text-indigo-600 mb-2">
+                <h3 className="text-xl font-semibold text-scolor-600 mb-2">
                   Jane Smith
                 </h3>
                 <p className="text-gray-600 mb-4">
@@ -430,10 +430,10 @@ const WeddingPage = () => {
                     className="w-16 h-16 rounded-full mx-auto"
                   />
                 </div>
-                <h3 className="text-xl font-semibold text-indigo-600 mb-2">
+                <h3 className="text-xl font-semibold text-scolor-600 mb-2">
                   Michael Lee
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-sclor-600 mb-4">
                   The team was exceptional! Their packages were perfect for my
                   needs and they delivered beyond my expectations.
                 </p>

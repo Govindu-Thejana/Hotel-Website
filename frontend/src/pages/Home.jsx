@@ -98,8 +98,8 @@ Whether you're traveling for business or leisure. </p>
 {/* Carousel */}
 <section className="container mx-auto py-12">
         <div className="relative">
-          <div className="h-96 overflow-hidden rounded-lg">
-            <img src={`/images/${currentSlide === 0 ? 'bride.jpg' : currentSlide === 1 ? 'all.jpg' : 'bg.jpg'}`} alt="Hotel" className="w-full h-full object-cover" />
+          <div className="h-128 overflow-hidden rounded-lg">
+            <img src={`/images/${currentSlide === 0 ? 'weddinggroup.png' : currentSlide === 1 ? 'all.jpg' : 'bridal.png'}`} alt="Hotel" className="w-full h-full object-cover" />
           </div>
 
           {/* Carousel Navigation */}

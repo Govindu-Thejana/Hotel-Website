@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { type } from 'os';
 
 const weddingSchema = mongoose.Schema(
     {
@@ -8,6 +9,10 @@ const weddingSchema = mongoose.Schema(
         },
         price:{
             type:Number,
+            required: true,
+        },
+        Description:{
+            type:String,
             required: true,
         }
     },

@@ -1,4 +1,8 @@
 {
     "editor.formatOnSave": true,
-    "files.autoSaveWhenNoErrors": true
+    "files.autoSaveWhenNoErrors": true,
+    "reactSnippets.settings.importReactOnTop": true,
+    "eslint.workingDirectories": [
+        
+    ]
 }

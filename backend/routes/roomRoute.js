@@ -89,11 +89,8 @@ router.delete('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        const { roomId, roomType, description, capacity, pricePerNight, availability, amenities, images, checkInTime, checkOutTime, cancellationPolicy } = req.body;
+        const { roomId, roomType, description, capacity, pricePerNight, availability, amenities, images, cancellationPolicy } = req.body;
 
-        if (!roomId || !roomType || !description || !capacity || !pricePerNight || availability === undefined || !amenities || !images) {
-            return res.status(400).json({ message: 'Please fill in all required fields' });
-        }
 
         const newRoom = new RoomModel({
             roomId,
@@ -104,8 +101,6 @@ router.post('/', async (req, res) => {
             availability,
             amenities,
             images,
-            checkInTime,
-            checkOutTime,
             cancellationPolicy
         });
 

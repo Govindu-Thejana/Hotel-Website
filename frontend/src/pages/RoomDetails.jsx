@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { FaWifi, FaSwimmingPool, FaParking, FaCoffee, FaDog, FaStar, FaUsers, FaCalendarAlt, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaWifi, FaSwimmingPool, FaParking, FaCoffee, FaDog, FaStar, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { MdSmokeFree, MdOutlinePets } from 'react-icons/md';
 import StepCarousel from '../components/PackageCarousel';
+import BookingForm from '../components/BookingForm';
+import RoomCard from '../components/RoomCard';
+import Loader from '../components/Loader';
 
 const RoomDetails = () => {
     const { roomId } = useParams();
     const [room, setRoom] = useState(null);
-    const [rooms, setRooms] = useState(null);
+    const [rooms, setRooms] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -70,13 +73,18 @@ const RoomDetails = () => {
         }
     };
 
-    if (loading) return <div className="text-center py-10">Loading...</div>;
-    if (error) return (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-            <strong className="font-bold">Error!</strong>
-            <span className="block sm:inline"> {error}</span>
-        </div>
-    );
+    // Show loader while fetching data
+    if (loading) {
+        return <Loader />;
+    }
+    if (error) {
+        return (
+            <div className="border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                <strong className="font-bold">Error!</strong>
+                <span className="block sm:inline">{error}</span>
+            </div>
+        );
+    }
     if (!room) return <div className="text-center py-10">Room not found</div>;
 
     return (
@@ -102,7 +110,7 @@ const RoomDetails = () => {
                 </h1>
                 <p className="text-gray-500 text-base md:text-lg leading-relaxed">
                     Each room at Hotel Suneragira is bright and airy, offering all the essentials for a comfortable stay.
-                    Our focus extends beyond comfort to include sleek, contemporary design, complemented by rich, natural tones visible from your window or terrace                     </p>
+                    Our focus extends beyond comfort to include sleek, contemporary design, complemented by rich, natural tones visible from your window or terrace</p>
             </section>
 
             <div className="max-w-7xl mx-auto p-6 bg-gray-50">
@@ -213,106 +221,13 @@ const RoomDetails = () => {
                         </div>
                     </div>
 
-                    {/* Booking form */}
+                    {/* Booking Form */}
                     <section className='Booking Form'>
-                        <div className="w-full lg:w-96 bg-white p-6 rounded-xl shadow-lg self-start sticky top-6">
-                            <h3 className="text-2xl font-serif mb-4 text-gray-800">Reserve Your Stay</h3>
-                            <form className="space-y-4">
-                                {/* Name Field */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                                    <input
-                                        type="text"
-                                        required
-                                        className="w-full p-2 border rounded-lg"
-                                        placeholder="Enter your name"
-                                    />
-                                </div>
-
-                                {/* Email Field */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-                                    <input
-                                        type="email"
-                                        required
-                                        className="w-full p-2 border rounded-lg"
-                                        placeholder="Enter your email"
-                                    />
-                                </div>
-
-                                {/* Phone Number Field */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-                                    <input
-                                        type="tel"
-                                        required
-                                        className="w-full p-2 border rounded-lg"
-                                        placeholder="Enter your phone number"
-                                    />
-                                </div>
-
-                                {/* Check In  */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Check In</label>
-                                    <div className="relative">
-                                        <input
-                                            type="date"
-                                            required
-                                            className="w-full p-2 pr-10 border rounded-lg"
-                                            placeholder="Select dates"
-                                        />
-                                        <FaCalendarAlt className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                                    </div>
-                                </div>
-                                {/*Check Out */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Check Out</label>
-                                    <div className="relative">
-                                        <input
-                                            type="date"
-                                            required
-                                            className="w-full p-2 pr-10 border rounded-lg"
-                                            placeholder="Select dates"
-                                        />
-                                        <FaCalendarAlt className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                                    </div>
-                                </div>
-
-                                {/* Guests Field */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Guests</label>
-                                    <div className="relative">
-                                        <input
-                                            type="number"
-                                            className="w-full p-2 pr-10 border rounded-lg"
-                                            defaultValue={1}
-                                            min={1}
-                                            max={room.capacity}
-                                        />
-                                        <FaUsers className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                                    </div>
-                                </div>
-
-                                {/* Special Requests Field */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Special Requests</label>
-                                    <textarea
-                                        className="w-full p-2 border rounded-lg"
-                                        rows={3}
-                                        placeholder="Any special requests or notes"
-                                    ></textarea>
-                                </div>
-
-                                {/* Booking Summary */}
-                                <div className="flex justify-between items-center">
-                                    <span className="text-lg font-semibold text-gray-800">{room.pricePerNight}$</span>
-                                    <button type="submit" className="bg-scolor text-white px-4 py-2 hover:bg-pcolor transition">
-                                        Book Now
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-
+                        {rooms && rooms.length > 0 ? (
+                            <BookingForm room={rooms[0]} />
+                        ) : (
+                            <p>Loading booking information...</p>
+                        )}
                     </section>
                 </div>
 
@@ -320,46 +235,44 @@ const RoomDetails = () => {
             </div>
 
             {/* ROOMS packages cards */}
-            <div className='py-10'>
-
-                <h2 className="text-left px-24 text-4xl font-serif text-gray-800 mb-10">Other Room Types</h2>
-                <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 px-20">
-                    {error ? (
-                        <div className="col-span-full text-center text-red-500">
-                            {error}
-                        </div>
-                    ) : (
-                        rooms.map((room) => (
-                            <div key={room._id} className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
-                                <img
-                                    className="w-full h-48 object-cover"
-                                    src={room.images[0]} // Assuming the first image in the array
-                                    alt={room.roomType}
-                                />
-                                <div className="p-6">
-                                    <h2 className="text-2xl font-serif text-pcolor mb-2">{room.roomType}</h2>
-                                    <p className="text-gray-600 mb-6">{room.description}</p>
-                                    <div className="flex justify-between text-gray-800 mb-4">
-                                        {/* ... [occupancy and size info code] ... */}
-                                    </div>
-                                    <button
-                                        className="font-sans w-full bg-transparent border border-gray-500 text-scolor py-2 px-4 rounded hover:bg-scolor hover:text-white hover:border-white"
-                                        onClick={() => handleFindOutMore(room._id)} // Call function on button click
-                                    >
-                                        Find Out More
-                                    </button>
+            <h2 className="text-center text-4xl font-serif text-gray-800 mb-10">ROOMS & RATES</h2>
+            <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 px-20">
+                {error ? (
+                    <div className="col-span-full text-center text-red-500">
+                        {error}
+                    </div>
+                ) : (
+                    rooms.map((room) => (
+                        <div key={room._id} className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+                            <img
+                                className="w-full h-48 object-cover"
+                                src={room.images[0]} // Assuming the first image in the array
+                                alt={room.roomType}
+                            />
+                            <div className="p-6">
+                                <h2 className="text-2xl font-serif text-pcolor mb-2">{room.roomType}</h2>
+                                <p className="text-gray-600 mb-6">{room.description}</p>
+                                <div className="flex justify-between text-gray-800 mb-4">
+                                    {/* ... [occupancy and size info code] ... */}
                                 </div>
+                                <button
+                                    className="font-sans w-full bg-transparent border border-gray-500 text-scolor py-2 px-4 rounded hover:bg-scolor hover:text-white hover:border-white"
+                                    onClick={() => handleFindOutMore(room._id)} // Call function on button click
+                                >
+                                    Find Out More
+                                </button>
                             </div>
-                        ))
-                    )}
-                </section>
-            </div>
+                        </div>
+                    ))
+                )}
+            </section>
 
-            <div className='py-20'>
+            <section className='py-20'>
+
                 <h2 className="text-left px-24 text-3xl font-serif text-gray-800 mb-10">CUSTOMIZE YOUR OWN PACKAGE HERE</h2>
                 <StepCarousel />
 
-            </div>
+            </section>
 
 
         </div>

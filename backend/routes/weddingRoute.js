@@ -29,7 +29,7 @@ router.get('/:id', async (req, res) => {
 
 // POST a new wedding package
 router.post('/', async (req, res) => {
-    const { packagename, price } = req.body;
+    const { packagename, price,Description } = req.body;
 
     if (!packagename || !price) {
         return res.status(400).json({ message: 'All fields are required' });
@@ -39,6 +39,7 @@ router.post('/', async (req, res) => {
         const newWedding = new wedding({
             packagename,
             price,
+            Description,
         });
 
         const savedWedding = await newWedding.save();
@@ -58,6 +59,7 @@ router.put('/:id', async (req, res) => {
         if (weddingPackage) {
             weddingPackage.packagename = packagename || weddingPackage.packagename;
             weddingPackage.price = price || weddingPackage.price;
+            weddingPackage.Description = Description || weddingPackage.Description;
 
             const updatedWedding = await weddingPackage.save();
             res.json(updatedWedding);

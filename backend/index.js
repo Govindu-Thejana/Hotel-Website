@@ -5,6 +5,7 @@ import cors from "cors";
 import UserModel from './models/user.js';
 import roomRoute from './routes/roomRoute.js';
 import BookingModel from "./models/bookingModel.js";
+import weddingRoute from "./routes/weddingRoute.js";
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.get('/', (request, response) => {
 });
 
 app.use('/rooms', roomRoute);
+app.use('/wedding', weddingRoute);
 
 mongoose
     .connect(mongoDBURL)

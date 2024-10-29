@@ -11,7 +11,7 @@ pipeline {
         stage('SCM Checkout') {
             steps {
                 retry(3) {
-                    git branch: 'main', url: 'https://github.com/Govindu-Thejana/Hotel-Website.git'
+                    git branch: 'ci-cd-pipeline', url: 'https://github.com/Govindu-Thejana/Hotel-Website.git'
                 }
             }
         }
@@ -20,7 +20,7 @@ pipeline {
             steps {
                 dir('frontend') {
                     script {
-                        docker.build("${FRONTEND_IMAGE}:${BUILD_NUMBER}")
+                        bat "docker build -t ${FRONTEND_IMAGE}:${BUILD_NUMBER} ."
                     }
                 }
             }
@@ -30,19 +30,17 @@ pipeline {
             steps {
                 dir('backend') {
                     script {
-                        docker.build("${BACKEND_IMAGE}:${BUILD_NUMBER}")
+                        bat "docker build -t ${BACKEND_IMAGE}:${BUILD_NUMBER} ."
                     }
                 }
             }
         }
         
-         stage('Login to Docker Hub') {
+        stage('Login to Docker Hub') {
             steps {
-                withCredentials([string(credentialsId: 'test-dockerhubpassword', variable: 'test-dockerhubpass')]) {
-
-                    }                  
+                withCredentials([string(credentialsId: 'test-pass', variable: 'test')]) {
                     script {
-                        bat "docker login -u thejana2 -p %test-dockerhubpass%"
+                        bat "docker login -u thejana2 -p %test%"
                     }
                 }
             }
@@ -51,7 +49,7 @@ pipeline {
         stage('Push Frontend Image to Docker Hub') {
             steps {
                 script {
-                    docker.image("${FRONTEND_IMAGE}:${BUILD_NUMBER}").push()
+                    bat "docker push ${FRONTEND_IMAGE}:${BUILD_NUMBER}"
                 }
             }
         }
@@ -59,17 +57,15 @@ pipeline {
         stage('Push Backend Image to Docker Hub') {
             steps {
                 script {
-                    docker.image("${BACKEND_IMAGE}:${BUILD_NUMBER}").push()
+                    bat "docker push ${BACKEND_IMAGE}:${BUILD_NUMBER}"
                 }
-            }
-        }
-    
-    post {
-        always {
-            script {
-                sh "docker logout"
             }
         }
     }
 
+    post {
+        always {
+            bat "docker logout"
+        }
+    }
 }

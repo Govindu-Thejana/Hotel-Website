@@ -7,6 +7,11 @@ import AddRooms from "./pages/AddRooms";
 import AdminDashboard from "./pages/AdminDashBoard";
 import Navbar from "./components/AdminNavbar";
 import AdminRoom from "./pages/AdminRoom";
+import Accomadation from"./pages/Accomadation";
+import WeddingPage from "./pages/weddingpage";
+import Header from "./components/Header";
+import Footer from "./components/Footer"
+import Adminpackage from "./pages/Adminpackage";
 
 // Layout for the Main Website (with Header and Footer)
 const MainLayout = ({ children }) => {
@@ -47,6 +52,8 @@ const App = () => {
         <Route path="/add-rooms" element={<AdminLayout><AddRooms /></AdminLayout>} />
         <Route path="/admin-dashboard" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
         <Route path="/admin-rooms" element={<AdminLayout><AdminRoom /></AdminLayout>} />
+        <Route path="/admin-package" element={<AdminLayout><Adminpackage /></AdminLayout>} />
+
       </Routes>
     </div>
   );

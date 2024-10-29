@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  web:
+    build: 
+      context: ./frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
+    environment:
+      - VITE_API_URL=http://api:5555
+
+  api:
+    build: 
+      context: ./backend
+    ports:
+      - "5555:5555"
+    environment:
+      DB_URL: "mongodb+srv://govinduthejana:0715435326@hotel-website-softwarep.dx207.mongodb.net/Hotel-Website?retryWrites=true&w=majority&appName=Hotel-Website-SoftwareProject"
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:

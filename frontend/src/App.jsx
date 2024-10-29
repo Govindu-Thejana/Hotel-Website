@@ -10,7 +10,8 @@ import RoomDetails from "./pages/RoomDetails";
 import AddRooms from "./pages/AddRooms";
 import AdminDashboard from "./pages/AdminDashBoard";
 import Navbar from "./components/AdminNavbar";
-import AdminRoom from "./pages/AdminRoom";
+import RoomManagement from "./pages/RoomManagement";
+import EditRoom from "./pages/EditRoom";
 
 // Layout for the Main Website (with Header and Footer)
 const MainLayout = ({ children }) => {
@@ -50,7 +51,10 @@ const App = () => {
         {/* Admin Routes (Separate from the main website layout) */}
         <Route path="/add-rooms" element={<AdminLayout><AddRooms /></AdminLayout>} />
         <Route path="/admin-dashboard" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
-        <Route path="/admin-rooms" element={<AdminLayout><AdminRoom /></AdminLayout>} />
+        <Route path="/room-management" element={<AdminLayout><RoomManagement /></AdminLayout>} />
+        <Route path="/edit-room/:roomId" element={<AdminLayout><EditRoom /></AdminLayout>} />
+
+
       </Routes>
     </div>
   );

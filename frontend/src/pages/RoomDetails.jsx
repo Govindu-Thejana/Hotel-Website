@@ -5,7 +5,7 @@ import { FaWifi, FaSwimmingPool, FaParking, FaCoffee, FaDog, FaStar, FaChevronLe
 import { MdSmokeFree, MdOutlinePets } from 'react-icons/md';
 import StepCarousel from '../components/PackageCarousel';
 import BookingForm from '../components/BookingForm';
-import RoomCard from '../components/RoomCard';
+
 import Loader from '../components/Loader';
 
 const RoomDetails = () => {

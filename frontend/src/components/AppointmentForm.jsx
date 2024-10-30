@@ -9,6 +9,26 @@ const AppointmentForm = () => {
   });
   const [showSuccess, setShowSuccess] = useState(false); // State for success message
 
+  // Generate available times for the current day in 1-hour increments
+  const generateAvailableTimes = () => {
+    const times = [];
+    const startTime = new Date(); // Current date and time
+    startTime.setMinutes(0); // Round to the nearest hour
+
+    for (let i = 0; i < 24; i++) { // 24 hours in a day
+      const timeString = startTime.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      times.push(timeString);
+      startTime.setHours(startTime.getHours() + 1); // Increment by 1 hour
+    }
+
+    return times;
+  };
+
+  const availableTimes = generateAvailableTimes();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -119,15 +139,21 @@ const AppointmentForm = () => {
             >
               Preferred Time
             </label>
-            <input
-              type="time"
+            <select
               id="time"
               name="time"
               value={formData.time}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               required
-            />
+            >
+              <option value="">Select time</option>
+              {availableTimes.map((time) => (
+                <option key={time} value={time}>
+                  {time}
+                </option>
+              ))}
+            </select>
           </div>
 
           <button
@@ -140,13 +166,12 @@ const AppointmentForm = () => {
 
         {/* Success message popup */}
         {showSuccess && (
-  <div className="mt-8 bg-pcolor border border-pcolor text-white px-6 py-4 rounded-lg max-w-lg mx-auto shadow-lg">
-    <span className="block sm:inline text-xl font-semibold">
-      🎉 Appointment request successfully sent! We’ll be in touch soon to confirm the details.
-    </span>
-  </div>
-)}
-
+          <div className="mt-8 bg-pcolor border border-pcolor text-white px-6 py-4 rounded-lg max-w-lg mx-auto shadow-lg">
+            <span className="block sm:inline text-xl font-semibold">
+              🎉 Appointment request successfully sent! We’ll be in touch soon to confirm the details.
+            </span>
+          </div>
+        )}
 
         <div className="mt-8 text-gray-600">
           <p className="text-sm">

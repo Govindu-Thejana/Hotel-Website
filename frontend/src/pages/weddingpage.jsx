@@ -182,19 +182,9 @@ const WeddingPage = () => {
 
         <section className="bg-white py-16">
           <div className="container mx-auto text-center">
-            <div className="text-center mb-12">
-              <h2 className="text-sm uppercase text-scolor italic tracking-widest">
-                LET SET A DATE AND START PLANNING YOUR DREAM EVENT.BOOK A
-                MEETING WITH US <div className="B"></div>
-              </h2>
-              <h2 className="text-4xl font-serif">Schedule & Appointments</h2>
-            </div>
-
             {/* Appointment Scheduling Form */}
             <AppointmentForm />
-
-            <div className="mt-8 text-gray-600">
-              
+            <div className="mt-8 text-gray-600">             
             </div>
           </div>
         </section>

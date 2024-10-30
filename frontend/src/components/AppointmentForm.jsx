@@ -1,40 +1,43 @@
-import  { useState } from 'react';
+import { useState } from "react";
 
 const AppointmentForm = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    date: '',
-    time: ''
+    name: "",
+    email: "",
+    date: "",
+    time: "",
   });
+  const [showSuccess, setShowSuccess] = useState(false); // State for success message
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5555/appointments', {
-        method: 'POST',
+      const response = await fetch("http://localhost:5555/appointments", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
 
       if (response.ok) {
-        console.log('Form submitted successfully');
-        setFormData({ name: '', email: '', date: '', time: '' });
+        console.log("Form submitted successfully");
+        setFormData({ name: "", email: "", date: "", time: "" });
+        setShowSuccess(true); // Show success message
+        setTimeout(() => setShowSuccess(false), 3000); // Hide after 3 seconds
       } else {
-        console.error('Failed to submit form');
+        console.error("Failed to submit form");
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -43,12 +46,16 @@ const AppointmentForm = () => {
       <div className="container mx-auto text-center">
         <div className="text-center mb-12">
           <h2 className="text-sm uppercase text-scolor italic tracking-widest">
-            LET US SET A DATE AND START PLANNING YOUR DREAM EVENT. BOOK A MEETING WITH US
+            LET US SET A DATE AND START PLANNING YOUR DREAM EVENT. BOOK A
+            MEETING WITH US
           </h2>
           <h2 className="text-4xl font-serif">Schedule & Appointments</h2>
         </div>
 
-        <form onSubmit={handleSubmit} className="max-w-lg mx-auto bg-gray-100 p-8 rounded-lg shadow-lg">
+        <form
+          onSubmit={handleSubmit}
+          className="max-w-lg mx-auto bg-gray-100 p-8 rounded-lg shadow-lg"
+        >
           <div className="mb-6">
             <label
               className="block text-left text-gray-700 font-semibold mb-2"
@@ -131,10 +138,20 @@ const AppointmentForm = () => {
           </button>
         </form>
 
+        {/* Success message popup */}
+        {showSuccess && (
+  <div className="mt-8 bg-pcolor border border-pcolor text-white px-6 py-4 rounded-lg max-w-lg mx-auto shadow-lg">
+    <span className="block sm:inline text-xl font-semibold">
+      🎉 Appointment request successfully sent! We’ll be in touch soon to confirm the details.
+    </span>
+  </div>
+)}
+
+
         <div className="mt-8 text-gray-600">
           <p className="text-sm">
-            We will reach out to confirm your appointment. Please provide
-            the best time and date that works for you.
+            We will reach out to confirm your appointment. Please provide the
+            best time and date that works for you.
           </p>
         </div>
       </div>

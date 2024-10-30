@@ -5,7 +5,7 @@ services:
     build: 
       context: ./frontend
     ports:
-      - "5173:5173"
+      - "8000:5173"
     depends_on:
       - api
     environment:
@@ -15,7 +15,7 @@ services:
     build: 
       context: ./backend
     ports:
-      - "5555:5555"
+      - "5000:5555"
     environment:
       DB_URL: "mongodb+srv://govinduthejana:0715435326@hotel-website-softwarep.dx207.mongodb.net/Hotel-Website?retryWrites=true&w=majority&appName=Hotel-Website-SoftwareProject"
     volumes:

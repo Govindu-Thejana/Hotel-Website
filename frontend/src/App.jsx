@@ -2,10 +2,6 @@ import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import WeddingPage from "./pages/WeddingPage";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import Accomadation from "./pages/Accomadation";
 import RoomDetails from "./pages/RoomDetails";
 import AddRooms from "./pages/AddRooms";
 import AdminDashboard from "./pages/AdminDashBoard";
@@ -13,28 +9,40 @@ import Navbar from "./components/AdminNavbar";
 import RoomManagement from "./pages/RoomManagement";
 import EditRoom from "./pages/EditRoom";
 
-// Layout for the Main Website (with Header and Footer)
-const MainLayout = ({ children }) => {
-  return (
-    <div>
-      <Header />
-      {children}
-      <Footer />
-    </div>
-  );
+import AdminAppointment from "./components/AdminAppointment";
+import Accomadation from "./pages/Accomadation";
+import WeddingPage from "./pages/weddingpage";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Adminpackage from "./pages/Adminpackage";
+import PropTypes from 'prop-types';
+
+const MainLayout = ({ children }) => (
+  <div>
+    <Header />
+    {children}
+    <Footer />
+  </div>
+);
+MainLayout.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
-// Layout for Admin Pages (without Header and Footer)
-const AdminLayout = ({ children }) => {
-  return (
-    <div className="flex">
-      <Navbar /> {/* Fixed Sidebar */}
-      <div className="flex-grow p-4 ml-64"> {/* Main Content Area */}
-        {children}
-      </div>
+const AdminLayout = ({ children }) => (
+  <div className="flex">
+    <Navbar />
+    <div className="flex-grow p-4 ml-64">
+      {children}
     </div>
-  );
+  </div>
+);
+AdminLayout.propTypes = {
+  children: PropTypes.node.isRequired,
 };
+
+
+
+
 
 const App = () => {
   return (
@@ -53,11 +61,13 @@ const App = () => {
         <Route path="/admin-dashboard" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
         <Route path="/room-management" element={<AdminLayout><RoomManagement /></AdminLayout>} />
         <Route path="/edit-room/:roomId" element={<AdminLayout><EditRoom /></AdminLayout>} />
-
+        <Route path="/admin-appointment" element={<AdminLayout><AdminAppointment /></AdminLayout>} />
+        <Route path="/admin-package" element={<AdminLayout><Adminpackage /></AdminLayout>} />
 
       </Routes>
     </div>
   );
 }
+
 
 export default App;

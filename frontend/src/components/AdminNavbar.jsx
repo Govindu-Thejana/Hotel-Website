@@ -1,6 +1,7 @@
 import React from 'react';
 import { BedDouble, LayoutDashboard, Search, LogOut } from 'lucide-react';
 
+
 const Navbar = () => {
     const currentPath = window.location.pathname;
 

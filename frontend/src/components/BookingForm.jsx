@@ -1,4 +1,6 @@
+
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { FaCalendarAlt, FaUsers } from 'react-icons/fa';
 import { createBooking } from '../components/utils/ApiFunctions.js'; // Adjust this import based on your file structure
 
@@ -160,6 +162,14 @@ const BookingForm = ({ roomId, room }) => {
             </section>
         </div>
     );
+};
+
+// Add PropTypes for validation
+BookingForm.propTypes = {
+    room: PropTypes.shape({
+        capacity: PropTypes.number,
+        pricePerNight: PropTypes.number,
+    })
 };
 
 export default BookingForm;

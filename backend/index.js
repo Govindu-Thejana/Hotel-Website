@@ -4,6 +4,8 @@ import mongoose from "mongoose";
 import cors from "cors";
 import roomRoute from './routes/roomRoute.js';
 import bookedRoomRoutes from './routes/bookedRoomRoutes.js';
+import weddingRoute from "./routes/weddingRoute.js";
+import appointments from './routes/appointments.js';
 
 
 mongoose
@@ -32,5 +34,10 @@ app.get('/', (request, response) => {
 app.use('/rooms', roomRoute);
 
 app.use('/bookedRoom', bookedRoomRoutes);
+app.use('/appointments', appointments);
+
+
+app.use('/wedding', weddingRoute);
+
 
 

@@ -4,6 +4,7 @@ import WeddingPackages from "../components/WeddingPackages";
 import WeddingServices from "../components/Services";
 import WeddingPlanners from "../components/Planners";
 import PastWeddings from "../components/PastWeddings";
+import AppointmentForm from "../components/AppointmentForm";
 
 const WeddingPage = () => {
   return (
@@ -190,78 +191,10 @@ const WeddingPage = () => {
             </div>
 
             {/* Appointment Scheduling Form */}
-            <form className="max-w-lg mx-auto bg-gray-100 p-8 rounded-lg shadow-lg">
-              <div className="mb-6">
-                <label
-                  className="block text-left text-gray-700 font-semibold mb-2"
-                  htmlFor="name"
-                >
-                  Your Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-                  placeholder="John Doe"
-                />
-              </div>
-
-              <div className="mb-6">
-                <label
-                  className="block text-left text-gray-700 font-semibold mb-2"
-                  htmlFor="email"
-                >
-                  Your Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-                  placeholder="johndoe@example.com"
-                />
-              </div>
-
-              <div className="mb-6">
-                <label
-                  className="block text-left text-gray-700 font-semibold mb-2"
-                  htmlFor="date"
-                >
-                  Select a Date
-                </label>
-                <input
-                  type="date"
-                  id="date"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-                />
-              </div>
-
-              <div className="mb-6">
-                <label
-                  className="block text-left text-gray-700 font-semibold mb-2"
-                  htmlFor="time"
-                >
-                  Preferred Time
-                </label>
-                <input
-                  type="time"
-                  id="time"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="bg-scolor text-white py-3 px-6 rounded-md shadow-lg hover:bg-gradient-to-l transition duration-300"
-              >
-                Book Appointment
-              </button>
-            </form>
+            <AppointmentForm />
 
             <div className="mt-8 text-gray-600">
-              <p className="text-sm">
-                We will reach out to confirm your appointment. Please provide
-                the best time and date that works for you.
-              </p>
+              
             </div>
           </div>
         </section>

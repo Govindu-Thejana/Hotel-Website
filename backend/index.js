@@ -6,6 +6,8 @@ import UserModel from './models/user.js';
 import roomRoute from './routes/roomRoute.js';
 import BookingModel from "./models/bookingModel.js";
 
+import appointments from './routes/appointments.js';
+
 const app = express();
 
 //Middleware for passing request body
@@ -21,6 +23,8 @@ app.get('/', (request, response) => {
 });
 
 app.use('/rooms', roomRoute);
+app.use('/appointments', appointments);
+
 
 mongoose
     .connect(mongoDBURL)

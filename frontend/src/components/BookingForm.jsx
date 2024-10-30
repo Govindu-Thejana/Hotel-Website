@@ -1,4 +1,4 @@
-import React from 'react';
+import PropTypes from 'prop-types';
 import { FaCalendarAlt, FaUsers } from 'react-icons/fa';
 
 const BookingForm = ({ room }) => {
@@ -105,5 +105,13 @@ const BookingForm = ({ room }) => {
         </section>
     );
 }
+
+// Add PropTypes for validation
+BookingForm.propTypes = {
+    room: PropTypes.shape({
+        capacity: PropTypes.number,
+        pricePerNight: PropTypes.number,
+    })
+};
 
 export default BookingForm;

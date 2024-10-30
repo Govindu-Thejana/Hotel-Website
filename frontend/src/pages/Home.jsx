@@ -87,9 +87,7 @@ const Home = () => {
       </section>
 
       {/* Wedding Package Section */}
-      <section className="container mx-auto py-12">
-        <WeddingPackages />
-      </section>
+      <WeddingPackages />
       {/* Carousel */}
       <section className="container mx-auto py-12">
         <div className="relative">

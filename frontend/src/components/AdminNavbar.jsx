@@ -1,6 +1,7 @@
 import React from 'react';
 import { BedDouble, LayoutDashboard, Search, LogOut } from 'lucide-react';
-
+import { TbPackages, TbMessage2Down } from "react-icons/tb";
+import { BsBuildingFillCheck } from "react-icons/bs";
 
 const Navbar = () => {
     const currentPath = window.location.pathname;
@@ -15,6 +16,21 @@ const Navbar = () => {
             href: "/room-management",
             label: "Rooms",
             icon: <BedDouble className="w-5 h-5" />
+        },
+        {
+            href: "/room-management",
+            label: "Bookings",
+            icon: <BsBuildingFillCheck className="w-5 h-5" />
+        },
+        {
+            href: "/admin-appointment",
+            label: "Appointsments",
+            icon: <TbMessage2Down className="w-5 h-5" />
+        },
+        {
+            href: "/admin-package",
+            label: "Wedding Packages",
+            icon: <TbPackages className="w-5 h-5" />
         },
         {
             href: "/overview",

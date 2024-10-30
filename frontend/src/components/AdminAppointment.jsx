@@ -8,7 +8,7 @@ const AdminAppointment = () => {
   const [proposedOptions, setProposedOptions] = useState({});
 
   const availableTimes = ["10:00 AM", "11:00 AM", "2:00 PM", "3:00 PM"];
-  
+
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -125,13 +125,13 @@ const AdminAppointment = () => {
     <section className="bg-white py-16">
       <div className="container mx-auto text-center px-4">
         <h2 className="text-4xl font-serif mb-12">Admin Appointment View</h2>
-  
+
         {appointments.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {appointments.map((appointment) => (
               <div key={appointment._id} className="bg-gray-100 rounded-lg shadow-lg p-6 flex flex-col">
                 <h3 className="text-xl font-semibold mb-2">{appointment.name}</h3>
-  
+
                 {/* New vertical table for Email, Date, Time, and Status */}
                 <div className="mt-4 flex-grow">
                   <h4 className="text-lg font-medium">Appointment Details:</h4>
@@ -156,7 +156,7 @@ const AdminAppointment = () => {
                     </tbody>
                   </table>
                 </div>
-  
+
                 {/* Proposed Options Section */}
                 <h4 className="text-lg font-medium mt-4">Proposed Options:</h4>
                 {appointment.options?.length > 0 ? (
@@ -179,7 +179,7 @@ const AdminAppointment = () => {
                 ) : (
                   <p className="text-gray-500">No proposed options</p>
                 )}
-  
+
                 <div className="mt-4 flex justify-between">
                   <button
                     onClick={() => handleConfirm(appointment._id)}
@@ -194,7 +194,7 @@ const AdminAppointment = () => {
                     Reject
                   </button>
                 </div>
-  
+
                 <div className="mt-2">
                   <button
                     onClick={() => handleAskForAnotherDate(appointment._id)}
@@ -209,7 +209,7 @@ const AdminAppointment = () => {
         ) : (
           <p className="text-gray-600">No appointments scheduled yet.</p>
         )}
-  
+
         {askingForDateId && (
           <form onSubmit={handleSubmitNewOptions} className="mt-6 flex flex-col items-center">
             <div className="flex mb-4">
@@ -250,7 +250,7 @@ const AdminAppointment = () => {
             </button>
           </form>
         )}
-  
+
         {askingForDateId && proposedOptions[askingForDateId]?.length > 0 && (
           <div className="mt-4">
             <h3 className="text-lg">Current Proposed Options:</h3>
@@ -283,5 +283,5 @@ const AdminAppointment = () => {
       </div>
     </section>
   );
-};  
+};
 export default AdminAppointment;

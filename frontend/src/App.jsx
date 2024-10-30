@@ -2,15 +2,28 @@ import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import WeddingPage from "./pages/WeddingPage";
+
+import WeddingPage from "./pages/weddingpage";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Accomadation from "./pages/Accomadation";
+
 import RoomDetails from "./pages/RoomDetails";
 import AddRooms from "./pages/AddRooms";
 import AdminDashboard from "./pages/AdminDashBoard";
 import Navbar from "./components/AdminNavbar";
 import AdminRoom from "./pages/AdminRoom";
+
+import AdminAppointment from "./components/AdminAppointment";
+import PropTypes from 'prop-types';
+
+
+import Accomadation from"./pages/Accomadation";
+import WeddingPage from "./pages/weddingpage";
+import Header from "./components/Header";
+import Footer from "./components/Footer"
+import Adminpackage from "./pages/Adminpackage";
+
 
 // Layout for the Main Website (with Header and Footer)
 const MainLayout = ({ children }) => {
@@ -21,6 +34,9 @@ const MainLayout = ({ children }) => {
       <Footer />
     </div>
   );
+};
+MainLayout.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 // Layout for Admin Pages (without Header and Footer)
@@ -34,7 +50,9 @@ const AdminLayout = ({ children }) => {
     </div>
   );
 };
-
+AdminLayout.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 const App = () => {
   return (
     <div>
@@ -51,6 +69,12 @@ const App = () => {
         <Route path="/add-rooms" element={<AdminLayout><AddRooms /></AdminLayout>} />
         <Route path="/admin-dashboard" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
         <Route path="/admin-rooms" element={<AdminLayout><AdminRoom /></AdminLayout>} />
+
+        <Route path="/admin-appointment" element={<AdminLayout><AdminAppointment /></AdminLayout>} />
+
+        <Route path="/admin-package" element={<AdminLayout><Adminpackage /></AdminLayout>} />
+
+
       </Routes>
     </div>
   );

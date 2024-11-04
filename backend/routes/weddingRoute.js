@@ -1,5 +1,5 @@
 import express from 'express';
-import { wedding } from '../models/weddingModel.js'; 
+import wedding from '../models/weddingModel.js'; 
 
 const router = express.Router();
 

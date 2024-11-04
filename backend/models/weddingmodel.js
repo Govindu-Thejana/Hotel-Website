@@ -1,18 +1,17 @@
 import mongoose from 'mongoose';
-import { type } from 'os';
 
 const weddingSchema = mongoose.Schema(
     {
-        packagename:{
-            type:String,
+        packagename: {
+            type: String,
             required: true,
         },
-        price:{
-            type:Number,
+        price: {
+            type: Number,
             required: true,
         },
-        Description:{
-            type:String,
+        Description: {
+            type: String,
             required: true,
         }
     },
@@ -21,6 +20,6 @@ const weddingSchema = mongoose.Schema(
     }
 )
 
-export const wedding = mongoose.model("wedding", weddingSchema);
+const wedding = mongoose.model("wedding", weddingSchema);
 
-
+export default wedding;

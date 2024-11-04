@@ -18,7 +18,7 @@ const Navbar = () => {
             icon: <BedDouble className="w-5 h-5" />
         },
         {
-            href: "/room-management",
+            href: "/admin-bookings",
             label: "Bookings",
             icon: <BsBuildingFillCheck className="w-5 h-5" />
         },

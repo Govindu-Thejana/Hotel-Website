@@ -16,6 +16,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Adminpackage from "./pages/Adminpackage";
 import PropTypes from 'prop-types';
+import BookingManagement from "./pages/BookingManagement";
 
 const MainLayout = ({ children }) => (
   <div>
@@ -63,6 +64,7 @@ const App = () => {
         <Route path="/edit-room/:roomId" element={<AdminLayout><EditRoom /></AdminLayout>} />
         <Route path="/admin-appointment" element={<AdminLayout><AdminAppointment /></AdminLayout>} />
         <Route path="/admin-package" element={<AdminLayout><Adminpackage /></AdminLayout>} />
+        <Route path="/admin-bookings" element={<AdminLayout><BookingManagement /></AdminLayout>} />
 
       </Routes>
     </div>

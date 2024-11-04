@@ -59,23 +59,29 @@ const RoomManagement = () => {
     };
 
     const handleDelete = async (roomId) => {
-        try {
-            const result = await axios.delete(`http://localhost:5555/rooms/${roomId}`);
-            if (result.status === 200) {
-                setSuccessMessage(`Room No ${roomId} was deleted.`);
-                setRooms(rooms.filter(room => room._id !== roomId));
-                fetchRooms(); // Refresh room list if needed
-            } else {
-                setErrorMessage(`Error deleting room: ${result.data.message}`);
+        // Show confirmation dialog
+        const confirmDelete = window.confirm("Are you sure you want to delete this room?");
+
+        if (confirmDelete) { // If user confirms
+            try {
+                const result = await axios.delete(`http://localhost:5555/rooms/${roomId}`);
+                if (result.status === 200) {
+                    setSuccessMessage(`Room No ${roomId} was deleted.`);
+                    setRooms(rooms.filter(room => room._id !== roomId));
+                    fetchRooms(); // Refresh room list if needed
+                } else {
+                    setErrorMessage(`Error deleting room: ${result.data.message}`);
+                }
+            } catch (error) {
+                setErrorMessage(error.response ? error.response.data.message : error.message);
             }
-        } catch (error) {
-            setErrorMessage(error.response ? error.response.data.message : error.message);
+            setTimeout(() => {
+                setSuccessMessage("");
+                setErrorMessage("");
+            }, 3000);
         }
-        setTimeout(() => {
-            setSuccessMessage("");
-            setErrorMessage("");
-        }, 3000);
     };
+
 
     const calculateTotalPages = (filteredRooms, roomsPerPage, rooms) => {
         const totalRooms = filteredRooms.length > 0 ? filteredRooms.length : rooms.length;

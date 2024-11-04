@@ -9,8 +9,8 @@ const roomSchema = new mongoose.Schema({
     },
     roomType: {
         type: String,
-        required: [true, 'Room type is required'],
-        enum: ['Single', 'Double', 'Suite', 'Deluxe Suite'],
+        required: [true, 'Room type is required']
+
     },
     description: {
         type: String,
@@ -19,11 +19,6 @@ const roomSchema = new mongoose.Schema({
     capacity: {
         type: Number,
         min: [1, 'Capacity must be at least 1 guest'],
-    },
-    size: {
-        type: Number,
-        default: 25,
-        required: true
     },
     pricePerNight: {
         type: Number,
@@ -42,6 +37,10 @@ const roomSchema = new mongoose.Schema({
     cancellationPolicy: {
         type: String,
         default: "Free cancellation up to 24 hours before check-in.",
+    },
+    isbooked: {
+        type: Boolean,
+        default: false,
     }
 }, {
     timestamps: true,

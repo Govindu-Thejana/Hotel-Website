@@ -2,309 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
-  .nav-link {
-    @apply text-sm font-semibold leading-6 text-gray-900;
+
+:root {
+    --pcolor: #2D2C2C; /* Example primary color (blue) */
+    --scolor: #BF9766; /* Example secondary color (green) */
+    --acolor: #F3EDE6; /* Example accent color (red) */
+    --bgcolor: #f5f5f5; /* Example background color */
   }
 
-  .mobile-nav-link {
-    @apply -mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50;
-  }
-
-  .gradient-background {
-    @apply relative aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30;
-    clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%);
-  }
-
-  .primary-button {
-    @apply rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600;
-  }
+  /* In your global CSS file */
+:h1 {
+  font: 300 text-2xl font-serif mb-2 text-gray-800;
 }
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing: border-box;
-  text-decoration: none;
-  list-style: none;
-}
-html{
-  font-size: 62.5%;
-}
-:root{
-  --header:#cc8c18;
-}
-header{
-  position: fixxed;
-  top:0;
-  left:0;
-  right:0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding:2rem 9%;  
+:h {
+  font: 200 text-2xl font-serif mb-2 text-gray-800;
 }
 
-header .logo{
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: var(--header);
-}
-
-header .bg{
-  color: #232323;
-}
-
-nav a{
-  font-size: 1.8rem;
-  margin: 0 1rem;
-  color: #232323;
-  transition: 0.5s ease-in;
-}
-nav a:hover{
-  color: var(--header);  
-}
-nav a.active{
-  color: var(--header);
-}
-
-.social i{
-  width: 4rem;
-  height: 4rem;
-  font-size: 1.8rem;
-  background: #efefef;
-  line-height: 4rem;
-  text-align: center;
-  border-radius: 50%;
-  margin: 0 1rem;
-}
-section{
-  padding: 2rem 9%;
-}
-.showcase{
-  min-height: 100vh;
-  padding-top: 18rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;  
-  text-align: center;
-  padding-bottom: 10rem;
-  width: 100%;
-  background: url('http://html.efforttech.com/html/akomo/images/background/3.jpg') no-repeat center center / cover;
-  position: relative;
-}
-.title{
-  color: #fff;
-  text-align: center;
-  font-size: 8rem;
-}
-.btn{
-  display: inline-block;
-  padding: 10px 20px;
-  background: var(--header);
-  color: #fff;
-  font-size: 1.7rem;
-  margin-top: 30px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-.bot{
-  position: absolute;
-  bottom:-4px;
-  left:0;
-  right:0;
-  width: 100%;
-  overflow-x: hidden;
-}
-.about{
-  padding-top: 8rem;
-}
-.about h6{
-  color: var(--header);
-  font-size: 1.8rem;
-  text-align: center;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  margin-bottom: 20px;
-}
-.about h1{
-  text-align: center;
-  font-size: 4rem;
-  color: #24416b;
-  font-weight: bold;
-  margin-bottom: 10rem;
-}
-.wrap{
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 2rem;
-}
-.wrap .abt-txt,
-.wrap .abt-img{
-  flex: 1 1 40rem;
-}
-.abt-img{
-   box-shadow: 20px 25px 1px var(--header);
-}
-.abt-img img{
-  width: 100%;
-}
-.abt-txt h2{
-  color: #24416b;
-  font-size: 3rem;
-  margin-bottom: 2rem;
-}
-.abt-txt{
-  margin-right: 2rem;
-}
-.abt-txt p{
-  color: #7a7e9a;
-  font-size: 1.7rem;
-  line-height: 1.4;
-  text-align: justify;
-}
-.round{
-  border-radius: 25px;
-  margin-top: 40px;
-}
-.features{
- margin-top: 10rem;
-  width: 100%;
-  background: url('https://templates.envytheme.com/ecorik/default/assets/img/city/city-bg-two.jpg') no-repeat center center/cover;
-  position: relative;
-}
-.bot-1{
-  position: absolute;
-  top:-5px;
-  left:0;
-  right:0;
-  width: 100%;
-  height:100%;
-  overflow: hidden;
-}
-/* .slider{
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  min-height: 40vh;
-}
-.slider-cont{
-  display: flex;
-  justify-content: space-between;
-} */
-.slider-cont{
-  padding: 10rem 0;
-}
-.slide{
-  background: #efefef;
-  display: flex;
-  justify-content: center;
-  height: 300px;
-  font-size: 3rem;
-  line-height: 300px;
-}
-.menu{
-  display: none;
-}
-.boxes{
-  padding-top: 10rem;
-}
-.boxes h6{
-  font-size: 1.7rem;
-  color: var(--header);    
-  text-align: center;
-  margin-bottom: 15px;
-}
-.boxes h1{
-  font-size: 4rem;
-  text-align: center;
-  color: #24416b;
-  margin-bottom: 40px;
-}
-.boxes .wrap{
-  display: grid;
-  gap: 1.2em;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-}
-.boxes .box{
-  padding: 30px 10px;
-  box-shadow: 0 0 2px rgba(0,0,0,0.2);
-  text-align: center;
-  transition: 0.5s ease-in;  
-}
-.boxes .box:hover{
-  background: var(--header);
-  transform: translatey(-10px);
-}
-.boxes .box:hover i,
-.boxes .box:hover h6,
-.boxes .box:hover p{
-  color: #fff;
-}
-.box i{
-  font-size: 3rem;
-  color: var(--header);
-  margin-bottom: 15px;
-}
-.box h6{
-  color: #24416b;
-  font-size: 2.2rem
-}
-.box p{
-  color: #7a7e9a;
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-}
-.box .men-btn{
-  display: inline-block;
-  width: 4rem;
-  height: 4rem;
-  background: var(--header);
-  color: #fff;
-  font-size: 2rem;  
-  text-align: center;
-  line-height: 4rem;
-  border-radius: 50%;
+p {
+  font: 200 text-sm font-serif mb-2 text-gray-800;
 }
 
 
-@media(max-width: 865px){
-  html{
-    font-size: 55%;
-  }
-  .menu{
-    display: block;
-    font-size: 2rem;
-    font-weight: bold;
-    cursor: pointer;
-    color: var(--header);
-  }
-  header nav{
-    position: absolute;
-    top: 7.4%;
-    left:0;
-    right:0;
-    z-index: 1111;
-    background: #fff;
-    padding: 2rem;
-    width: 100%;
-    transition: 0.5s linear;
-    clip-path: polygon(0 0,100% 0, 100% 0, 0 0);
-  }
-  header nav.active{
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-  }
-  nav a{
-    display: block;
-    font-size: 2.5rem;
-    margin: 2rem;
-  }
-  header{
-    padding: 2rem;
-  }
-  section{
-    padding: 2rem;
-  }
+/* In your global CSS or component CSS */
+.bg-s-color {
+  background-color: #2D2C2C; 
 }
+
+
+.bg-p-color {
+  background-color: #BF9766;
+}
+
+
+  

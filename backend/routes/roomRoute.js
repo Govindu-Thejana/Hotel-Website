@@ -121,4 +121,17 @@ router.post('/', async (req, res) => {
     }
 });
 
+router.get('/search/:roomId', async (req, res) => {
+    const { roomId } = req.params;
+    try {
+        const room = await RoomModel.findOne({ roomId });
+        if (!room) {
+            return res.status(404).json({ error: 'Room not found' });
+        }
+        res.json(room);
+    } catch (error) {
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
 export default router;  // Export the router to be used in other parts of the application.

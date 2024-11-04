@@ -15,6 +15,7 @@ const RoomManagement = () => {
     const [selectedRoomType, setSelectedRoomType] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
+    const [searchRoomId, setSearchRoomId] = useState(""); // Add state for search input
 
     useEffect(() => {
         fetchRooms();
@@ -23,12 +24,22 @@ const RoomManagement = () => {
     const fetchRooms = async () => {
         setIsLoading(true);
         try {
-            const result = await axios.get('http://localhost:5555/rooms'); // Fetch all rooms
-            setRooms(result.data.data);
-            setFilteredRooms(result.data.data); // Initialize filteredRooms
+            if (searchRoomId) {
+                // Fetch a specific room by roomId
+                const result = await axios.get(`http://localhost:5555/rooms/search/${searchRoomId}`);
+                setRooms([result.data]); // Set the result as an array to maintain consistency
+                setFilteredRooms([result.data]);
+            } else {
+                // Fetch all rooms
+                const result = await axios.get('http://localhost:5555/rooms');
+                setRooms(result.data.data);
+                setFilteredRooms(result.data.data); // Initialize filteredRooms
+            }
             setIsLoading(false);
         } catch (error) {
             setErrorMessage(error.message);
+            setRooms([]);
+            setFilteredRooms([]);
             setIsLoading(false);
         }
     };
@@ -52,7 +63,6 @@ const RoomManagement = () => {
             const result = await axios.delete(`http://localhost:5555/rooms/${roomId}`);
             if (result.status === 200) {
                 setSuccessMessage(`Room No ${roomId} was deleted.`);
-                // Use _id instead of roomId here if needed
                 setRooms(rooms.filter(room => room._id !== roomId));
                 fetchRooms(); // Refresh room list if needed
             } else {
@@ -67,8 +77,6 @@ const RoomManagement = () => {
         }, 3000);
     };
 
-
-
     const calculateTotalPages = (filteredRooms, roomsPerPage, rooms) => {
         const totalRooms = filteredRooms.length > 0 ? filteredRooms.length : rooms.length;
         return Math.ceil(totalRooms / roomsPerPage);
@@ -82,6 +90,13 @@ const RoomManagement = () => {
 
     const handleNavigateAddRoom = () => {
         navigate('/add-rooms');
+    };
+
+    // Handle Enter key press in the search input
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            fetchRooms(); // Trigger fetchRooms on Enter key press
+        }
     };
 
     return (
@@ -109,7 +124,10 @@ const RoomManagement = () => {
                         <div className="flex-1">
                             <input
                                 type="text"
-                                placeholder="Search rooms..."
+                                placeholder="Search rooms by RoomID..."
+                                value={searchRoomId}
+                                onChange={(e) => setSearchRoomId(e.target.value)}
+                                onKeyDown={handleKeyDown} // Trigger search on Enter key
                                 className="w-full px-4 py-2 border rounded-lg"
                             />
                         </div>
@@ -135,7 +153,7 @@ const RoomManagement = () => {
                                         <td className="px-6 py-4 text-sm text-gray-900">{room.roomId}</td>
                                         <td className="px-6 py-4 text-sm text-gray-900">{room.roomType}</td>
                                         <td className="px-6 py-4 text-sm text-gray-900">{room.pricePerNight}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-900">{room.availability}</td>
+                                        <td className="px-6 py-4 text-sm text-gray-900">{room.availability ? "Available" : "Not Available"}</td>
                                         <td className="px-6 py-4 text-sm">
                                             <div className="flex gap-3">
                                                 <Link to={`/edit-room/${room._id}`} className="gap-2">

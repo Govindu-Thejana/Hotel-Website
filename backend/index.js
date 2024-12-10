@@ -27,10 +27,10 @@ app.get('/', (request, response) => {
     return response.status(200).send("Welcome To SUNERAGIRA HOTEL"); // Change status code to 200
 });
 
-app.use('https://hotel-website-backend-drab.vercel.app/rooms', roomRoute);
-app.use('https://hotel-website-backend-drab.vercel.app/bookedRoom', bookedRoomRoutes);
-app.use('https://hotel-website-backend-drab.vercel.app/appointments', appointments);
-app.use('https://hotel-website-backend-drab.vercel.app/wedding', weddingRoute);
+app.use('/rooms', roomRoute);
+app.use('/bookedRoom', bookedRoomRoutes);
+app.use('/appointments', appointments);
+app.use('/wedding', weddingRoute);
 
 // Connect to MongoDB and start the server
 mongoose

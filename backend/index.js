@@ -16,13 +16,13 @@ const PORT = process.env.PORT;
 
 
 const app = express(); // Initialize the app first
-const backendURL = 'https://hotel-website-three-azure.vercel.app'; // Your backend URL
+const backendURL = 'https://hotel-website-backend-drab.vercel.app/'; // Your backend URL
 
 // Middleware
 app.use(express.json());
 app.use(cors());
 
-app.get('/', (request, response) => {
+app.get('https://hotel-website-backend-drab.vercel.app/', (request, response) => {
     console.log(request);
     return response.status(200).send("Welcome To SUNERAGIRA HOTEL"); // Change status code to 200
 });

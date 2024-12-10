@@ -22,7 +22,7 @@ const backendURL = 'https://hotel-website-backend-drab.vercel.app/'; // Your bac
 app.use(express.json());
 app.use(cors());
 
-app.get('https://hotel-website-backend-drab.vercel.app/', (request, response) => {
+app.get('/', (request, response) => {
     console.log(request);
     return response.status(200).send("Welcome To SUNERAGIRA HOTEL"); // Change status code to 200
 });

@@ -17,6 +17,7 @@ import Footer from "./components/Footer";
 import Adminpackage from "./pages/Adminpackage";
 import PropTypes from 'prop-types';
 import BookingManagement from "./pages/BookingManagement";
+import RoomCreationForm from "./components/room/RoomCreationForm";
 
 const MainLayout = ({ children }) => (
   <div>
@@ -65,6 +66,7 @@ const App = () => {
         <Route path="/admin-appointment" element={<AdminLayout><AdminAppointment /></AdminLayout>} />
         <Route path="/admin-package" element={<AdminLayout><Adminpackage /></AdminLayout>} />
         <Route path="/admin-bookings" element={<AdminLayout><BookingManagement /></AdminLayout>} />
+        <Route path="/add-newrooms" element={<AdminLayout><RoomCreationForm /></AdminLayout>} />
 
       </Routes>
     </div>

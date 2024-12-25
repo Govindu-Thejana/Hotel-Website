@@ -2,9 +2,13 @@ import express from 'express';  // Import the Express framework to handle routin
 import mongoose from 'mongoose';  // Import Mongoose for MongoDB interactions.
 import RoomModel from '../models/roomModel.js';  // Import the Room model for database operations.
 
+import upload from '../middleware/fileUploadMiddleware.js'; // Import renamed middleware
+import { createRoom, getRoomById, getRoomByRoomId, getAllRooms, updateRoomById, deleteRoomById } from '../controllers/roomController.js'; // Import room controller
+
+
 const router = express.Router();  // Create a new Express router instance.
 
-// Route to get all rooms
+/* // Route to get all rooms
 router.get('/', async (req, res) => {
     try {
         const rooms = await RoomModel.find({});  // Fetch all room documents from the database.
@@ -16,10 +20,10 @@ router.get('/', async (req, res) => {
         console.log(error.message);  // Log any errors to the console.
         res.status(500).send({ message: error.message });  // Return a 500 status with the error message.
     }
-});
+}); */
 
 // Route to get a specific room by ID
-router.get('/:id', async (req, res) => {
+/* router.get('/:id', async (req, res) => {
     try {
         const { id } = req.params;  // Extract room ID from request parameters.
 
@@ -38,9 +42,9 @@ router.get('/:id', async (req, res) => {
         console.log(error.message);  // Log any errors.
         res.status(500).send({ message: error.message });  // Return 500 on server error.
     }
-});
+}); */
 
-// Route to update a room by ID
+/* // Route to update a room by ID
 router.put('/:id', async (req, res) => {
     try {
         const { id } = req.params;  // Extract the room ID.
@@ -70,9 +74,9 @@ router.put('/:id', async (req, res) => {
         console.log(error.message);  // Log any errors.
         res.status(500).send({ message: error.message });  // Return 500 on server error.
     }
-});
+}); */
 
-// Route to delete a room by ID
+/* // Route to delete a room by ID
 router.delete('/:id', async (req, res) => {
     try {
         const { id } = req.params;  // Extract the room ID.
@@ -92,9 +96,9 @@ router.delete('/:id', async (req, res) => {
         console.log(error.message);  // Log errors.
         res.status(500).send({ message: error.message });  // Return 500 on server error.
     }
-});
+}); */
 
-// Route to create a new room
+/* // Route to create a new room
 router.post('/', async (req, res) => {
     try {
         // Destructure the required room fields from the request body
@@ -119,9 +123,9 @@ router.post('/', async (req, res) => {
         console.log(error.message);  // Log errors.
         res.status(500).send({ message: error.message });  // Return 500 on server error.
     }
-});
+}); */
 
-router.get('/search/:roomId', async (req, res) => {
+/* router.get('/search/:roomId', async (req, res) => {
     const { roomId } = req.params;
     try {
         const room = await RoomModel.findOne({ roomId });
@@ -132,6 +136,25 @@ router.get('/search/:roomId', async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: 'Server error' });
     }
-});
+}); */
+
+
+// Route to create a room with file upload
+router.post('/withfileupload', upload.array('images', 5), createRoom); // Allow up to 5 images
+
+// Route for fetching room by custom roomId
+router.get('/search/:roomId', getRoomByRoomId);
+
+// Route for fetching room by MongoDB ObjectId
+router.get('/:id', getRoomById);
+
+// Route to get all rooms
+router.get('/', getAllRooms);
+
+// Route to update a room by ID
+router.put('/:id', updateRoomById);
+
+// Route to delete a room by ID
+router.delete('/:id', deleteRoomById);
 
 export default router;  // Export the router to be used in other parts of the application.

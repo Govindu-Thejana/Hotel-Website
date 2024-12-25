@@ -17,6 +17,8 @@ import Footer from "./components/Footer";
 import Adminpackage from "./pages/Adminpackage";
 import PropTypes from 'prop-types';
 import BookingManagement from "./pages/BookingManagement";
+import BookingPage from "./pages/bookingProcess/BookingPage";
+import CompleteBooking from "./pages/bookingProcess/CompleteBooking";
 
 const MainLayout = ({ children }) => (
   <div>
@@ -56,6 +58,8 @@ const App = () => {
         <Route path="/accommodation" element={<MainLayout><Accomadation /></MainLayout>} />
         <Route path="/roomDetails/:roomId" element={<MainLayout><RoomDetails /></MainLayout>} />
         <Route path="/weddings" element={<MainLayout><WeddingPage /></MainLayout>} />
+        <Route path="/reservation" element={<MainLayout><BookingPage /></MainLayout>} />
+        <Route path="/CompleteBooking" element={<MainLayout><CompleteBooking /></MainLayout>} />
 
         {/* Admin Routes (Separate from the main website layout) */}
         <Route path="/add-rooms" element={<AdminLayout><AddRooms /></AdminLayout>} />

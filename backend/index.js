@@ -5,6 +5,9 @@ import roomRoute from './routes/roomRoute.js';
 import bookedRoomRoutes from './routes/bookedRoomRoutes.js';
 import weddingRoute from "./routes/weddingRoute.js";
 import appointments from './routes/appointments.js';
+import paypalRoutes from './routes/paypalRoutes.js';
+import { createOrder, capturePayment, generateAccessToken } from "./services/paypal.js";
+
 import dotenv from 'dotenv';
 
 // Load environment variables from .env file
@@ -12,7 +15,7 @@ dotenv.config();
 
 // MongoDB connection string from .env
 const mongoURI = process.env.mongoDBURL;
-const PORT = process.env.PORT;
+const PORT = process.env.BACKEND_PORT;
 
 
 const app = express(); // Initialize the app first
@@ -24,13 +27,14 @@ app.use(cors());
 
 app.get('/', (request, response) => {
     console.log(request);
-    return response.status(200).send("Welcome To SUNERAGIRA HOTEL"); // Change status code to 200
+    return response.status(200).send("Welcome To SUNERAGIRA HOTEL");
 });
 
 app.use('/rooms', roomRoute);
 app.use('/bookedRoom', bookedRoomRoutes);
 app.use('/appointments', appointments);
 app.use('/wedding', weddingRoute);
+app.use('/paypal', paypalRoutes);
 
 // Connect to MongoDB and start the server
 mongoose
@@ -44,3 +48,9 @@ mongoose
     .catch((error) => {
         console.log('MongoDB connection error:', error);
     });
+
+generateAccessToken()
+    .then(() => console.log("Access token created"))
+    .catch((error) => console.error("Error creating access token:", error));
+
+createOrder().then(result => console.log(result));

@@ -18,7 +18,7 @@ import Adminpackage from "./pages/Adminpackage";
 import PropTypes from 'prop-types';
 import BookingManagement from "./pages/BookingManagement";
 import BookingPage from "./pages/bookingProcess/BookingPage";
-import CheckoutPage from "./pages/bookingProcess/checkoutPage";
+import CheckoutPage from "./pages/bookingProcess/CheckoutPage";
 import CompleteBooking from "./pages/bookingProcess/CompleteBooking";
 
 const MainLayout = ({ children }) => (

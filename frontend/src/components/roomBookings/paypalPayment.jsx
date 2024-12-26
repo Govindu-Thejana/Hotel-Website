@@ -1,14 +1,15 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
+import CheckoutButton from "./checkOutButton";
 
 const PayPalButton = ({ totalAmount, onSuccess, onError }) => {
     useEffect(() => {
-        // Access PayPal client ID from environment variables using import.meta.env
         const clientID = import.meta.env.VITE_PAYPAL_CLIENT_ID_SANDBOX;
 
         const addPayPalScript = () => {
             const script = document.createElement("script");
-            script.src = `https://www.paypal.com/sdk/js?client-id=${clientID}&currency=USD`;
+            // Add disable-funding parameter to remove card option
+            script.src = `https://www.paypal.com/sdk/js?client-id=${clientID}&currency=USD&components=buttons&disable-funding=card`;
             script.async = true;
             script.onload = () => initPayPalButton();
             script.onerror = () => {
@@ -34,10 +35,8 @@ const PayPalButton = ({ totalAmount, onSuccess, onError }) => {
                     },
                     onApprove: (data, actions) => {
                         return actions.order.capture().then((details) => {
-                            console.log(details); // Log details of the transaction
-
-                            // After successful payment, redirect to the complete-order page
-                            window.location.href = "/CompleteBooking"; // Modify the redirect URL as needed
+                            console.log(details);
+                            window.location.href = "/CompleteBooking";
                         });
                     },
                     onError: (err) => {
@@ -49,6 +48,8 @@ const PayPalButton = ({ totalAmount, onSuccess, onError }) => {
                         shape: "rect",
                         label: "paypal",
                     },
+                    // Explicitly disable funding sources except PayPal
+                    fundingSource: window.paypal.FUNDING.PAYPAL
                 }).render("#paypal-button-container");
             }
         };
@@ -75,14 +76,17 @@ const PayPalButton = ({ totalAmount, onSuccess, onError }) => {
                 style={{
                     width: "100%",
                     maxWidth: "400px",
-                    margin: "0 auto",
+                    margin: " auto",
                     padding: "10px",
                     border: "1px solid #ccc",
                     borderRadius: "8px",
                     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
                     backgroundColor: "#f9f9f9",
                 }}
-            ></div>
+            >
+                {/* stripe Payment Integragtion button is this */}
+                <CheckoutButton />
+            </div>
             <p style={{ marginTop: "15px", fontSize: "14px", color: "#666" }}>
                 Your total amount is: <strong>${totalAmount?.toFixed(2) || "10.00"}</strong>
             </p>

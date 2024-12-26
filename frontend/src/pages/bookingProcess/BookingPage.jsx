@@ -1,15 +1,9 @@
 import React from 'react'
-import PayPalButton from '../../components/roomBookings/paypalPayment'
 
 const BookingPage = () => {
   return (
-    <div>
-      <div>
-        <PayPalButton />
-      </div>
-
-    </div>
+    <div>BookingPage</div>
   )
 }
 
-export default BookingPage;
+export default BookingPage

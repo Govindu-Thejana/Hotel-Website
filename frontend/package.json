@@ -12,6 +12,8 @@
   "dependencies": {
     "@headlessui/react": "^2.1.2",
     "@heroicons/react": "^2.1.5",
+    "@stripe/react-stripe-js": "^3.1.1",
+    "@stripe/stripe-js": "^5.4.0",
     "axios": "^1.7.7",
     "cors": "^2.8.5",
     "icons": "^1.0.0",

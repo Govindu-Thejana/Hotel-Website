@@ -6,7 +6,8 @@ import bookedRoomRoutes from './routes/bookedRoomRoutes.js';
 import weddingRoute from "./routes/weddingRoute.js";
 import appointments from './routes/appointments.js';
 import paypalRoutes from './routes/paypalRoutes.js';
-import { createOrder, capturePayment, generateAccessToken } from "./services/paypal.js";
+import { createCheckoutSession } from "./services/stripe.js";
+
 
 import dotenv from 'dotenv';
 
@@ -36,6 +37,8 @@ app.use('/appointments', appointments);
 app.use('/wedding', weddingRoute);
 app.use('/paypal', paypalRoutes);
 
+app.post("/checkout", createCheckoutSession); // Use the handler from the stripe module
+
 // Connect to MongoDB and start the server
 mongoose
     .connect(mongoURI)
@@ -48,9 +51,3 @@ mongoose
     .catch((error) => {
         console.log('MongoDB connection error:', error);
     });
-
-generateAccessToken()
-    .then(() => console.log("Access token created"))
-    .catch((error) => console.error("Error creating access token:", error));
-
-createOrder().then(result => console.log(result));

@@ -1,8 +1,7 @@
 // CheckoutPage.js
 import React from "react";
 import PayPalButton from "../../components/roomBookings/paypalPayment";
-import StripePayment from '../../components/roomBookings/stripePayment';
-import CheckoutButton from "../../components/roomBookings/checkOutButton";
+
 
 const CheckoutPage = () => {
     return (

@@ -1,6 +1,4 @@
 import express from 'express';  // Import the Express framework to handle routing and requests.
-import mongoose from 'mongoose';  // Import Mongoose for MongoDB interactions.
-import RoomModel from '../models/roomModel.js';  // Import the Room model for database operations.
 
 import upload from '../middleware/fileUploadMiddleware.js'; // Import renamed middleware
 import { createRoom, getRoomById, getRoomByRoomId, getAllRooms, updateRoomById, deleteRoomById } from '../controllers/roomController.js'; // Import room controller
@@ -152,7 +150,7 @@ router.get('/:id', getRoomById);
 router.get('/', getAllRooms);
 
 // Route to update a room by ID
-router.put('/:id', updateRoomById);
+router.put('/:id', upload.array('images', 5), updateRoomById);
 
 // Route to delete a room by ID
 router.delete('/:id', deleteRoomById);

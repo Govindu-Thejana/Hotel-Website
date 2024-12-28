@@ -1,5 +1,7 @@
 import RoomModel from '../models/roomModel.js';// Import your Room model
 import mongoose from 'mongoose';  // Import Mongoose for MongoDB interactions.
+import fs from 'fs';
+import path from 'path';
 
 // Controller to create a room
 export const createRoom = async (req, res) => {
@@ -92,30 +94,48 @@ export const updateRoomById = async (req, res) => {
 
         const {
             roomId, roomType, description, capacity, pricePerNight,
-            availability, amenities, images, checkInTime, checkOutTime,
+            availability, amenities, checkInTime, checkOutTime,
             cancellationPolicy
         } = req.body;
 
-        // Check for required fields
-        if (!roomId || !roomType || !description || !capacity || !pricePerNight ||
-            availability === undefined || !amenities || !images) {
-            return res.status(400).json({ message: 'Please fill in all required fields' });
-        }
+        // Process uploaded images
+        const uploadedImages = req.files ? req.files.map((file) => file.path) : [];
 
-        const updatedRoom = await RoomModel.findByIdAndUpdate(id, req.body, { new: true });
-
-        if (!updatedRoom) {
+        // Find the room to update
+        const room = await RoomModel.findById(id);
+        if (!room) {
             return res.status(404).json({ message: 'Room not found' });
         }
 
+        // Update the room fields
+        const updatedRoom = await RoomModel.findByIdAndUpdate(
+            id,
+            {
+                roomId,
+                roomType,
+                description,
+                capacity,
+                pricePerNight,
+                availability,
+                amenities: amenities ? JSON.parse(amenities) : room.amenities, // Parse amenities if provided as JSON string
+                images: uploadedImages.length > 0 ? uploadedImages : room.images,
+                checkInTime,
+                checkOutTime,
+                cancellationPolicy,
+            },
+            { new: true }
+        );
+
         return res.status(200).json({ message: 'Room updated successfully', room: updatedRoom });
     } catch (error) {
-        console.log(error.message);
-        res.status(500).send({ message: error.message });
+        console.error(error.message);
+        res.status(500).json({ message: error.message });
     }
 };
 
-// Delete a room by ID
+
+
+
 export const deleteRoomById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -125,14 +145,29 @@ export const deleteRoomById = async (req, res) => {
             return res.status(400).json({ message: 'Invalid Room ID' });
         }
 
-        const deleteRoom = await RoomModel.findByIdAndDelete(id);
-        if (!deleteRoom) {
+        // Find the room to delete
+        const room = await RoomModel.findById(id);
+        if (!room) {
             return res.status(404).json({ message: 'Room not found' });
         }
 
-        return res.status(200).json({ message: 'Room deleted successfully', room: deleteRoom });
+        // Delete associated images from the file system
+        if (Array.isArray(room.images)) {
+            room.images.forEach((imagePath) => {
+                const fullPath = path.resolve(imagePath);
+                fs.unlink(fullPath, (err) => {
+                    if (err) console.error(`Failed to delete image: ${fullPath}`, err);
+                });
+            });
+        }
+
+        // Delete the room from the database
+        await RoomModel.findByIdAndDelete(id);
+
+        return res.status(200).json({ message: 'Room deleted successfully' });
     } catch (error) {
-        console.log(error.message);
-        res.status(500).send({ message: error.message });
+        console.error(error.message);
+        res.status(500).json({ message: error.message });
     }
 };
+

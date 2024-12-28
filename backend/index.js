@@ -22,6 +22,16 @@ const backendURL = 'https://hotel-website-backend-drab.vercel.app/'; // Your bac
 app.use(express.json());
 app.use(cors());
 
+app.use('/uploads', express.static('uploads')); // Serve uploaded files
+
+// Error handling middleware for Multer
+app.use((err, req, res, next) => {
+    if (err.message.includes('Only image files are allowed!')) {
+        return res.status(400).send({ message: err.message });
+    }
+    next(err);
+});
+
 app.get('/', (request, response) => {
     console.log(request);
     return response.status(200).send("Welcome To SUNERAGIRA HOTEL"); // Change status code to 200
@@ -31,6 +41,7 @@ app.use('/rooms', roomRoute);
 app.use('/bookedRoom', bookedRoomRoutes);
 app.use('/appointments', appointments);
 app.use('/wedding', weddingRoute);
+
 
 // Connect to MongoDB and start the server
 mongoose

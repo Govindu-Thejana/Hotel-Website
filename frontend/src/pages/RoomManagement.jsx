@@ -95,7 +95,7 @@ const RoomManagement = () => {
     const navigate = useNavigate();
 
     const handleNavigateAddRoom = () => {
-        navigate('/add-rooms');
+        navigate('/add-newrooms');
     };
 
     // Handle Enter key press in the search input
@@ -162,10 +162,12 @@ const RoomManagement = () => {
                                         <td className="px-6 py-4 text-sm text-gray-900">{room.availability ? "Available" : "Not Available"}</td>
                                         <td className="px-6 py-4 text-sm">
                                             <div className="flex gap-3">
-                                                <Link to={`/edit-room/${room._id}`} className="gap-2">
+                                                <Link to={`/admin-roomview/${room._id}`} className="gap-2">
                                                     <button className="text-blue-600 hover:text-blue-800">
                                                         <Eye size={16} />
                                                     </button>
+                                                </Link>
+                                                <Link to={`/edit-room/${room._id}`} className="gap-2">
                                                     <button className="text-yellow-600 hover:text-yellow-800">
                                                         <Edit size={16} />
                                                     </button>

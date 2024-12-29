@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Modal from '../components/Modal'; // Import the Modal component
+import { Heart, ChevronRight, Star } from 'lucide-react';
+import Modal from '../components/Modal';
 
 const WeddingPackages = () => {
-    const [wedding, setWedding] = useState([]); // State for wedding packages
-    const [error, setError] = useState(''); // State for error messages
-    const [selectedPackage, setSelectedPackage] = useState(null); // State for selected package
-    const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+    const [wedding, setWedding] = useState([]);
+    const [error, setError] = useState('');
+    const [selectedPackage, setSelectedPackage] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchWedding = async () => {
@@ -36,41 +37,80 @@ const WeddingPackages = () => {
     };
 
     return (
-        <div className="bg-white p-8 rounded-lg shadow-lg text-center border">
-            <div className="text-center mb-12">
-                <h2 className="text-4xl font-serif">Featured Wedding Packages</h2>
-            </div>
+        <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white py-16 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto">
+                <div className="text-center mb-16">
+                    <div className="flex items-center justify-center mb-4">
+                        <Heart className="w-8 h-8 text-pink-500 mr-2" />
+                        <h2 className="text-5xl font-serif text-gray-900">Wedding Packages</h2>
+                    </div>
+                    <p className="mt-4 text-xl text-gray-600 max-w-2xl mx-auto">
+                        Create unforgettable memories with our carefully curated wedding packages
+                    </p>
+                </div>
 
-            <section className="container mx-auto py-12">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {error && (
+                    <div className="text-red-600 text-center mb-8">{error}</div>
+                )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                     {wedding.map((item) => (
-                        <div key={item._id} className="bg-white p-8 rounded-lg shadow-lg text-center border">
-                            <div className="flex justify-center space-x-8">
+                        <div
+                            key={item._id}
+                            className="group relative bg-white rounded-2xl shadow-xl overflow-hidden transform hover:-translate-y-2 transition-all duration-300"
+                        >
+                            <div className="absolute top-4 right-4 z-10">
+                                <div className="bg-white/90 backdrop-blur-sm rounded-full p-2">
+                                    <Heart className="w-6 h-6 text-pink-500" />
+                                </div>
+                            </div>
+
+                            <div className="aspect-w-16 aspect-h-9 bg-gray-200">
                                 <img
-                                    src="/images/Standard.png"
-                                    alt="Package"
-                                    className="max-w-xs"
+                                    src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800"
+                                    alt={item.packagename}
+                                    className="w-full h-64 object-cover"
                                 />
                             </div>
-                            <h3 className="text-2xl font-semibold mb-2">{item.packagename}</h3>
-                            <p className="text-3xl text-gray-700 mb-4">Rs.{item.price}</p>
-                            <ul className="text-gray-600 space-y-2 mb-6">
-                                {(item.Description || "").split(',').map((desc, index) => (
-                                    <li key={index}>{desc.trim()}</li>
-                                ))}
-                            </ul>
-                            <button
-                                onClick={() => openModal(item)} // Open modal with selected package
-                                className="border border-black text-black py-2 px-4 rounded mr-4"
-                            >
-                                Detail
-                            </button>
+
+                            <div className="p-8">
+                                <div className="flex items-center mb-4">
+                                    <div className="flex space-x-1">
+                                        {[...Array(5)].map((_, i) => (
+                                            <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <h3 className="text-2xl font-semibold text-gray-900 mb-2">
+                                    {item.packagename}
+                                </h3>
+
+                                <p className="text-3xl font-bold text-pink-600 mb-6">
+                                    Rs.{item.price.toLocaleString()}
+                                </p>
+
+                                <div className="space-y-3 mb-8">
+                                    {(item.Description || "").split(',').map((desc, index) => (
+                                        <div key={index} className="flex items-center text-gray-600">
+                                            <ChevronRight className="w-5 h-5 text-pink-500 mr-2" />
+                                            <span>{desc.trim()}</span>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <button
+                                    onClick={() => openModal(item)}
+                                    className="w-full bg-scolor text-white py-3 px-6 rounded-lg font-semibold hover:bg-pcolor transition-all duration-300 shadow-lg hover:shadow-xl"
+                                >
+                                    View Details
+                                </button>
+                            </div>
                         </div>
                     ))}
                 </div>
-            </section>
+            </div>
 
-            {/* Modal for showing package details */}
             <Modal 
                 isOpen={isModalOpen} 
                 onClose={closeModal} 

@@ -41,7 +41,7 @@ const WeddingPackages = () => {
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-16">
                     <div className="flex items-center justify-center mb-4">
-                        <Heart className="w-8 h-8 text-pink-500 mr-2" />
+                        <Heart className="w-8 h-8 text-gray-900 mr-2" />
                         <h2 className="text-5xl font-serif text-gray-900">Wedding Packages</h2>
                     </div>
                     <p className="mt-4 text-xl text-gray-600 max-w-2xl mx-auto">
@@ -61,7 +61,7 @@ const WeddingPackages = () => {
                         >
                             <div className="absolute top-4 right-4 z-10">
                                 <div className="bg-white/90 backdrop-blur-sm rounded-full p-2">
-                                    <Heart className="w-6 h-6 text-pink-500" />
+                                    <Heart className="w-6 h-6 text-gray-900" />
                                 </div>
                             </div>
 
@@ -86,14 +86,14 @@ const WeddingPackages = () => {
                                     {item.packagename}
                                 </h3>
 
-                                <p className="text-3xl font-bold text-pink-600 mb-6">
+                                <p className="text-3xl font-bold text-gray-900 mb-6">
                                     Rs.{item.price.toLocaleString()}
                                 </p>
 
                                 <div className="space-y-3 mb-8">
                                     {(item.Description || "").split(',').map((desc, index) => (
                                         <div key={index} className="flex items-center text-gray-600">
-                                            <ChevronRight className="w-5 h-5 text-pink-500 mr-2" />
+                                            <ChevronRight className="w-5 h-5 text-gray-900 mr-2" />
                                             <span>{desc.trim()}</span>
                                         </div>
                                     ))}

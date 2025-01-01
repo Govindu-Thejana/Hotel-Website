@@ -157,3 +157,125 @@ export const getAllBookings = async (req, res) => {
         });
     }
 };
+export const getBookedDatesByRoomType = async (req, res) => {
+    try {
+        const { roomType } = req.params;
+
+        if (!roomType) {
+            console.log('Room type not provided');
+            return res.status(400).json({ message: 'Room type is required' });
+        }
+
+        console.log('Fetching rooms of type:', roomType);
+        const rooms = await RoomModel.find({ roomType });
+        if (!rooms.length) {
+            console.log('No rooms found for this room type');
+            return res.status(404).json({ message: 'No rooms found for this room type' });
+        }
+
+        const roomIds = rooms.map(room => room._id);
+        console.log('Room IDs:', roomIds);
+
+        console.log('Fetching bookings for room IDs:', roomIds);
+        const bookings = await BookedRoomModel.find({
+            roomId: { $in: roomIds }
+        }).populate('roomId');
+
+        if (!bookings.length) {
+            console.log('No bookings found for these rooms');
+            return res.status(200).json({
+                success: true,
+                data: {
+                    roomType,
+                    allRoomBookedDates: [],
+                    commonBookedDates: [],
+                },
+            });
+        }
+
+        // Set current date to start of today
+        const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0);
+
+        // Filter out bookings where checkout date is today or earlier
+        const filteredBookings = bookings.filter(booking => {
+            const checkOutDate = new Date(booking.checkOut);
+            checkOutDate.setHours(0, 0, 0, 0);
+            return checkOutDate > currentDate;
+        });
+
+        // Initialize bookedDates object for each room
+        const bookingsByRoom = {};
+        roomIds.forEach(roomId => {
+            bookingsByRoom[roomId] = { bookedDates: new Set(), bookingDetails: [] };
+        });
+
+        // Fill in the booked dates and details for each room
+        filteredBookings.forEach(booking => {
+            const roomId = booking.roomId._id.toString();
+            const roomNumber = booking.roomId.roomId;
+            const checkInDate = new Date(booking.checkIn).toISOString().split('T')[0];
+            const checkOutDate = new Date(booking.checkOut).toISOString().split('T')[0];
+
+            // Add booked dates to the Set
+            let currentDate = new Date(booking.checkIn);
+            const endDate = new Date(booking.checkOut);
+
+            while (currentDate < endDate) {
+                bookingsByRoom[roomId].bookedDates.add(currentDate.toISOString().split('T')[0]);
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+
+            // Add booking details
+            bookingsByRoom[roomId].bookingDetails.push({
+                roomNumber,
+                checkIn: checkInDate,
+                checkOut: checkOutDate,
+            });
+        });
+
+        // Convert Set to Array and format data
+        const allRoomBookedDates = Object.entries(bookingsByRoom).map(([roomId, data]) => ({
+            roomId,
+            bookedDates: Array.from(data.bookedDates),
+            bookingDetails: data.bookingDetails,
+        }));
+
+        // Log booking details for each room
+        allRoomBookedDates.forEach(room => {
+            console.log(`Room ID: ${room.roomId}`);
+            room.bookingDetails.forEach(detail => {
+                console.log(`Room Number: ${detail.roomNumber}, Check-In: ${detail.checkIn}, Check-Out: ${detail.checkOut}`);
+            });
+        });
+
+        // Find dates that are common between all rooms
+        const roomDateArrays = allRoomBookedDates.map(room => room.bookedDates);
+        let commonBookedDates = [];
+
+        if (roomDateArrays.length > 1) {
+            // Find intersection of all booked dates
+            commonBookedDates = roomDateArrays.reduce((commonDates, roomDates) =>
+                commonDates.filter(date => roomDates.includes(date))
+            );
+        }
+
+        console.log("Common Booked Dates:", commonBookedDates);
+
+        res.status(200).json({
+            success: true,
+            data: {
+                roomType,
+                allRoomBookedDates,
+                commonBookedDates,
+            },
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Error fetching booked dates for room type',
+            error: error.message,
+        });
+    }
+};
+

@@ -2,9 +2,20 @@ import React from 'react';
 import { BedDouble, LayoutDashboard, Search, LogOut } from 'lucide-react';
 import { TbPackages, TbMessage2Down } from "react-icons/tb";
 import { BsBuildingFillCheck } from "react-icons/bs";
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
     const currentPath = window.location.pathname;
+    const navigate = useNavigate(); // To handle navigation programmatically
+
+    // Define handleLogout function
+    const handleLogout = () => {
+        // Remove the admin token from localStorage
+        localStorage.removeItem("adminToken");
+
+        // Navigate to the login page
+        navigate("/login");
+    };
 
     const navItems = [
         {
@@ -24,7 +35,7 @@ const Navbar = () => {
         },
         {
             href: "/admin-appointment",
-            label: "Appointsments",
+            label: "Appointments",
             icon: <TbMessage2Down className="w-5 h-5" />
         },
         {
@@ -38,10 +49,11 @@ const Navbar = () => {
             icon: <Search className="w-5 h-5" />
         },
         {
-            href: "/logout",
+            // Use the handleLogout function for the logout button
             label: "Logout",
             icon: <LogOut className="w-5 h-5" />,
-            className: "text-red-500 hover:text-red-600"
+            className: "text-red-500 hover:text-red-600",
+            onClick: handleLogout // Attach onClick for logout item
         }
     ];
 
@@ -72,6 +84,7 @@ const Navbar = () => {
                                 <a
                                     key={item.href}
                                     href={item.href}
+                                    onClick={item.onClick || undefined} // Attach onClick for logout item
                                     className={`flex items-center px-4 py-3 rounded-lg transition-colors duration-200 
                                     ${isActive
                                             ? 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-200'

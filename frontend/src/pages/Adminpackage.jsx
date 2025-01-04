@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+
 const Adminpackage = () => {
     const [wedding, setWedding] = useState([]);
     const [error, setError] = useState(null);

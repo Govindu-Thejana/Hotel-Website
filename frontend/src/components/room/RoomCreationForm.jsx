@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'; // Ensure axios is installed: npm install axios
 import { addRooms } from './RoomCrudApi'; // Import addRooms function
+import Alert from '@mui/material/Alert'; // Import the Alert component from Material UI
 
 const RoomCreationForm = () => {
     const [roomData, setRoomData] = useState({
@@ -21,6 +22,22 @@ const RoomCreationForm = () => {
     const [newAmenity, setNewAmenity] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [previewImages, setPreviewImages] = useState([]);
+
+    // State for the alert message and severity
+    const [alertMessage, setAlertMessage] = useState(null);
+
+    useEffect(() => {
+        if (alertMessage) {
+            // Set a timer to hide the alert after 3 seconds (3000 milliseconds)
+            const timer = setTimeout(() => {
+                setAlertMessage(null); // This will clear the alert after 3 seconds
+            }, 3000);
+
+            // Cleanup function to clear the timer if the component unmounts or if alertMessage changes
+            return () => clearTimeout(timer);
+        }
+    }, [alertMessage]);
+
 
     // Fetch room types from the backend
     useEffect(() => {
@@ -98,7 +115,10 @@ const RoomCreationForm = () => {
         const files = Array.from(e.target.files);
 
         if (files.length > 5) {
-            alert('You can upload a maximum of 5 images.');
+            setAlertMessage({
+                message: 'You can upload a maximum of 5 images.',
+                severity: 'error',
+            });
             return;
         }
 
@@ -118,7 +138,10 @@ const RoomCreationForm = () => {
         const requiredFields = ['roomId', 'roomType', 'description', 'capacity', 'pricePerNight', 'cancellationPolicy'];
         const missingFields = requiredFields.filter((field) => !roomData[field]);
         if (missingFields.length > 0) {
-            alert(`Please fill in the following fields: ${missingFields.join(', ')}`);
+            setAlertMessage({
+                message: `Please fill in the following fields: ${missingFields.join(', ')}`,
+                severity: 'error',
+            });
             return;
         }
 
@@ -136,7 +159,10 @@ const RoomCreationForm = () => {
                 roomData.images
             );
             if (success) {
-                alert('Room Created Successfully!');
+                setAlertMessage({
+                    message: 'Room Created Successfully!',
+                    severity: 'success',
+                });
                 setRoomData({
                     roomId: '',
                     roomType: '',
@@ -152,7 +178,10 @@ const RoomCreationForm = () => {
             }
         } catch (error) {
             console.error('Error creating room:', error);
-            alert('Failed to create the room. Please try again.');
+            setAlertMessage({
+                message: 'Failed to create the room. Room Id is already exist. Please try again.',
+                severity: 'error',
+            });
         } finally {
             setIsSubmitting(false);
         }
@@ -161,6 +190,7 @@ const RoomCreationForm = () => {
     return (
         <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
             <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Create New Room</h2>
+
             <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Room ID and Room Type */}
                 <div className="grid md:grid-cols-2 gap-6">
@@ -331,8 +361,14 @@ const RoomCreationForm = () => {
                         className={`px-6 py-2 rounded-md text-white ${isSubmitting ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'}`}
                         disabled={isSubmitting}
                     >
-                        {isSubmitting ? 'Creating Room...' : 'Create Room'}
+                        {isSubmitting ? 'Submitting...' : 'Create Room'}
                     </button>
+                    {/* Display Alert Message */}
+                    {alertMessage && (
+                        <Alert severity={alertMessage.severity} className="mb-4">
+                            {alertMessage.message}
+                        </Alert>
+                    )}
                 </div>
             </form>
         </div>

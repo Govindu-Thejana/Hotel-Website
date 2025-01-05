@@ -47,6 +47,14 @@ export const createBooking = async (req, res) => {
         );
         const totalAmount = numberOfNights * room.pricePerNight;
 
+        // Generate bookedDates array (from check-in to one day before check-out)
+        const bookedDates = [];
+        let currentDate = new Date(checkInDate);
+        while (currentDate < checkOutDate) {
+            bookedDates.push(new Date(currentDate));
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+
         // Create new booking
         const booking = new BookedRoomModel({
             bookingId: generateBookingId(),
@@ -56,6 +64,7 @@ export const createBooking = async (req, res) => {
             phone,
             checkIn: checkInDate,
             checkOut: checkOutDate,
+            bookedDates,
             guests,
             specialRequests,
             totalAmount,
@@ -174,9 +183,7 @@ export const getBookedDatesByRoomType = async (req, res) => {
         }
 
         const roomIds = rooms.map(room => room._id);
-        console.log('Room IDs:', roomIds);
 
-        console.log('Fetching bookings for room IDs:', roomIds);
         const bookings = await BookedRoomModel.find({
             roomId: { $in: roomIds }
         }).populate('roomId');
@@ -278,4 +285,60 @@ export const getBookedDatesByRoomType = async (req, res) => {
         });
     }
 };
+
+// Function to fetch available rooms based on date range and room type
+export const getAvailableRooms = async (req, res) => {
+    try {
+        const { startDate, endDate, roomType } = req.query;
+
+        // Convert dates to Date objects
+        const checkInDate = new Date(startDate);
+        const checkOutDate = new Date(endDate);
+
+        // Find all rooms
+        const rooms = await RoomModel.find({});
+        if (!rooms.length) {
+            return res.status(404).json({ message: 'No rooms found' });
+        }
+
+        // Filter rooms based on their availability
+        const availableRooms = [];
+        for (const room of rooms) {
+            if (!room.availability) {
+                continue; // Skip room if it is not available
+            }
+
+            // Check if any of the dates between checkIn and checkOut exist in bookedDates
+            const existingBooking = await BookedRoomModel.findOne({
+                roomId: room._id,
+                bookedDates: {
+                    $elemMatch: {
+                        $gte: checkInDate,
+                        $lt: checkOutDate
+                    }
+                }
+            });
+
+            // Room is available if no booking exists for the requested dates
+            if (!existingBooking) {
+                availableRooms.push(room);
+            }
+        }
+
+        // Ensure the first room is of the requested room type if available
+        const requestedRoomIndex = availableRooms.findIndex(room => room.roomType === roomType);
+        if (requestedRoomIndex > -1) {
+            const [requestedRoom] = availableRooms.splice(requestedRoomIndex, 1);
+            availableRooms.unshift(requestedRoom);
+        }
+
+        res.status(200).json({ availableRooms });
+    } catch (error) {
+        res.status(500).json({
+            message: 'Error fetching available rooms',
+            error: error.message
+        });
+    }
+};
+
 

@@ -10,12 +10,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@headlessui/react": "^2.1.2",
     "@heroicons/react": "^2.1.5",
+    "@mui/icons-material": "^6.3.0",
+    "@mui/material": "^6.3.0",
     "@stripe/react-stripe-js": "^3.1.1",
     "@stripe/stripe-js": "^5.4.0",
     "axios": "^1.7.7",
     "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
+    "framer-motion": "^11.15.0",
     "icons": "^1.0.0",
     "lucide-react": "^0.446.0",
     "mobiscroll-react": "^4.0.0",

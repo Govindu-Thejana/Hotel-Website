@@ -1,38 +1,53 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const appointmentSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
   email: {
     type: String,
     required: true,
     trim: true,
-    lowercase: true
+    lowercase: true,
   },
+  phone: {
+    type: String,
+    required: true,
+    trim: true, // Ensures there are no leading/trailing spaces
+  },
+
   date: {
     type: Date,
-    required: true
+    required: true,
   },
   time: {
     type: String,
-    required: true
+    required: true,
   },
   status: {
     type: String,
-    enum: ['pending', 'confirmed', 'cancelled'],
-    default: 'pending'
+    enum: ["pending", "confirmed", "cancelled"],
+    default: "pending",
   },
-  options: [{
-    date: Date,
-    time: String
-  }],
+  options: [
+    {
+      date: Date,
+      time: String,
+    },
+  ],
   createdAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
+  cancelledAt: {
+    type: Date,
+  },
+  confirmedAt: {
+    type: Date,
+    
+  },
 });
 
-export default mongoose.model('Appointment', appointmentSchema);
+export default mongoose.model("Appointment", appointmentSchema);

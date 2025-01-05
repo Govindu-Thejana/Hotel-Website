@@ -2,192 +2,281 @@ import { useState, useEffect } from "react";
 
 const AdminAppointment = () => {
   const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [editingAppointment, setEditingAppointment] = useState(null);
   const [newDate, setNewDate] = useState("");
   const [newTime, setNewTime] = useState("");
-  const [askingForDateId, setAskingForDateId] = useState(null);
-  const [proposedOptions, setProposedOptions] = useState({});
-  const availableTimes = ["10:00 AM", "11:00 AM", "2:00 PM", "3:00 PM"];
 
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
+        setLoading(true);
         const response = await fetch("http://localhost:5555/appointments");
         if (!response.ok) throw new Error("Failed to fetch appointments");
         const data = await response.json();
         setAppointments(data);
+        setError(null);
       } catch (error) {
         console.error("Error fetching appointments:", error);
+        setError("Failed to load appointments");
+      } finally {
+        setLoading(false);
       }
     };
 
-    // Initial fetch
     fetchAppointments();
-
-    // Set up polling to refresh appointments every 5 seconds
-    const intervalId = setInterval(fetchAppointments, 5000);
-
-    // Cleanup the interval on component unmount
-    return () => clearInterval(intervalId);
   }, []);
 
-  const handleReject = async (id) => {
-    try {
-      const response = await fetch(`http://localhost:5555/appointments/${id}`, {
-        method: "UPDATE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: "rejected" }), // Update the status to rejected
-      });
-      if (!response.ok) throw new Error("Failed to reject appointment");
-
-      // Update the local state to reflect the rejection
-      setAppointments((prevAppointments) =>
-        prevAppointments.map((appointment) =>
-          appointment._id === id
-            ? { ...appointment, status: "rejected" } // Update status to rejected
-            : appointment
-        )
-      );
-    } catch (error) {
-      console.error("Error rejecting appointment:", error);
-    }
-  };
-
   const handleConfirm = async (id) => {
+    const userConfirmed = window.confirm(
+      "Are you sure you want to confirm this appointment?"
+    );
+    if (!userConfirmed) return;
+
     try {
       const response = await fetch(`http://localhost:5555/appointments/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ status: "confirmed" }), // Update the status
+        body: JSON.stringify({ status: "confirmed" }),
       });
+
       if (!response.ok) throw new Error("Failed to confirm appointment");
 
-      // Update the local state to reflect the confirmation
+      const updatedAppointment = await response.json();
+
       setAppointments((prevAppointments) =>
         prevAppointments.map((appointment) =>
-          appointment._id === id
-            ? { ...appointment, status: "confirmed" } // Update status to confirmed
-            : appointment
+          appointment._id === id ? updatedAppointment : appointment
         )
       );
     } catch (error) {
       console.error("Error confirming appointment:", error);
+      setError("Failed to confirm appointment");
     }
   };
 
-  const handleAskForAnotherDate = (id) => {
-    setAskingForDateId(id);
-    setProposedOptions((prev) => ({
-      ...prev,
-      [id]: prev[id] || [],
-    }));
+  const handleCancel = async (id) => {
+    const userConfirmed = window.confirm(
+      "Are you sure you want to cancel this appointment?"
+    );
+    if (!userConfirmed) return;
+
+    try {
+      const response = await fetch(`http://localhost:5555/appointments/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status: "cancelled",
+          cancelledAt: new Date().toISOString(),
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to cancel appointment");
+
+      const updatedAppointment = await response.json();
+
+      setAppointments((prevAppointments) =>
+        prevAppointments.map((appointment) =>
+          appointment._id === id ? updatedAppointment : appointment
+        )
+      );
+    } catch (error) {
+      console.error("Error cancelling appointment:", error);
+      setError("Failed to cancel appointment");
+    }
   };
 
-  const handleSubmitNewOptions = (e) => {
-    e.preventDefault();
-    if (newDate && newTime && askingForDateId) {
-      const newOption = { date: newDate, time: newTime };
-      setProposedOptions((prev) => {
-        const currentOptions = prev[askingForDateId] || [];
-        if (currentOptions.length < 5) {
-          return {
-            ...prev,
-            [askingForDateId]: [...currentOptions, newOption],
-          };
+  const handleEdit = (appointment) => {
+    setEditingAppointment(appointment);
+    setNewDate(new Date(appointment.date).toISOString().split("T")[0]);
+    setNewTime(appointment.time);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingAppointment(null);
+    setNewDate("");
+    setNewTime("");
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingAppointment || !newDate || !newTime) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:5555/appointments/${editingAppointment._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            date: newDate,
+            time: newTime,
+            status:
+              editingAppointment.status === "cancelled"
+                ? "confirmed"
+                : editingAppointment.status, // If cancelled, change to confirmed
+          }),
         }
-        return prev;
-      });
+      );
+
+      if (!response.ok) throw new Error("Failed to update appointment");
+
+      const updatedAppointment = await response.json();
+
+      setAppointments((prevAppointments) =>
+        prevAppointments.map((appointment) =>
+          appointment._id === editingAppointment._id
+            ? updatedAppointment
+            : appointment
+        )
+      );
+
+      // Reset the edit state
+      setEditingAppointment(null);
       setNewDate("");
       setNewTime("");
+    } catch (error) {
+      console.error("Error updating appointment:", error);
+      setError("Failed to update appointment");
     }
   };
 
-  const handleSaveProposedOptions = async () => {
-    if (askingForDateId && proposedOptions[askingForDateId]?.length > 0) {
-      try {
-        const response = await fetch(
-          `http://localhost:5555/appointments/${askingForDateId}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ options: proposedOptions[askingForDateId] }),
-          }
-        );
+  // Categorize and sort appointments
+  const pendingAppointments = appointments
+    .filter(
+      (appointment) => !appointment.status || appointment.status === "pending"
+    )
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
 
-        if (!response.ok) throw new Error("Failed to save proposed options");
+  const confirmedAppointments = appointments
+    .filter((appointment) => appointment.status === "confirmed")
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
 
-        // Update the local state after saving the proposed options
-        setAppointments((prevAppointments) =>
-          prevAppointments.map((appointment) =>
-            appointment._id === askingForDateId
-              ? { ...appointment, options: proposedOptions[askingForDateId] } // Save proposed options to the appointment
-              : appointment
-          )
-        );
+  const cancelledAppointments = appointments
+    .filter((appointment) => appointment.status === "cancelled")
+    .sort(
+      (a, b) =>
+        new Date(b.cancelledAt || b.createdAt) - new Date(a.cancelledAt || a.createdAt)
+    );
 
-        setAskingForDateId(null);
-        setProposedOptions((prev) => ({ ...prev, [askingForDateId]: [] }));
-      } catch (error) {
-        console.error("Error saving proposed options:", error);
-      }
-    }
-  };
-
-  // Categorize appointments
-  const pendingAppointments = appointments.filter(
-    (appointment) => !appointment.status || appointment.status === "pending"
-  );
-  const confirmedAppointments = appointments.filter(
-    (appointment) => appointment.status === "confirmed"
-  );
-  const rejectedAppointments = appointments.filter(
-    (appointment) => appointment.status === "rejected"
-  );
+  if (loading)
+    return <div className="text-center py-16">Loading appointments...</div>;
+  if (error)
+    return <div className="text-center py-16 text-red-600">{error}</div>;
 
   return (
     <section className="bg-white py-16">
-      <div className="container mx-auto text-center px-4">
-        <h2 className="text-4xl font-serif mb-12">Admin Appointment View</h2>
+      <div className="container mx-auto px-4">
+        <h2 className="text-4xl font-serif mb-12 text-center">
+          Admin Appointment View
+        </h2>
 
-        <div>
-          <h3 className="text-2xl font-medium mb-4">Pending Appointments</h3>
-          {pendingAppointments.length > 0 ? (
-            <AppointmentList
-              appointments={pendingAppointments}
-              handleConfirm={handleConfirm}
-              handleReject={handleReject}
-              handleAskForAnotherDate={handleAskForAnotherDate}
-            />
-          ) : (
-            <p className="text-gray-600">No pending appointments.</p>
-          )}
-        </div>
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+            {error}
+          </div>
+        )}
 
-        <div>
-          <h3 className="text-2xl font-medium mt-12 mb-4">
-            Confirmed Appointments
-          </h3>
-          {confirmedAppointments.length > 0 ? (
-            <AppointmentList appointments={confirmedAppointments} />
-          ) : (
-            <p className="text-gray-600">No confirmed appointments.</p>
-          )}
-        </div>
+        {editingAppointment && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg p-6 max-w-md w-full">
+              <h3 className="text-xl font-semibold mb-4">Edit Appointment</h3>
+              {/* Display client's name */}
+              <p className="text-lg mb-4 font-medium">
+                Client: {editingAppointment.name}
+              </p>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Date</label>
+                  <input
+                    type="date"
+                    value={newDate}
+                    onChange={(e) => setNewDate(e.target.value)}
+                    className="w-full p-2 border rounded"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Time</label>
+                  <input
+                    type="time"
+                    value={newTime}
+                    onChange={(e) => setNewTime(e.target.value)}
+                    className="w-full p-2 border rounded"
+                  />
+                </div>
+                <div className="flex justify-end space-x-2">
+                  <button
+                    onClick={handleCancelEdit}
+                    className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleSaveEdit}
+                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                  >
+                    {editingAppointment.status === "pending" ? "OK" : "Confirm"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
-        <div>
-          <h3 className="text-2xl font-medium mt-12 mb-4">
-            Rejected Appointments
-          </h3>
-          {rejectedAppointments.length > 0 ? (
-            <AppointmentList appointments={rejectedAppointments} />
-          ) : (
-            <p className="text-gray-600">No rejected appointments.</p>
-          )}
+        <div className="space-y-12">
+          <div>
+            <h3 className="text-2xl font-medium mb-4">
+              Pending Appointments ({pendingAppointments.length})
+            </h3>
+            {pendingAppointments.length > 0 ? (
+              <AppointmentList
+                appointments={pendingAppointments}
+                handleConfirm={handleConfirm}
+                handleCancel={handleCancel}
+                handleEdit={handleEdit}
+              />
+            ) : (
+              <p className="text-gray-600">No pending appointments.</p>
+            )}
+          </div>
+
+          <div>
+            <h3 className="text-2xl font-medium mb-4">
+              Confirmed Appointments ({confirmedAppointments.length})
+            </h3>
+            {confirmedAppointments.length > 0 ? (
+              <AppointmentList
+                appointments={confirmedAppointments}
+                handleCancel={handleCancel}
+                handleEdit={handleEdit}
+                showConfirmationStatus={true}
+              />
+            ) : (
+              <p className="text-gray-600">No confirmed appointments.</p>
+            )}
+          </div>
+
+          <div>
+            <h3 className="text-2xl font-medium mb-4">
+              Cancelled Appointments ({cancelledAppointments.length})
+            </h3>
+            {cancelledAppointments.length > 0 ? (
+              <AppointmentList
+                appointments={cancelledAppointments}
+                handleConfirm={handleConfirm}
+                handleEdit={handleEdit}
+                showCancellationDate={true}
+              />
+            ) : (
+              <p className="text-gray-600">No cancelled appointments.</p>
+            )}
+          </div>
         </div>
       </div>
     </section>
@@ -197,32 +286,76 @@ const AdminAppointment = () => {
 const AppointmentList = ({
   appointments,
   handleConfirm,
-  handleReject,
-  handleAskForAnotherDate,
+  handleCancel,
+  handleEdit,
+  showCancellationDate,
+  showConfirmationStatus,
 }) => (
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
     {appointments.map((appointment) => (
       <div
         key={appointment._id}
-        className="bg-gray-100 rounded-lg shadow-lg p-6"
+        className={`rounded-lg shadow-lg p-6 ${
+          appointment.status === "cancelled"
+            ? "bg-red-50"
+            : appointment.status === "confirmed"
+            ? "bg-green-50"
+            : "bg-gray-100"
+        }`}
       >
         <h3 className="text-xl font-semibold mb-2">{appointment.name}</h3>
-        <p>Email: {appointment.email}</p>
-        <p>Date: {new Date(appointment.date).toLocaleDateString()}</p>
-        <p>Time: {appointment.time}</p>
-        <p>Status: {appointment.status || "pending"}</p>
+        <p className="text-gray-700">Email: {appointment.email}</p>
+        <p className="text-gray-700">Phone: {appointment.phone}</p>
+        <p className="text-gray-700">
+          Date: {new Date(appointment.date).toLocaleDateString()}
+        </p>
+        <p className="text-gray-700">Time: {appointment.time}</p>
+        <p
+          className={`font-medium ${
+            appointment.status === "cancelled"
+              ? "text-red-600"
+              : appointment.status === "confirmed"
+              ? "text-green-600"
+              : "text-gray-600"
+          }`}
+        >
+          Status: {appointment.status || "pending"}
+        </p>
 
-        {handleConfirm && (
-          <button onClick={() => handleConfirm(appointment._id)}>Confirm</button>
+        {showCancellationDate && appointment.status === "cancelled" && (
+          <p className="text-sm text-red-500 mt-2">
+            Cancelled on: {new Date(appointment.cancelledAt).toLocaleString()}
+          </p>
         )}
-        {handleReject && (
-          <button onClick={() => handleReject(appointment._id)}>Reject</button>
+
+        {showConfirmationStatus && appointment.status === "confirmed" && (
+          <p className="text-sm text-green-500 mt-2">
+            Confirmed on: {new Date(appointment.updatedAt).toLocaleString()}
+          </p>
         )}
-        {handleAskForAnotherDate && (
-          <button onClick={() => handleAskForAnotherDate(appointment._id)}>
-            Ask for Another Date
+
+        <div className="flex space-x-2 mt-4">
+          {appointment.status === "pending" && (
+            <button
+              onClick={() => handleConfirm(appointment._id)}
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              Confirm
+            </button>
+          )}
+          <button
+            onClick={() => handleCancel(appointment._id)}
+            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+          >
+            Cancel
           </button>
-        )}
+          <button
+            onClick={() => handleEdit(appointment)}
+            className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+          >
+            Edit
+          </button>
+        </div>
       </div>
     ))}
   </div>

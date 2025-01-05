@@ -23,6 +23,7 @@ import AddonsPage from "./pages/bookingProcess/AddonsPage";
 import CompleteBooking from "./pages/bookingProcess/CompleteBooking";
 import CartProvider from "./contexts/CartContext";
 
+
 const MainLayout = ({ children }) => (
   <div>
     <Header />

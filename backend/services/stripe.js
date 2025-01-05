@@ -32,8 +32,8 @@ const createCheckoutSession = async (req, res) => {
                     quantity: item.quantity,
                 };
             }),
-            success_url: `${process.env.BASE_URL}/CompleteBooking`,
-            cancel_url: `${process.env.BASE_URL}/cancel-order`,
+            success_url: `${process.env.BASE_URL}/bookingComplete`,
+            cancel_url: `${process.env.BASE_URL}/checkout`,
         });
 
         // Return the session URL to redirect to the payment page

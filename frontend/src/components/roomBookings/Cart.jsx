@@ -40,8 +40,8 @@ const Cart = () => {
       basePrice: item.totalAmount,
       addonsTotal: addonsTotal,
       vat: (item.totalAmount + addonsTotal) * 0.1,
-      serviceFee: 30.00,
-      total: item.totalAmount + addonsTotal + (item.totalAmount + addonsTotal) * 0.1 + 30.00,
+      serviceFee: 3.00,
+      total: item.totalAmount + addonsTotal + (item.totalAmount + addonsTotal) * 0.1 + 3.00,
       perNight: perNightRate,
       numberOfNights: nights
     };
@@ -74,7 +74,7 @@ const Cart = () => {
   };
 
   const NightsBadge = ({ nights }) => (
-    <div className="flex items-center space-x-1 bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+    <div className="flex items-center space-x-1 text-scolor px-2 py-1 rounded-full">
       <FaMoon className="text-sm" />
       <span className="font-medium text-xs">{nights} {nights === 1 ? 'night' : 'nights'}</span>
     </div>
@@ -84,14 +84,14 @@ const Cart = () => {
     <div className="bg-gray-50 p-2 rounded-xl mb-2">
       <div className="grid grid-cols-2 gap-2">
         <div className="flex items-center space-x-2">
-          <FaCalendarAlt className="text-blue-500" />
+          <FaCalendarAlt className="text-scolor" />
           <div>
             <p className="text-xs text-gray-500">CHECK IN</p>
             <p className="font-medium text-xs">{format(new Date(checkIn), 'EEE, MMM d, yyyy')}</p>
           </div>
         </div>
         <div className="flex items-center space-x-2">
-          <FaCalendarAlt className="text-blue-500" />
+          <FaCalendarAlt className="text-scolor" />
           <div>
             <p className="text-xs text-gray-500">CHECK OUT</p>
             <p className="font-medium text-xs">{format(new Date(checkOut), 'EEE, MMM d, yyyy')}</p>
@@ -129,7 +129,7 @@ const Cart = () => {
 
         {/* Guest Information */}
         <div className="flex items-center space-x-2 mb-2">
-          <FaUsers className="text-blue-500" />
+          <FaUsers className="text-scolor" />
           <div>
             <p className="text-xs text-gray-500">GUESTS</p>
             <p className="font-medium text-xs">
@@ -150,7 +150,7 @@ const Cart = () => {
                   <span className="mr-2">${addon.price.toFixed(2)}</span>
                   <button
                     onClick={() => handleRemoveAddon(item.room._id, addon.type)}
-                    className="bg-red-500 hover:bg-red-600 text-white text-xs px-2 py-1 rounded"
+                    className=" hover:bg- text-pcolor text-xs px-2 py-1 rounded"
                   >
                     <FaTrash />
                   </button>
@@ -164,7 +164,7 @@ const Cart = () => {
         <div className="bg-gray-50 p-2 rounded-xl space-y-2">
           <div className="flex justify-between items-start">
             <div className="flex items-center space-x-1">
-              <FaMoon className="text-blue-500" />
+              <FaMoon className="text-scolor" />
               <span className="text-xs">Room Rate</span>
             </div>
             <div className="text-right">
@@ -205,7 +205,7 @@ const Cart = () => {
         <div className="mt-4 flex justify-end">
           <button
             onClick={() => handleRemove(item.room._id)}
-            className="bg-red-500 hover:bg-red-600 text-white py-1 px-2 rounded-md transition-colors flex items-center space-x-1 text-xs"
+            className=" hover:text-pcolor text-scolor py-1 px-2 rounded-md transition-colors flex items-center space-x-1 text-xs"
           >
             <FaTrash className="text-xs" />
             <span>Remove</span>
@@ -225,19 +225,18 @@ const Cart = () => {
       )}
 
       <div className="mb-4">
-        <h1 className="text-3xl font-bold text-gray-800">Your Cart</h1>
-        <p className="text-gray-500 mt-1">
-          {cart.length} {cart.length === 1 ? 'item' : 'items'} in your cart
+        <h1 className="text-2xl font-bold text-gray-800">Your Cart</h1>
+        <p className="text-xl text-gray-500 mt-1">
+          {cart.length} {cart.length === 1 ? 'item' : 'items'}
         </p>
       </div>
 
       {loading ? (
         <div className="flex justify-center items-center h-64">
-          <ClipLoader className="animate-spin text-4xl text-blue-500" />
+          <ClipLoader className="animate-spin text-4xl text-scolor" />
         </div>
       ) : cart.length === 0 ? (
         <div className="text-center py-8 bg-gray-50 rounded-2xl">
-          <ClipLoader className="mx-auto text-4xl text-gray-400 mb-2" />
           <p className="text-gray-500 text-lg">Your cart is empty</p>
         </div>
       ) : (
@@ -260,14 +259,14 @@ const Cart = () => {
             <div>
               <button
                 onClick={() => navigate('/reservation')}
-                className="text-red-500 hover:text-red-600 flex items-center space-x-1 text-xs"
+                className="text-pcolor hover:text-scolor flex items-center space-x-1 text-xs"
               >
                 <span>Add Room</span>
               </button>
             </div>
             <button
               onClick={handleCheckout} // Use handleCheckout for the checkout button
-              className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-xl transition-all flex items-center space-x-1 text-sm"
+              className="bg-scolor hover:bg-pcolor text-white px-6 py-2 rounded-xl transition-all flex items-center space-x-1 text-sm"
               disabled={checkoutLoading} // Disable button while loading
             >
               {checkoutLoading ? (

@@ -64,8 +64,8 @@ export const createOrder = async () => {
                     },
                 ],
                 application_context: {
-                    return_url: `${process.env.BASE_URL}/CompleteBooking`,
-                    cancel_url: `${process.env.BASE_URL}/cancel-order`,
+                    return_url: `${process.env.BASE_URL}/bookingComplete`,
+                    cancel_url: `${process.env.BASE_URL}/checkout`,
                     shipping_preference: 'NO_SHIPPING',
                     user_action: 'PAY_NOW',
                     brand_name: 'manfra.io',

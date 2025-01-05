@@ -72,12 +72,12 @@ const RoomCard = ({ room, onAddToCart }) => {
                         <div>
                             <h2 className="text-xl font-bold text-gray-800">{room.roomType}</h2>
                             <div className="flex items-center gap-2 mt-1">
-                                <FaMapMarkerAlt className="text-blue-500" />
+                                <FaMapMarkerAlt className="text-scolor" />
                                 <span className="text-sm text-gray-600">Room {room.roomId}</span>
                             </div>
                         </div>
                         <div className="text-right">
-                            <p className="text-2xl font-bold text-blue-600">
+                            <p className="text-2xl font-bold text-scolor">
                                 ${room.pricePerNight}
                                 <span className="text-sm text-gray-500">/night</span>
                             </p>
@@ -124,14 +124,14 @@ const RoomCard = ({ room, onAddToCart }) => {
                             disabled={!room.availability}
                             className={`flex-1 py-2 px-4 rounded-lg text-white font-semibold 
                      ${room.availability
-                                    ? 'bg-blue-600 hover:bg-blue-700'
+                                    ? 'bg-scolor hover:bg-pcolor'
                                     : 'bg-gray-400 cursor-not-allowed'}`}
                         >
                             {room.availability ? 'Add Room' : 'Not Available'}
                         </button>
                         <button
                             onClick={() => setShowDetails(!showDetails)}
-                            className="px-3 py-1 border-2 border-blue-600 text-blue-600 
+                            className="px-3 py-1 border-2 border-scolor text-pcolor
                      rounded-lg hover:bg-blue-50"
                         >
                             Details

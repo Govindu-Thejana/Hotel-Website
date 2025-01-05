@@ -30,10 +30,10 @@ const RoomBookingSearchBar = () => {
   const [tempAdults, setTempAdults] = useState(adults); // Temporary state for adults
   const [children, setChildren] = useState(0);
   const [tempChildren, setTempChildren] = useState(children); // Temporary state for children
-  const [selectedPackage, setSelectedPackage] = useState("Double");
+  const [selectedPackage, setSelectedPackage] = useState("Double Room");
   const [tempSelectedPackage, setTempSelectedPackage] = useState(selectedPackage); // Temporary state for package
   const [commonBookedDates, setCommonBookedDates] = useState([]);
-  const [roomTypes] = useState(['Deluxe Suite', 'Executive Suite', 'Single', 'Double']);
+  const [roomTypes] = useState(['Deluxe Suite', 'Executive Suite', 'Single Room', 'Double Room']);
   const { cart, addToCart } = useContext(CartContext); // Use CartContext
   const navigate = useNavigate(); // Initialize useNavigate
   const packageRef = useRef(null);
@@ -358,9 +358,9 @@ const RoomBookingSearchBar = () => {
           <div className="relative w-20 pt-4">
             {!isOverlayActive && (
               <button
-                className={`border-2 border-blue-500 rounded-md w-full h-10 flex items-center justify-center shadow-md transition-all
+                className={` w-full h-10 flex items-center justify-center shadow-md transition-all
                   ${isValidDateRange()
-                    ? 'bg-blue-500 text-white hover:bg-blue-400 cursor-pointer'
+                    ? 'bg-scolor text-white hover:bg-pcolor cursor-pointer'
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
                 onClick={handleSearch}
                 disabled={!isValidDateRange()}
@@ -436,7 +436,7 @@ const RoomBookingSearchBar = () => {
       </div>
 
       {/* Cart component */}
-      <div className="w-full md:w-1/3 p-4 bg-gray-50"> 
+      <div className="w-full md:w-1/3 p-4 bg-gray-50">
         <Cart />
       </div>
     </div>

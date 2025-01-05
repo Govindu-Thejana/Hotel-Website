@@ -61,7 +61,7 @@ const TransportOptions = () => {
     <div className="flex flex-col md:flex-row mx-auto max-w-7xl min-h-screen py-20 px-4 sm:px-6 lg:px-8">
       {/* Enhancements section */}
       <div className="flex flex-col w-full md:w-2/3 p-4 min-h-screen">
-        <div className="flex items-center gap-2 text-blue-500 mb-8" onClick={() => navigate('/reservation')}>
+        <div className="flex items-center gap-2 text-scolor mb-8" onClick={() => navigate('/reservation')}>
           <ArrowLeft className="w-6 h-6" />
           <h1 className="text-2xl font-bold">ENHANCE YOUR STAY</h1>
         </div>
@@ -83,7 +83,7 @@ const TransportOptions = () => {
 
               <button
                 onClick={() => addAddonToRoom(selectedRoomId, addonType, selectedRoom.guests.adults, selectedRoom.guests.children)}
-                className="bg-blue-500 text-white px-4 py-2 rounded w-full sm:w-auto float-right hover:bg-blue-600 transition-colors"
+                className="bg-scolor text-white px-4 py-2 rounded w-full sm:w-auto float-right hover:bg-scolor transition-colors"
               >
                 ADD TO MY STAY
               </button>
@@ -93,14 +93,6 @@ const TransportOptions = () => {
         <p className="text-sm text-gray-600">
           *This cost applies only to the first day of your booking and does not include for other dates.
         </p>
-
-        {/* Checkout button */}
-        <button
-          onClick={handleCheckout}
-          className="bg-green-500 text-white px-4 py-2 rounded w-full sm:w-auto mt-4 hover:bg-green-600 transition-colors"
-        >
-          {loading ? <ClipLoader size={20} color={"#ffffff"} /> : "Proceed to Checkout"}
-        </button>
       </div>
 
       {/* Cart section */}

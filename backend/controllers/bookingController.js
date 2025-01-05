@@ -6,83 +6,93 @@ import { generateBookingId, generateConfirmationCode } from '../middleware/gener
 export const createBooking = async (req, res) => {
     try {
         const {
-            roomId,
-            fullName,
-            email,
+            prefix,
+            firstName,
+            lastName,
             phone,
-            checkIn,
-            checkOut,
-            guests,
-            specialRequests
+            email,
+            country,
+            address1,
+            city,
+            zipCode,
+            cart
         } = req.body;
 
-        // Check if room exists
-        const room = await RoomModel.findById(roomId);
-        if (!room) {
-            return res.status(404).json({ message: 'Room not found' });
-        }
+        // Create bookings for each item in the cart
+        const bookings = [];
+        for (const item of cart) {
+            const { room, checkIn, checkOut, guests, totalAmount, addons } = item;
 
-        // Check if room is already booked for the given dates
-        const existingBooking = await BookedRoomModel.findOne({
-            roomId,
-            $or: [
-                {
-                    checkIn: { $lte: new Date(checkOut) },
-                    checkOut: { $gte: new Date(checkIn) }
+            // Find room by ID
+            const roomRecord = await RoomModel.findById(room._id);
+            if (!roomRecord) {
+                return res.status(404).json({ message: 'Room not found' });
+            }
+
+            // Check if room is already booked for the given dates
+            const existingBooking = await BookedRoomModel.findOne({
+                roomId: room._id,
+                bookedDates: {
+                    $elemMatch: {
+                        $gte: new Date(checkIn),
+                        $lt: new Date(checkOut)
+                    }
                 }
-            ]
-        });
-
-        if (existingBooking) {
-            return res.status(400).json({
-                message: 'Room is not available for the selected dates'
             });
+
+            if (existingBooking) {
+                return res.status(400).json({
+                    message: `Room ${room.roomId} is not available for the selected dates`
+                });
+            }
+
+            // Generate bookedDates array (from check-in to one day before check-out)
+            const bookedDates = [];
+            let currentDate = new Date(checkIn);
+            while (currentDate < new Date(checkOut)) {
+                bookedDates.push(new Date(currentDate));
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+
+            // Create new booking
+            const booking = new BookedRoomModel({
+                bookingId: generateBookingId(),
+                roomId: room._id,
+                fullName: `${prefix} ${firstName} ${lastName}`,
+                email,
+                phone,
+                checkIn: new Date(checkIn),
+                checkOut: new Date(checkOut),
+                bookedDates,
+                guests,
+                address: {
+                    country,
+                    address1,
+                    city,
+                    zipCode
+                },
+                totalAmount,
+                addons,
+                bookingConfirmationCode: generateConfirmationCode()
+            });
+
+            // Save booking
+            await booking.save();
+            bookings.push(booking);
+
+            // Update room status
+            roomRecord.isbooked = true;
+            await roomRecord.save();
         }
 
-        // Calculate total amount
-        const checkInDate = new Date(checkIn);
-        const checkOutDate = new Date(checkOut);
-        const numberOfNights = Math.ceil(
-            (checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24)
-        );
-        const totalAmount = numberOfNights * room.pricePerNight;
-
-        // Generate bookedDates array (from check-in to one day before check-out)
-        const bookedDates = [];
-        let currentDate = new Date(checkInDate);
-        while (currentDate < checkOutDate) {
-            bookedDates.push(new Date(currentDate));
-            currentDate.setDate(currentDate.getDate() + 1);
-        }
-
-        // Create new booking
-        const booking = new BookedRoomModel({
-            bookingId: generateBookingId(),
-            roomId,
-            fullName,
-            email,
-            phone,
-            checkIn: checkInDate,
-            checkOut: checkOutDate,
-            bookedDates,
-            guests,
-            specialRequests,
-            totalAmount,
-            bookingConfirmationCode: generateConfirmationCode()
-        });
-
-        // Update room status
-        room.isBooked = true;
-        await room.save();
-
-        // Save booking
-        await booking.save();
-
+        // Send response after all bookings are created
         res.status(201).json({
             message: 'Booking created successfully',
-            booking
+            bookings
         });
     } catch (error) {
+        // Log the error and send a single error response
+        console.error("Error creating booking:", error);
         res.status(500).json({
             message: 'Error creating booking',
             error: error.message
@@ -289,11 +299,10 @@ export const getBookedDatesByRoomType = async (req, res) => {
 // Function to fetch available rooms based on date range and room type
 export const getAvailableRooms = async (req, res) => {
     try {
-        const { startDate, endDate, roomType } = req.query;
+        const { checkOutDate, checkInDate, roomType } = req.query;
 
         // Convert dates to Date objects
-        const checkInDate = new Date(startDate);
-        const checkOutDate = new Date(endDate);
+
 
         // Find all rooms
         const rooms = await RoomModel.find({});
@@ -322,6 +331,8 @@ export const getAvailableRooms = async (req, res) => {
             // Room is available if no booking exists for the requested dates
             if (!existingBooking) {
                 availableRooms.push(room);
+                console.log("availableRooms", room.roomType, room.roomId)
+
             }
         }
 

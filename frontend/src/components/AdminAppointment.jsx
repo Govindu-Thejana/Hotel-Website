@@ -33,15 +33,22 @@ const AdminAppointment = () => {
   const handleReject = async (id) => {
     try {
       const response = await fetch(`http://localhost:5555/appointments/${id}`, {
-        method: "PUT",
+        method: "UPDATE",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ status: "rejected" }), // Update the status
+        body: JSON.stringify({ status: "rejected" }), // Update the status to rejected
       });
       if (!response.ok) throw new Error("Failed to reject appointment");
 
-      // No need to call fetchAppointments here since polling handles it
+      // Update the local state to reflect the rejection
+      setAppointments((prevAppointments) =>
+        prevAppointments.map((appointment) =>
+          appointment._id === id
+            ? { ...appointment, status: "rejected" } // Update status to rejected
+            : appointment
+        )
+      );
     } catch (error) {
       console.error("Error rejecting appointment:", error);
     }
@@ -58,7 +65,14 @@ const AdminAppointment = () => {
       });
       if (!response.ok) throw new Error("Failed to confirm appointment");
 
-      // No need to call fetchAppointments here since polling handles it
+      // Update the local state to reflect the confirmation
+      setAppointments((prevAppointments) =>
+        prevAppointments.map((appointment) =>
+          appointment._id === id
+            ? { ...appointment, status: "confirmed" } // Update status to confirmed
+            : appointment
+        )
+      );
     } catch (error) {
       console.error("Error confirming appointment:", error);
     }
@@ -106,6 +120,15 @@ const AdminAppointment = () => {
         );
 
         if (!response.ok) throw new Error("Failed to save proposed options");
+
+        // Update the local state after saving the proposed options
+        setAppointments((prevAppointments) =>
+          prevAppointments.map((appointment) =>
+            appointment._id === askingForDateId
+              ? { ...appointment, options: proposedOptions[askingForDateId] } // Save proposed options to the appointment
+              : appointment
+          )
+        );
 
         setAskingForDateId(null);
         setProposedOptions((prev) => ({ ...prev, [askingForDateId]: [] }));
@@ -190,9 +213,7 @@ const AppointmentList = ({
         <p>Status: {appointment.status || "pending"}</p>
 
         {handleConfirm && (
-          <button onClick={() => handleConfirm(appointment._id)}>
-            Confirm
-          </button>
+          <button onClick={() => handleConfirm(appointment._id)}>Confirm</button>
         )}
         {handleReject && (
           <button onClick={() => handleReject(appointment._id)}>Reject</button>

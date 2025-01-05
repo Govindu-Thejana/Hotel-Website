@@ -152,8 +152,12 @@ const Home = () => {
             <div key={room._id} className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
               <img
                 className="w-full h-48 object-cover"
-                src={room.images[0]} // Assuming the first image in the array
-                alt={room.roomType}
+                src={
+                  room.images && room.images[0]
+                    ? `http://localhost:5555/${room.images[0].replace(/\\/g, '/')}`
+                    : '/default-image.jpg' // Fallback image if images array is undefined or empty
+                }
+                alt={room.roomType || 'Room'}
               />
               <div className="p-6">
                 <h2 className="text-2xl font-serif text-pcolor mb-2">{room.roomType}</h2>

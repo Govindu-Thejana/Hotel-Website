@@ -40,7 +40,7 @@ const AdminAppointment = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ status: "confirmed" }),
+        body: JSON.stringify({ status: "confirmed", confirmedAt: new Date().toISOString() }),
       });
 
       if (!response.ok) throw new Error("Failed to confirm appointment");
@@ -117,6 +117,8 @@ const AdminAppointment = () => {
           body: JSON.stringify({
             date: newDate,
             time: newTime,
+            phone: editingAppointment.phone, // Include phone field
+            reason: editingAppointment.reason, // Include reason field
             status:
               editingAppointment.status === "cancelled"
                 ? "confirmed"
@@ -144,6 +146,31 @@ const AdminAppointment = () => {
     } catch (error) {
       console.error("Error updating appointment:", error);
       setError("Failed to update appointment");
+    }
+  };
+
+  const handleDelete = async (id) => {
+    const userConfirmed = window.confirm(
+      "Are you sure you want to delete this appointment?"
+    );
+    if (!userConfirmed) return;
+
+    try {
+      const response = await fetch(`http://localhost:5555/appointments/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) throw new Error("Failed to delete appointment");
+
+      setAppointments((prevAppointments) =>
+        prevAppointments.filter((appointment) => appointment._id !== id)
+      );
+    } catch (error) {
+      console.error("Error deleting appointment:", error);
+      setError("Failed to delete appointment");
     }
   };
 
@@ -182,6 +209,61 @@ const AdminAppointment = () => {
             {error}
           </div>
         )}
+
+        <div className={editingAppointment ? "blur-sm" : ""}>
+          <div className="space-y-12">
+            <div>
+              <h3 className="text-2xl font-medium mb-4">
+                Pending Appointments ({pendingAppointments.length})
+              </h3>
+              {pendingAppointments.length > 0 ? (
+                <AppointmentList
+                  appointments={pendingAppointments}
+                  handleConfirm={handleConfirm}
+                  handleCancel={handleCancel}
+                  handleEdit={handleEdit}
+                  handleDelete={handleDelete}
+                />
+              ) : (
+                <p className="text-gray-600">No pending appointments.</p>
+              )}
+            </div>
+
+            <div>
+              <h3 className="text-2xl font-medium mb-4">
+                Confirmed Appointments ({confirmedAppointments.length})
+              </h3>
+              {confirmedAppointments.length > 0 ? (
+                <AppointmentList
+                  appointments={confirmedAppointments}
+                  handleCancel={handleCancel}
+                  handleEdit={handleEdit}
+                  handleDelete={handleDelete}
+                  showConfirmationStatus={true}
+                />
+              ) : (
+                <p className="text-gray-600">No confirmed appointments.</p>
+              )}
+            </div>
+
+            <div>
+              <h3 className="text-2xl font-medium mb-4">
+                Cancelled Appointments ({cancelledAppointments.length})
+              </h3>
+              {cancelledAppointments.length > 0 ? (
+                <AppointmentList
+                  appointments={cancelledAppointments}
+                  handleConfirm={handleConfirm}
+                  handleEdit={handleEdit}
+                  handleDelete={handleDelete}
+                  showCancellationDate={true}
+                />
+              ) : (
+                <p className="text-gray-600">No cancelled appointments.</p>
+              )}
+            </div>
+          </div>
+        </div>
 
         {editingAppointment && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
@@ -229,55 +311,7 @@ const AdminAppointment = () => {
           </div>
         )}
 
-        <div className="space-y-12">
-          <div>
-            <h3 className="text-2xl font-medium mb-4">
-              Pending Appointments ({pendingAppointments.length})
-            </h3>
-            {pendingAppointments.length > 0 ? (
-              <AppointmentList
-                appointments={pendingAppointments}
-                handleConfirm={handleConfirm}
-                handleCancel={handleCancel}
-                handleEdit={handleEdit}
-              />
-            ) : (
-              <p className="text-gray-600">No pending appointments.</p>
-            )}
-          </div>
-
-          <div>
-            <h3 className="text-2xl font-medium mb-4">
-              Confirmed Appointments ({confirmedAppointments.length})
-            </h3>
-            {confirmedAppointments.length > 0 ? (
-              <AppointmentList
-                appointments={confirmedAppointments}
-                handleCancel={handleCancel}
-                handleEdit={handleEdit}
-                showConfirmationStatus={true}
-              />
-            ) : (
-              <p className="text-gray-600">No confirmed appointments.</p>
-            )}
-          </div>
-
-          <div>
-            <h3 className="text-2xl font-medium mb-4">
-              Cancelled Appointments ({cancelledAppointments.length})
-            </h3>
-            {cancelledAppointments.length > 0 ? (
-              <AppointmentList
-                appointments={cancelledAppointments}
-                handleConfirm={handleConfirm}
-                handleEdit={handleEdit}
-                showCancellationDate={true}
-              />
-            ) : (
-              <p className="text-gray-600">No cancelled appointments.</p>
-            )}
-          </div>
-        </div>
+        <Calendar appointments={confirmedAppointments} />
       </div>
     </section>
   );
@@ -288,6 +322,7 @@ const AppointmentList = ({
   handleConfirm,
   handleCancel,
   handleEdit,
+  handleDelete,
   showCancellationDate,
   showConfirmationStatus,
 }) => (
@@ -295,7 +330,7 @@ const AppointmentList = ({
     {appointments.map((appointment) => (
       <div
         key={appointment._id}
-        className={`rounded-lg shadow-lg p-6 ${
+        className={`rounded-lg shadow-lg p-6 transition-transform transform hover:scale-105 ${
           appointment.status === "cancelled"
             ? "bg-red-50"
             : appointment.status === "confirmed"
@@ -305,10 +340,12 @@ const AppointmentList = ({
       >
         <h3 className="text-xl font-semibold mb-2">{appointment.name}</h3>
         <p className="text-gray-700">Email: {appointment.email}</p>
+        <p className="text-gray-700">Phone: {appointment.phone}</p>
         <p className="text-gray-700">
           Date: {new Date(appointment.date).toLocaleDateString()}
         </p>
         <p className="text-gray-700">Time: {appointment.time}</p>
+        <p className="text-gray-700">Reason: {appointment.reason}</p>
         <p
           className={`font-medium ${
             appointment.status === "cancelled"
@@ -328,7 +365,9 @@ const AppointmentList = ({
         )}
 
         {showConfirmationStatus && appointment.status === "confirmed" && (
-          <p className="text-sm text-green-500 mt-2">Confirmed on: {new Date(appointment.updatedAt).toLocaleString()}</p>
+          <p className="text-sm text-green-500 mt-2">
+            Confirmed on: {new Date(appointment.confirmedAt).toLocaleString()}
+          </p>
         )}
 
         <div className="flex space-x-2 mt-4">
@@ -352,10 +391,83 @@ const AppointmentList = ({
           >
             Edit
           </button>
+          <button
+            onClick={() => handleDelete(appointment._id)}
+            className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+          >
+            Delete
+          </button>
         </div>
       </div>
     ))}
   </div>
 );
+
+const Calendar = ({ appointments }) => {
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+  const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+  const startDay = startOfMonth.getDay();
+  const daysInMonth = endOfMonth.getDate();
+
+  const prevMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
+  };
+
+  const nextMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
+  };
+
+  const renderDays = () => {
+    const days = [];
+    for (let i = 0; i < startDay; i++) {
+      days.push(<div key={`empty-${i}`} className="border p-2"></div>);
+    }
+    for (let i = 1; i <= daysInMonth; i++) {
+      const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
+      const appointmentsOnDate = appointments.filter(
+        (appointment) => new Date(appointment.date).toDateString() === date.toDateString()
+      );
+      days.push(
+        <div key={i} className="border p-2">
+          <div>{i}</div>
+          {appointmentsOnDate.map((appointment) => (
+            <div key={appointment._id} className="text-xs text-green-600">
+              {appointment.name} at {appointment.time}
+            </div>
+          ))}
+        </div>
+      );
+    }
+    return days;
+  };
+
+  return (
+    <div className="mt-12">
+      <div className="flex justify-between items-center mb-4">
+        <button onClick={prevMonth} className="px-4 py-2 bg-gray-300 rounded">
+          Previous
+        </button>
+        <h3 className="text-xl font-medium">
+          {currentDate.toLocaleString("default", { month: "long" })} {currentDate.getFullYear()}
+        </h3>
+        <button onClick={nextMonth} className="px-4 py-2 bg-gray-300 rounded">
+          Next
+        </button>
+      </div>
+      <div className="grid grid-cols-7 gap-2">
+        <div className="font-bold">Sun</div>
+        <div className="font-bold">Mon</div>
+        <div className="font-bold">Tue</div>
+        <div className="font-bold">Wed</div>
+        <div className="font-bold">Thu</div>
+        <div className="font-bold">Fri</div>
+        <div className="font-bold">Sat</div>
+        {renderDays()}
+      </div>
+    </div>
+  );
+};
 
 export default AdminAppointment;

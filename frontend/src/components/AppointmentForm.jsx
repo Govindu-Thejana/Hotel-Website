@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-
 const AppointmentForm = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -8,6 +7,7 @@ const AppointmentForm = () => {
     phone: "", // Added phone field
     date: "",
     time: "",
+    reason: "", // Added reason field
   });
   const [showSuccess, setShowSuccess] = useState(false); // State for success message
 
@@ -24,7 +24,7 @@ const AppointmentForm = () => {
 
       if (response.ok) {
         console.log("Form submitted successfully");
-        setFormData({ name: "", email: "", phone: "", date: "", time: "" });
+        setFormData({ name: "", email: "", phone: "", date: "", time: "", reason: "" });
         setShowSuccess(true); // Show success message
         setTimeout(() => setShowSuccess(false), 3000); // Hide after 3 seconds
       } else {
@@ -147,6 +147,24 @@ const AppointmentForm = () => {
               value={formData.time}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+              required
+            />
+          </div>
+
+          <div className="mb-6">
+            <label
+              className="block text-left text-gray-700 font-semibold mb-2"
+              htmlFor="reason"
+            >
+              Reason for Appointment
+            </label>
+            <textarea
+              id="reason"
+              name="reason"
+              value={formData.reason}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+              placeholder="Describe the reason for your appointment"
               required
             />
           </div>

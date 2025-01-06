@@ -33,16 +33,17 @@ async function sendNotification(email, subject, text) {
 // Create a new appointment
 router.post('/', async (req, res) => {
   try {
-    const { name, email, date, time } = req.body;
+    const { name, email, phone, date, time, reason } = req.body;
 
     const appointment = new Appointment({
       name,
       email,
+      phone,
       date,
       time,
+      reason,
       status: 'pending',
       createdAt: new Date(),
-      confirmedAt: new Date(),
     });
 
     const savedAppointment = await appointment.save();
@@ -54,8 +55,10 @@ router.post('/', async (req, res) => {
       `A new appointment has been created:
       Name: ${name}
       Email: ${email}
+      Phone: ${phone}
       Date: ${date}
-      Time: ${time}`
+      Time: ${time}
+      Reason: ${reason}`
     );
 
     res.status(201).json(savedAppointment);
@@ -74,8 +77,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-
-
 // Get a specific appointment
 router.get('/:id', async (req, res) => {
   try {
@@ -89,6 +90,7 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
 // Update an appointment (confirm, cancel, or update date/time)
 router.put('/:id', async (req, res) => {
   try {
@@ -112,14 +114,14 @@ router.put('/:id', async (req, res) => {
         await sendNotification(
           appointment.email,
           'Appointment Cancelled',
-          `Dear ${appointment.name},\n\nYour appointment scheduled for ${new Date(appointment.date).toLocaleDateString()} at ${appointment.time} has been cancelled.\n\nPlease contact us at 0779411017 if you would like to schedule a new appointment.\n\nBest regards,\nYour Team`
+          `Dear ${appointment.name},\n\nYour appointment scheduled for ${new Date(appointment.date).toLocaleDateString()} at ${appointment.time} has been cancelled.\n\nPlease contact us at 0779411017 if you would like to schedule a new appointment.\n\nBest regards,\nHotel Suneragira`
         );
       } else if (status === 'confirmed') {
         appointment.cancelledAt = undefined;
         await sendNotification(
           appointment.email,
           'Appointment Confirmed',
-          `Dear ${appointment.name},\n\nYour appointment has been confirmed for ${new Date(appointment.date).toLocaleDateString()} at ${appointment.time}.\n\nIf you need to make any changes, please contact us at 0779411017.\n\nBest regards,\nYour Team`
+          `Dear ${appointment.name},\n\nYour appointment has been confirmed for ${new Date(appointment.date).toLocaleDateString()} at ${appointment.time}.\n\nIf you need to make any changes, please contact us at 0779411017.\n\nBest regards,\nHotel Suneragira`
         );
       }
     }
@@ -129,7 +131,7 @@ router.put('/:id', async (req, res) => {
       await sendNotification(
         appointment.email,
         'Appointment Time Updated',
-        `Dear ${appointment.name},\n\nYour appointment has been rescheduled to ${new Date(appointment.date).toLocaleDateString()} at ${appointment.time}.\n\nIf this time doesn't work for you, please contact us at 0779411017.\n\nBest regards,\nYour Team`
+        `Dear ${appointment.name},\n\nYour appointment has been rescheduled to ${new Date(appointment.date).toLocaleDateString()} at ${appointment.time}.\n\nIf this time doesn't work for you, please contact us at 0779411017.\n\nBest regards,\nHotel Suneragira`
       );
     }
 
@@ -145,66 +147,7 @@ router.put('/:id', async (req, res) => {
         await sendNotification(
           appointment.email,
           'Alternative Appointment Dates Available',
-          `Dear ${appointment.name},\n\nWe would like to propose the following alternative dates for your appointment:\n\n${optionsText}\n\nPlease contact us at 0779411017 to confirm your preferred time slot.\n\nBest regards,\nYour Team`
-        );
-      }
-    }
-
-    // Save the updated appointment
-    appointment = await appointment.save();
-    res.json(appointment);
-  } catch (error) {
-    console.error('Error updating appointment:', error);
-    res.status(400).json({ message: error.message });
-  }
-});
-// Update an appointment (confirm, cancel, or update date/time)
-router.put('/:id', async (req, res) => {
-  try {
-    const { status, options } = req.body;
-    let appointment = await Appointment.findById(req.params.id);
-
-    if (!appointment) {
-      return res.status(404).json({ message: 'Appointment not found' });
-    }
-
-    // Update status (confirm or cancel)
-    if (status) {
-      appointment.status = status;
-
-      // Add cancelledAt timestamp if status is cancelled
-      if (status === 'cancelled') {
-        appointment.cancelledAt = new Date();
-        await sendNotification(
-          appointment.email,
-          'Appointment Cancelled',
-          `Dear ${appointment.name},\n\nYour appointment scheduled for ${new Date(appointment.date).toLocaleDateString()} at ${appointment.time} has been cancelled.\n\nPlease contact us at 0779411017 if you would like to schedule a new appointment.\n\nBest regards,\nYour Team`
-        );
-      } else if (status === 'confirmed') {
-        // Clear cancelledAt if appointment is being confirmed
-        appointment.cancelledAt = undefined;
-        await sendNotification(
-          appointment.email,
-          'Appointment Confirmed',
-          `Dear ${appointment.name},\n\nYour appointment has been confirmed for ${new Date(appointment.date).toLocaleDateString()} at ${appointment.time}.\n\nIf you need to make any changes, please contact us at 0779411017.\n\nBest regards,\nYour Team`
-        );
-      }
-    }
-
-    // Update options (if asking for new date/time)
-    if (options && Array.isArray(options)) {
-      appointment.options = options;
-      
-      if (options.length > 0) {
-        // Send email about alternative dates if options are provided
-        const optionsText = options
-          .map((opt, index) => `Option ${index + 1}: ${new Date(opt.date).toLocaleDateString()} at ${opt.time}`)
-          .join('\n');
-
-        await sendNotification(
-          appointment.email,
-          'Alternative Appointment Dates Available',
-          `Dear ${appointment.name},\n\nWe would like to propose the following alternative dates for your appointment:\n\n${optionsText}\n\nPlease contact us at 0779411017 to confirm your preferred time slot.\n\nBest regards,\nYour Team`
+          `Dear ${appointment.name},\n\nWe would like to propose the following alternative dates for your appointment:\n\n${optionsText}\n\nPlease contact us at 0779411017 to confirm your preferred time slot.\n\nBest regards,\nHotel Suneragira`
         );
       }
     }
@@ -226,7 +169,7 @@ router.delete('/:id', async (req, res) => {
       await sendNotification(
         appointment.email,
         'Appointment Deleted',
-        `Dear ${appointment.name},\n\nYour appointment scheduled for ${new Date(appointment.date).toLocaleDateString()} at ${appointment.time} has been deleted from our system.\n\nPlease contact us at 0779411017 if you would like to schedule a new appointment.\n\nBest regards,\nYour Team`
+        `Dear ${appointment.name},\n\nYour appointment scheduled for ${new Date(appointment.date).toLocaleDateString()} at ${appointment.time} has been deleted from our system.\n\nPlease contact us at 0779411017 if you would like to schedule a new appointment.\n\nBest regards,\nHotel Suneragira`
       );
       res.json({ message: 'Appointment deleted successfully.' });
     } else {

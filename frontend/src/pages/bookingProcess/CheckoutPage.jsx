@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { CartContext } from '../../contexts/CartContext';
 import Cart from '../../components/roomBookings/Cart';
 import { ClipLoader } from 'react-spinners';
-import PayPalButton from '../../components/roomBookings/paypalPayment';
 import CheckoutButton from '../../components/roomBookings/checkOutButton';
 
 const CheckoutPage = () => {
@@ -50,7 +49,7 @@ const CheckoutPage = () => {
             const response = await createBooking(bookingData);
             console.log("Booking created successfully:", response);
             alert('Booking created successfully!');
-            navigate('/bookingComplete');
+            navigate('/CompleteBooking', { state: { booking: response.data } });
         } catch (error) {
             console.error("Error creating booking:", error);
             alert(error.message);
@@ -133,15 +132,12 @@ const CheckoutPage = () => {
                     </div>
                     <div>
                         <CheckoutButton />
-
                     </div>
 
                     <button type="submit" className="mt-6 w-full inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         {loading ? <ClipLoader size={24} color={"#ffffff"} /> : 'Confirm Booking'}
                     </button>
                 </form>
-            </div>
-            <div>
             </div>
 
             {/* Cart Section */}

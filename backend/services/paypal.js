@@ -64,7 +64,7 @@ export const createOrder = async () => {
                     },
                 ],
                 application_context: {
-                    return_url: `${process.env.BASE_URL}/bookingComplete`,
+                    return_url: `${process.env.BASE_URL}/CompleteBooking`,
                     cancel_url: `${process.env.BASE_URL}/checkout`,
                     shipping_preference: 'NO_SHIPPING',
                     user_action: 'PAY_NOW',

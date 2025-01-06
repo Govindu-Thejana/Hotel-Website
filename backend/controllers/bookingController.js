@@ -1,6 +1,7 @@
 import RoomModel from '../models/roomModel.js';
 import BookedRoomModel from '../models/bookedRoomModel.js';
 import { generateBookingId, generateConfirmationCode } from '../middleware/generators.js';
+import moment from 'moment-timezone';
 
 // Function to create a new booking
 export const createBooking = async (req, res) => {
@@ -17,6 +18,10 @@ export const createBooking = async (req, res) => {
             zipCode,
             cart
         } = req.body;
+        console.log(req.body);
+
+        // Define the desired timezone
+        const timeZone = 'Asia/Colombo';
 
         // Create bookings for each item in the cart
         const bookings = [];
@@ -34,8 +39,8 @@ export const createBooking = async (req, res) => {
                 roomId: room._id,
                 bookedDates: {
                     $elemMatch: {
-                        $gte: new Date(checkIn),
-                        $lt: new Date(checkOut)
+                        $gte: moment.tz(checkIn, "MM/DD/YYYY", timeZone).toDate(),
+                        $lt: moment.tz(checkOut, "MM/DD/YYYY", timeZone).toDate()
                     }
                 }
             });
@@ -48,8 +53,9 @@ export const createBooking = async (req, res) => {
 
             // Generate bookedDates array (from check-in to one day before check-out)
             const bookedDates = [];
-            let currentDate = new Date(checkIn);
-            while (currentDate < new Date(checkOut)) {
+            let currentDate = moment.tz(checkIn, "MM/DD/YYYY", timeZone).toDate();
+            const endDate = moment.tz(checkOut, "MM/DD/YYYY", timeZone).toDate();
+            while (currentDate < endDate) {
                 bookedDates.push(new Date(currentDate));
                 currentDate.setDate(currentDate.getDate() + 1);
             }
@@ -61,8 +67,8 @@ export const createBooking = async (req, res) => {
                 fullName: `${prefix} ${firstName} ${lastName}`,
                 email,
                 phone,
-                checkIn: new Date(checkIn),
-                checkOut: new Date(checkOut),
+                checkIn: moment.tz(checkIn, "MM/DD/YYYY", timeZone).toDate(),
+                checkOut: moment.tz(checkOut, "MM/DD/YYYY", timeZone).toDate(),
                 bookedDates,
                 guests,
                 address: {
@@ -299,10 +305,21 @@ export const getBookedDatesByRoomType = async (req, res) => {
 // Function to fetch available rooms based on date range and room type
 export const getAvailableRooms = async (req, res) => {
     try {
-        const { checkOutDate, checkInDate, roomType } = req.query;
+        const { startDate, endDate, roomType, guests } = req.query;
+
+        // Validate input dates
+        if (!startDate || !endDate || !roomType || !guests) {
+            return res.status(400).json({ message: 'Missing required query parameters' });
+        }
 
         // Convert dates to Date objects
+        const checkIn = new Date(startDate);
+        const checkOut = new Date(endDate);
 
+        // Validate date range
+        if (checkIn >= checkOut || isNaN(checkIn.getTime()) || isNaN(checkOut.getTime())) {
+            return res.status(400).json({ message: 'Invalid date range' });
+        }
 
         // Find all rooms
         const rooms = await RoomModel.find({});
@@ -317,22 +334,21 @@ export const getAvailableRooms = async (req, res) => {
                 continue; // Skip room if it is not available
             }
 
-            // Check if any of the dates between checkIn and checkOut exist in bookedDates
+            // Check if the room is already booked for the given dates
             const existingBooking = await BookedRoomModel.findOne({
                 roomId: room._id,
-                bookedDates: {
-                    $elemMatch: {
-                        $gte: checkInDate,
-                        $lt: checkOutDate
+                $or: [
+                    {
+                        checkIn: { $lte: checkOut },
+                        checkOut: { $gte: checkIn }
                     }
-                }
+                ]
             });
 
-            // Room is available if no booking exists for the requested dates
+            // Room is available if no booking exists for the requested dates or if there are no bookings at all
             if (!existingBooking) {
                 availableRooms.push(room);
-                console.log("availableRooms", room.roomType, room.roomId)
-
+                console.log(`Availble rooms :Room ID: ${room.roomId}, Room Type: ${room.roomType}`);
             }
         }
 
@@ -345,11 +361,10 @@ export const getAvailableRooms = async (req, res) => {
 
         res.status(200).json({ availableRooms });
     } catch (error) {
+        console.error('Error fetching available rooms:', error);
         res.status(500).json({
-            message: 'Error fetching available rooms',
+            message: 'Internal Server Error',
             error: error.message
         });
     }
 };
-
-

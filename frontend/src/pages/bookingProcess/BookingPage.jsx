@@ -189,8 +189,8 @@ const RoomBookingSearchBar = () => {
 
     try {
       const params = {
-        startDate: format(tempDateRange[0].startDate, "yyyy-MM-dd"),
-        endDate: format(tempDateRange[0].endDate, "yyyy-MM-dd"),
+        startDate: format(tempDateRange[0].startDate, "yyyy-MM-dd"), // Ensure correct date format
+        endDate: format(tempDateRange[0].endDate, "yyyy-MM-dd"), // Ensure correct date format
         roomType: tempSelectedPackage, // Use tempSelectedPackage for search
         guests: tempAdults + tempChildren,
       };
@@ -199,18 +199,20 @@ const RoomBookingSearchBar = () => {
       setAvailableRooms(availableRooms);
       setLoading(false);
     } catch (err) {
-      // Handle errors
-      if (error.response) {
+      let errorMessage = 'Error fetching available rooms';
+      if (err.response) {
         // Server responded with a status outside the 2xx range
-        console.error('Error fetching available rooms:', error.response.data);
-        console.error('Status code:', error.response.status);
-      } else if (error.request) {
+        errorMessage = err.response.data.message || errorMessage;
+        console.error('Error fetching available rooms:', err.response.data);
+        console.error('Status code:', err.response.status);
+      } else if (err.request) {
         // Request was made but no response was received
-        console.error('No response received:', error.request);
+        console.error('No response received:', err.request);
       } else {
         // Other errors during request setup
-        console.error('Error setting up request:', error.message);
+        console.error('Error setting up request:', err.message);
       }
+      setError(errorMessage);
       setLoading(false);
     }
   };

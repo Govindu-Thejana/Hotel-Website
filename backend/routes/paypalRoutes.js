@@ -15,7 +15,7 @@ router.post("/pay", async (req, res) => {
 });
 
 // Route to capture a PayPal payment
-router.get("/bookingComplete", async (req, res) => {
+router.get("/CompleteBooking", async (req, res) => {
     try {
         await capturePayment(req.query.token);
         res.send("Course purchased successfully");

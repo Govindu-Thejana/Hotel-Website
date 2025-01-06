@@ -114,8 +114,8 @@ const Cart = () => {
         {/* Room Header */}
         <div className="flex justify-between items-center mb-2">
           <div>
-            <h3 className="text-xl font-bold text-gray-800">{item.roomType}</h3>
-            <span className="text-xs text-gray-500">Room {item.roomId}</span>
+            <h3 className="text-xl font-bold text-gray-800">{item.room.roomType}</h3>
+            <span className="text-xs text-gray-500">Room {item.room._id}</span>
           </div>
           <NightsBadge nights={totals.numberOfNights} />
         </div>

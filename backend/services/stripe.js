@@ -32,7 +32,7 @@ const createCheckoutSession = async (req, res) => {
                     quantity: item.quantity,
                 };
             }),
-            success_url: `${process.env.BASE_URL}/bookingComplete`,
+            success_url: `${process.env.BASE_URL}/CompleteBooking`,
             cancel_url: `${process.env.BASE_URL}/checkout`,
         });
 

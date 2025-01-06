@@ -92,7 +92,11 @@ const RoomDetails = () => {
                 {room.images && room.images.length > 0 && (
                     <div className="relative mb-8 group">
                         <img
-                            src={room.images[currentImageIndex]}
+                            src={
+                                room.images[currentImageIndex]
+                                    ? `http://localhost:5555/${room.images[currentImageIndex].replace(/\\/g, '/')}`
+                                    : '/default-image.jpg' // Fallback image if the current image path is invalid
+                            }
                             alt={`Room view ${currentImageIndex + 1}`}
                             className="w-full h-[70vh] object-cover rounded-lg shadow-lg"
                         />
@@ -117,12 +121,22 @@ const RoomDetails = () => {
                     </div>
                 )}
 
+
                 {showAllPhotos && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                         <div className="bg-white p-6 rounded-lg max-w-4xl max-h-[90vh] overflow-auto">
                             <div className="grid grid-cols-2 gap-4">
                                 {room.images.map((img, index) => (
-                                    <img key={index} src={img} alt={`Room view ${index + 1}`} className="w-full h-64 object-cover" />
+                                    <img
+                                        key={index}
+                                        src={
+                                            img
+                                                ? `http://localhost:5555/${img.replace(/\\/g, '/')}`
+                                                : '/default-image.jpg' // Fallback image if the image path is not available
+                                        }
+                                        alt={`Room view ${index + 1}`}
+                                        className="w-full h-64 object-cover"
+                                    />
                                 ))}
                             </div>
                             <button
@@ -135,6 +149,7 @@ const RoomDetails = () => {
                     </div>
                 )}
 
+
                 <div className="flex flex-col lg:flex-row gap-12">
                     {/* Room Overview and Amenities */}
                     <div className="flex-grow">
@@ -143,32 +158,41 @@ const RoomDetails = () => {
                             <p className="text-gray-600 mb-5">{room.description}</p>
                             <ul className="list-disc list-inside text-gray-600 space-y-2">
                                 <li><strong>Occupancy:</strong> {room.capacity} persons</li>
-                                <li><strong>Size:</strong> {room.size} sqm</li>
-                                <li><strong>Bed Type:</strong> {room.bedType}</li>
-                                <li><strong>Availability:</strong> {room.availability}</li>
                                 <li><strong>Price Per Night($):</strong> {room.pricePerNight}</li>
+                                <li><strong>Cancellation Policy:</strong> {room.cancellationPolicy} persons</li>
                             </ul>
 
                             <h2 className="text-2xl font-serif text-pcolor mt-6 mb-3">Amenities</h2>
                             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                {room.amenities.map((amenity, index) => (
-                                    <div key={index} className="flex items-center p-4 bg-acolor rounded-lg shadow-sm">
-                                        {amenityIcons[amenity] && <span className="mr-2">{amenityIcons[amenity]}</span>}
-                                        <span className="text-gray-700">{amenity}</span>
-                                    </div>
-                                ))}
+                                {room.amenities && Array.isArray(JSON.parse(room.amenities)) && JSON.parse(room.amenities).length > 0 ? (
+                                    JSON.parse(room.amenities).map((amenity, index) => (
+                                        <div key={index} className="flex items-center p-4 bg-acolor rounded-lg shadow-sm">
+                                            {amenityIcons[amenity] && <span className="mr-2">{amenityIcons[amenity]}</span>}
+                                            <span className="text-gray-700">{amenity}</span>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="col-span-2 text-gray-400">No amenities specified</div>
+                                )}
+
                             </div>
+
+                            <div className="flex flex-col justify-between h-full">
+
+                                <div className="text-right my-4">
+                                    <button
+                                        className="bg-scolor text-white py-2 px-4 hover:bg-pcolor transition duration-300"
+                                    >
+                                        BOOK NOW
+                                    </button>
+                                </div>
+                            </div>
+
                         </div>
+
                     </div>
 
-                    {/* Booking Form */}
-                    <section className="Booking Form">
-                        {rooms && rooms.length > 0 ? (
-                            <BookingForm roomId={roomId} room={room} />
-                        ) : (
-                            <p>Loading booking information...</p>
-                        )}
-                    </section>
+
                 </div>
             </div>
 
@@ -177,7 +201,15 @@ const RoomDetails = () => {
             <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 px-20">
                 {rooms.map((room) => (
                     <div key={room._id} className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
-                        <img className="w-full h-48 object-cover" src={room.images[0]} alt={room.roomType} />
+                        <img
+                            className="w-full h-48 object-cover"
+                            src={
+                                room.images && room.images[0]
+                                    ? `http://localhost:5555/${room.images[0].replace(/\\/g, '/')}`
+                                    : '/default-image.jpg' // Fallback image if images array is undefined or empty
+                            }
+                            alt={room.roomType || 'Room'}
+                        />
                         <div className="p-6">
                             <h2 className="text-2xl font-serif text-pcolor mb-2">{room.roomType}</h2>
                             <p className="text-gray-600 mb-6">{room.description}</p>

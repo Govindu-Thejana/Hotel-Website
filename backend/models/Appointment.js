@@ -12,12 +12,6 @@ const appointmentSchema = new mongoose.Schema({
     trim: true,
     lowercase: true,
   },
-  phone: {
-    type: String,
-    required: true,
-    trim: true, // Ensures there are no leading/trailing spaces
-  },
-
   date: {
     type: Date,
     required: true,

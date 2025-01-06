@@ -24,7 +24,6 @@ async function sendNotification(email, subject, text) {
       to: email,
       subject,
       text,
-      
     });
   } catch (error) {
     console.error('Error sending email:', error.message);
@@ -34,12 +33,11 @@ async function sendNotification(email, subject, text) {
 // Create a new appointment
 router.post('/', async (req, res) => {
   try {
-    const { name, email,phone, date, time } = req.body;
+    const { name, email, date, time } = req.body;
 
     const appointment = new Appointment({
       name,
       email,
-      phone, // Set phone number to an empty string
       date,
       time,
       status: 'pending',
@@ -56,11 +54,8 @@ router.post('/', async (req, res) => {
       `A new appointment has been created:
       Name: ${name}
       Email: ${email}
-      Phone: ${phone}
       Date: ${date}
-      Time: ${time}
-      
-      `
+      Time: ${time}`
     );
 
     res.status(201).json(savedAppointment);

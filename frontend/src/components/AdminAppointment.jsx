@@ -305,7 +305,6 @@ const AppointmentList = ({
       >
         <h3 className="text-xl font-semibold mb-2">{appointment.name}</h3>
         <p className="text-gray-700">Email: {appointment.email}</p>
-        <p className="text-gray-700">Phone: {appointment.phone}</p>
         <p className="text-gray-700">
           Date: {new Date(appointment.date).toLocaleDateString()}
         </p>
@@ -329,9 +328,7 @@ const AppointmentList = ({
         )}
 
         {showConfirmationStatus && appointment.status === "confirmed" && (
-          <p className="text-sm text-green-500 mt-2">
-            Confirmed on: {new Date(appointment.updatedAt).toLocaleString()}
-          </p>
+          <p className="text-sm text-green-500 mt-2">Confirmed on: {new Date(appointment.updatedAt).toLocaleString()}</p>
         )}
 
         <div className="flex space-x-2 mt-4">

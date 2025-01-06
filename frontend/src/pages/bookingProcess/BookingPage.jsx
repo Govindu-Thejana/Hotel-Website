@@ -33,7 +33,7 @@ const RoomBookingSearchBar = () => {
   const [selectedPackage, setSelectedPackage] = useState("Double Room");
   const [tempSelectedPackage, setTempSelectedPackage] = useState(selectedPackage); // Temporary state for package
   const [commonBookedDates, setCommonBookedDates] = useState([]);
-  const [roomTypes] = useState(['Deluxe Suite', 'Executive Suite', 'Single Room', 'Double Room']);
+  const [roomTypes] = useState(['Deluxe Room', 'Executive Room', 'Single Room', 'Double Room']);
   const { cart, addToCart } = useContext(CartContext); // Use CartContext
   const navigate = useNavigate(); // Initialize useNavigate
   const packageRef = useRef(null);
@@ -393,6 +393,54 @@ const RoomBookingSearchBar = () => {
               staticRanges={[]}
               inputRanges={[]}
             />
+            <style jsx global>{`
+            .rdrCalendarWrapper {
+              width: 700px;
+              font-size: 14px;
+              background: white;
+            }
+            .rdrMonth {
+              width: 100%;
+              padding: 0 0.5rem;
+            }
+            .rdrDefinedRangesWrapper {
+              display: none;
+            }
+            .rdrDateRangeWrapper {
+              border-radius: 0.5rem;
+              border: 1px solid #e2e8f0;
+            }
+            .rdrDayNumber {
+              font-size: 12px;
+            }
+            .rdrSelected {
+              border-radius: 1.5rem;
+            }
+            .rdrDay {
+              height: 3rem;
+            }
+            .rdrDayPassive {
+              opacity: 0 !important;
+              visibility: hidden;
+              pointer-events: none;
+            }
+            .rdrDayPassive .rdrDayNumber {
+              display: none;
+            }
+            .blocked-day {
+              background-color: #ff0000 !important;
+              color: white !important;
+              opacity: 0.7 !important;
+              pointer-events: none;
+              text-decoration: line-through;
+            }
+            .blocked-day .rdrDayNumber span {
+              color: white !important;
+            }
+            .rdrMonths .rdrMonth {
+              padding: 0 8px;
+            }
+          `}</style>
             <div className="flex justify-between items-center mt-4">
               <p className="text-xs text-gray-600">Select check-in and check-out dates on the calendar</p>
               <div className="flex">

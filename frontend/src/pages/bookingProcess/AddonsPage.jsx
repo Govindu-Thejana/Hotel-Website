@@ -24,6 +24,8 @@ const TransportOptions = () => {
       "Executive Suite": { breakfast: 8.99, dinner: 9.99, bonfire: 4.99, bbq: 3.99 },
       "Single Room": { breakfast: 1.99, dinner: 2.99, bonfire: 4.99, bbq: 3.99 },
       "Double Room": { breakfast: 3.99, dinner: 4.99, bonfire: 4.99, bbq: 3.99 },
+      "Deluxe Room": { breakfast: 5.99, dinner: 6.99, bonfire: 4.99, bbq: 3.99 }, // Added missing room type
+      "Executive Room": { breakfast: 6.99, dinner: 7.99, bonfire: 4.99, bbq: 3.99 }, // Added missing room type
       "BBQ Experience with Dinner": { price: 3.99 },
       "Cozy Bonfire": { price: 4.99 }
     };

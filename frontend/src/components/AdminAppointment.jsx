@@ -2,286 +2,472 @@ import { useState, useEffect } from "react";
 
 const AdminAppointment = () => {
   const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [editingAppointment, setEditingAppointment] = useState(null);
   const [newDate, setNewDate] = useState("");
   const [newTime, setNewTime] = useState("");
-  const [askingForDateId, setAskingForDateId] = useState(null);
-  const [proposedOptions, setProposedOptions] = useState({});
-
-  const availableTimes = ["10:00 AM", "11:00 AM", "2:00 PM", "3:00 PM"];
-
 
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
+        setLoading(true);
         const response = await fetch("http://localhost:5555/appointments");
         if (!response.ok) throw new Error("Failed to fetch appointments");
         const data = await response.json();
         setAppointments(data);
+        setError(null);
       } catch (error) {
         console.error("Error fetching appointments:", error);
+        setError("Failed to load appointments");
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchAppointments();
   }, []);
 
-  const handleReject = async (id) => {
-    try {
-      const response = await fetch(`http://localhost:5555/appointments/${id}`, {
-        method: "DELETE",
-      });
-      if (!response.ok) throw new Error("Failed to reject appointment");
-      setAppointments((prev) =>
-        prev.filter((appointment) => appointment._id !== id)
-      );
-    } catch (error) {
-      console.error("Error rejecting appointment:", error);
-    }
-  };
-
   const handleConfirm = async (id) => {
+    const userConfirmed = window.confirm(
+      "Are you sure you want to confirm this appointment?"
+    );
+    if (!userConfirmed) return;
+
     try {
       const response = await fetch(`http://localhost:5555/appointments/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ status: "confirmed" }),
+        body: JSON.stringify({ status: "confirmed", confirmedAt: new Date().toISOString() }),
       });
+
       if (!response.ok) throw new Error("Failed to confirm appointment");
 
-      setAppointments((prev) =>
-        prev.map((appointment) =>
-          appointment._id === id
-            ? { ...appointment, status: "confirmed" }
-            : appointment
+      const updatedAppointment = await response.json();
+
+      setAppointments((prevAppointments) =>
+        prevAppointments.map((appointment) =>
+          appointment._id === id ? updatedAppointment : appointment
         )
       );
     } catch (error) {
       console.error("Error confirming appointment:", error);
+      setError("Failed to confirm appointment");
     }
   };
 
-  const handleAskForAnotherDate = (id) => {
-    setAskingForDateId(id);
-    setProposedOptions((prev) => ({
-      ...prev,
-      [id]: prev[id] || [],
-    }));
+  const handleCancel = async (id) => {
+    const userConfirmed = window.confirm(
+      "Are you sure you want to cancel this appointment?"
+    );
+    if (!userConfirmed) return;
+
+    try {
+      const response = await fetch(`http://localhost:5555/appointments/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status: "cancelled",
+          cancelledAt: new Date().toISOString(),
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to cancel appointment");
+
+      const updatedAppointment = await response.json();
+
+      setAppointments((prevAppointments) =>
+        prevAppointments.map((appointment) =>
+          appointment._id === id ? updatedAppointment : appointment
+        )
+      );
+    } catch (error) {
+      console.error("Error cancelling appointment:", error);
+      setError("Failed to cancel appointment");
+    }
   };
 
-  const handleSubmitNewOptions = (e) => {
-    e.preventDefault();
-    if (newDate && newTime && askingForDateId) {
-      const newOption = { date: newDate, time: newTime };
-      setProposedOptions((prev) => {
-        const currentOptions = prev[askingForDateId] || [];
-        // Limit to 5 options max
-        if (currentOptions.length < 5) {
-          return {
-            ...prev,
-            [askingForDateId]: [...currentOptions, newOption],
-          };
+  const handleEdit = (appointment) => {
+    setEditingAppointment(appointment);
+    setNewDate(new Date(appointment.date).toISOString().split("T")[0]);
+    setNewTime(appointment.time);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingAppointment(null);
+    setNewDate("");
+    setNewTime("");
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingAppointment || !newDate || !newTime) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:5555/appointments/${editingAppointment._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            date: newDate,
+            time: newTime,
+            phone: editingAppointment.phone, // Include phone field
+            reason: editingAppointment.reason, // Include reason field
+            status:
+              editingAppointment.status === "cancelled"
+                ? "confirmed"
+                : editingAppointment.status, // If cancelled, change to confirmed
+          }),
         }
-        return prev; // Do not add more than 5 options
-      });
+      );
+
+      if (!response.ok) throw new Error("Failed to update appointment");
+
+      const updatedAppointment = await response.json();
+
+      setAppointments((prevAppointments) =>
+        prevAppointments.map((appointment) =>
+          appointment._id === editingAppointment._id
+            ? updatedAppointment
+            : appointment
+        )
+      );
+
+      // Reset the edit state
+      setEditingAppointment(null);
       setNewDate("");
       setNewTime("");
+    } catch (error) {
+      console.error("Error updating appointment:", error);
+      setError("Failed to update appointment");
     }
   };
 
-  const handleSaveProposedOptions = async () => {
-    if (askingForDateId && proposedOptions[askingForDateId]?.length > 0) {
-      try {
-        const response = await fetch(
-          `http://localhost:5555/appointments/${askingForDateId}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ options: proposedOptions[askingForDateId] }),
-          }
-        );
+  const handleDelete = async (id) => {
+    const userConfirmed = window.confirm(
+      "Are you sure you want to delete this appointment?"
+    );
+    if (!userConfirmed) return;
 
-        if (!response.ok) throw new Error("Failed to save proposed options");
+    try {
+      const response = await fetch(`http://localhost:5555/appointments/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-        setAppointments((prev) =>
-          prev.map((appointment) =>
-            appointment._id === askingForDateId
-              ? { ...appointment, options: proposedOptions[askingForDateId] }
-              : appointment
-          )
-        );
-        setAskingForDateId(null);
-        setProposedOptions((prev) => ({ ...prev, [askingForDateId]: [] }));
-      } catch (error) {
-        console.error("Error saving proposed options:", error);
-      }
+      if (!response.ok) throw new Error("Failed to delete appointment");
+
+      setAppointments((prevAppointments) =>
+        prevAppointments.filter((appointment) => appointment._id !== id)
+      );
+    } catch (error) {
+      console.error("Error deleting appointment:", error);
+      setError("Failed to delete appointment");
     }
   };
+
+  // Categorize and sort appointments
+  const pendingAppointments = appointments
+    .filter(
+      (appointment) => !appointment.status || appointment.status === "pending"
+    )
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  const confirmedAppointments = appointments
+    .filter((appointment) => appointment.status === "confirmed")
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  const cancelledAppointments = appointments
+    .filter((appointment) => appointment.status === "cancelled")
+    .sort(
+      (a, b) =>
+        new Date(b.cancelledAt || b.createdAt) - new Date(a.cancelledAt || a.createdAt)
+    );
+
+  if (loading)
+    return <div className="text-center py-16">Loading appointments...</div>;
+  if (error)
+    return <div className="text-center py-16 text-red-600">{error}</div>;
 
   return (
     <section className="bg-white py-16">
-      <div className="container mx-auto text-center px-4">
-        <h2 className="text-4xl font-serif mb-12">Admin Appointment View</h2>
+      <div className="container mx-auto px-4">
+        <h2 className="text-4xl font-serif mb-12 text-center">
+          Admin Appointment View
+        </h2>
 
-        {appointments.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {appointments.map((appointment) => (
-              <div key={appointment._id} className="bg-gray-100 rounded-lg shadow-lg p-6 flex flex-col">
-                <h3 className="text-xl font-semibold mb-2">{appointment.name}</h3>
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+            {error}
+          </div>
+        )}
 
-                {/* New vertical table for Email, Date, Time, and Status */}
-                <div className="mt-4 flex-grow">
-                  <h4 className="text-lg font-medium">Appointment Details:</h4>
-                  <table className="min-w-full border mt-2">
-                    <tbody>
-                      <tr>
-                        <td className="border px-4 py-2 font-semibold">Email:</td>
-                        <td className="border px-4 py-2">{appointment.email}</td>
-                      </tr>
-                      <tr>
-                        <td className="border px-4 py-2 font-semibold">Date:</td>
-                        <td className="border px-4 py-2">{new Date(appointment.date).toLocaleDateString()}</td>
-                      </tr>
-                      <tr>
-                        <td className="border px-4 py-2 font-semibold">Time:</td>
-                        <td className="border px-4 py-2">{appointment.time}</td>
-                      </tr>
-                      <tr>
-                        <td className="border px-4 py-2 font-semibold">Status:</td>
-                        <td className="border px-4 py-2">{appointment.status || "pending"}</td>
-                      </tr>
-                    </tbody>
-                  </table>
+        <div className={editingAppointment ? "blur-sm" : ""}>
+          <div className="space-y-12">
+            <div>
+              <h3 className="text-2xl font-medium mb-4">
+                Pending Appointments ({pendingAppointments.length})
+              </h3>
+              {pendingAppointments.length > 0 ? (
+                <AppointmentList
+                  appointments={pendingAppointments}
+                  handleConfirm={handleConfirm}
+                  handleCancel={handleCancel}
+                  handleEdit={handleEdit}
+                  handleDelete={handleDelete}
+                />
+              ) : (
+                <p className="text-gray-600">No pending appointments.</p>
+              )}
+            </div>
+
+            <div>
+              <h3 className="text-2xl font-medium mb-4">
+                Confirmed Appointments ({confirmedAppointments.length})
+              </h3>
+              {confirmedAppointments.length > 0 ? (
+                <AppointmentList
+                  appointments={confirmedAppointments}
+                  handleCancel={handleCancel}
+                  handleEdit={handleEdit}
+                  handleDelete={handleDelete}
+                  showConfirmationStatus={true}
+                />
+              ) : (
+                <p className="text-gray-600">No confirmed appointments.</p>
+              )}
+            </div>
+
+            <div>
+              <h3 className="text-2xl font-medium mb-4">
+                Cancelled Appointments ({cancelledAppointments.length})
+              </h3>
+              {cancelledAppointments.length > 0 ? (
+                <AppointmentList
+                  appointments={cancelledAppointments}
+                  handleConfirm={handleConfirm}
+                  handleEdit={handleEdit}
+                  handleDelete={handleDelete}
+                  showCancellationDate={true}
+                />
+              ) : (
+                <p className="text-gray-600">No cancelled appointments.</p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {editingAppointment && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg p-6 max-w-md w-full">
+              <h3 className="text-xl font-semibold mb-4">Edit Appointment</h3>
+              {/* Display client's name */}
+              <p className="text-lg mb-4 font-medium">
+                Client: {editingAppointment.name}
+              </p>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Date</label>
+                  <input
+                    type="date"
+                    value={newDate}
+                    onChange={(e) => setNewDate(e.target.value)}
+                    className="w-full p-2 border rounded"
+                  />
                 </div>
-
-                {/* Proposed Options Section */}
-                <h4 className="text-lg font-medium mt-4">Proposed Options:</h4>
-                {appointment.options?.length > 0 ? (
-                  <table className="min-w-full">
-                    <thead>
-                      <tr>
-                        <th className="border px-4 py-2">Date</th>
-                        <th className="border px-4 py-2">Time</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {appointment.options.map((opt, index) => (
-                        <tr key={index}>
-                          <td className="border px-4 py-2">{new Date(opt.date).toLocaleDateString()}</td>
-                          <td className="border px-4 py-2">{opt.time}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                ) : (
-                  <p className="text-gray-500">No proposed options</p>
-                )}
-
-                <div className="mt-4 flex justify-between">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Time</label>
+                  <input
+                    type="time"
+                    value={newTime}
+                    onChange={(e) => setNewTime(e.target.value)}
+                    className="w-full p-2 border rounded"
+                  />
+                </div>
+                <div className="flex justify-end space-x-2">
                   <button
-                    onClick={() => handleConfirm(appointment._id)}
-                    className="bg-green-500 text-white py-1 px-4 rounded-md hover:bg-green-600 transition duration-300 w-full mr-2"
+                    onClick={handleCancelEdit}
+                    className="px-4 py-2 text-gray-600 hover:text-gray-800"
                   >
-                    Confirm
+                    Cancel
                   </button>
                   <button
-                    onClick={() => handleReject(appointment._id)}
-                    className="bg-red-500 text-white py-1 px-4 rounded-md hover:bg-red-600 transition duration-300 w-full ml-2"
+                    onClick={handleSaveEdit}
+                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
                   >
-                    Reject
-                  </button>
-                </div>
-
-                <div className="mt-2">
-                  <button
-                    onClick={() => handleAskForAnotherDate(appointment._id)}
-                    className="bg-blue-500 text-white py-1 px-4 rounded-md hover:bg-blue-600 transition duration-300 w-full"
-                  >
-                    Ask for Another Date
+                    {editingAppointment.status === "pending" ? "OK" : "Confirm"}
                   </button>
                 </div>
               </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-gray-600">No appointments scheduled yet.</p>
-        )}
-
-        {askingForDateId && (
-          <form onSubmit={handleSubmitNewOptions} className="mt-6 flex flex-col items-center">
-            <div className="flex mb-4">
-              <label htmlFor="new-date" className="mr-2">
-                New Date:
-              </label>
-              <input
-                type="date"
-                id="new-date"
-                value={newDate}
-                onChange={(e) => setNewDate(e.target.value)}
-                required
-                className="border rounded px-2 py-1"
-              />
-              <label htmlFor="new-time" className="mr-2 ml-4">
-                New Time:
-              </label>
-              <select
-                id="new-time"
-                value={newTime}
-                onChange={(e) => setNewTime(e.target.value)}
-                required
-                className="border rounded px-2 py-1"
-              >
-                <option value="">Select a time</option>
-                {availableTimes.map((time) => (
-                  <option key={time} value={time}>
-                    {time}
-                  </option>
-                ))}
-              </select>
             </div>
-            <button
-              type="submit"
-              className="bg-blue-500 text-white py-1 px-4 rounded-md hover:bg-blue-600 transition duration-300"
-            >
-              Add Option
-            </button>
-          </form>
-        )}
-
-        {askingForDateId && proposedOptions[askingForDateId]?.length > 0 && (
-          <div className="mt-4">
-            <h3 className="text-lg">Current Proposed Options:</h3>
-            <div className="overflow-y-auto max-h-40 border rounded p-2">
-              <table className="min-w-full">
-                <thead>
-                  <tr>
-                    <th className="border px-4 py-2">Date</th>
-                    <th className="border px-4 py-2">Time</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {proposedOptions[askingForDateId].map((opt, index) => (
-                    <tr key={index}>
-                      <td className="border px-4 py-2">{new Date(opt.date).toLocaleDateString()}</td>
-                      <td className="border px-4 py-2">{opt.time}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <button
-              onClick={handleSaveProposedOptions}
-              className="bg-green-500 text-white py-1 px-4 rounded-md hover:bg-green-600 transition duration-300 mt-2"
-            >
-              Save Proposed Options
-            </button>
           </div>
         )}
+
+        <Calendar appointments={confirmedAppointments} />
       </div>
     </section>
   );
 };
+
+const AppointmentList = ({
+  appointments,
+  handleConfirm,
+  handleCancel,
+  handleEdit,
+  handleDelete,
+  showCancellationDate,
+  showConfirmationStatus,
+}) => (
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {appointments.map((appointment) => (
+      <div
+        key={appointment._id}
+        className={`rounded-lg shadow-lg p-6 transition-transform transform hover:scale-105 ${
+          appointment.status === "cancelled"
+            ? "bg-red-50"
+            : appointment.status === "confirmed"
+            ? "bg-green-50"
+            : "bg-gray-100"
+        }`}
+      >
+        <h3 className="text-xl font-semibold mb-2">{appointment.name}</h3>
+        <p className="text-gray-700">Email: {appointment.email}</p>
+        <p className="text-gray-700">Phone: {appointment.phone}</p>
+        <p className="text-gray-700">
+          Date: {new Date(appointment.date).toLocaleDateString()}
+        </p>
+        <p className="text-gray-700">Time: {appointment.time}</p>
+        <p className="text-gray-700">Reason: {appointment.reason}</p>
+        <p
+          className={`font-medium ${
+            appointment.status === "cancelled"
+              ? "text-red-600"
+              : appointment.status === "confirmed"
+              ? "text-green-600"
+              : "text-gray-600"
+          }`}
+        >
+          Status: {appointment.status || "pending"}
+        </p>
+
+        {showCancellationDate && appointment.status === "cancelled" && (
+          <p className="text-sm text-red-500 mt-2">
+            Cancelled on: {new Date(appointment.cancelledAt).toLocaleString()}
+          </p>
+        )}
+
+        {showConfirmationStatus && appointment.status === "confirmed" && (
+          <p className="text-sm text-green-500 mt-2">
+            Confirmed on: {new Date(appointment.confirmedAt).toLocaleString()}
+          </p>
+        )}
+
+        <div className="flex space-x-2 mt-4">
+          {appointment.status === "pending" && (
+            <button
+              onClick={() => handleConfirm(appointment._id)}
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              Confirm
+            </button>
+          )}
+          <button
+            onClick={() => handleCancel(appointment._id)}
+            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={() => handleEdit(appointment)}
+            className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => handleDelete(appointment._id)}
+            className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+const Calendar = ({ appointments }) => {
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+  const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+  const startDay = startOfMonth.getDay();
+  const daysInMonth = endOfMonth.getDate();
+
+  const prevMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
+  };
+
+  const nextMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
+  };
+
+  const renderDays = () => {
+    const days = [];
+    for (let i = 0; i < startDay; i++) {
+      days.push(<div key={`empty-${i}`} className="border p-2"></div>);
+    }
+    for (let i = 1; i <= daysInMonth; i++) {
+      const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
+      const appointmentsOnDate = appointments.filter(
+        (appointment) => new Date(appointment.date).toDateString() === date.toDateString()
+      );
+      days.push(
+        <div key={i} className="border p-2">
+          <div>{i}</div>
+          {appointmentsOnDate.map((appointment) => (
+            <div key={appointment._id} className="text-xs text-green-600">
+              {appointment.name} at {appointment.time}
+            </div>
+          ))}
+        </div>
+      );
+    }
+    return days;
+  };
+
+  return (
+    <div className="mt-12">
+      <div className="flex justify-between items-center mb-4">
+        <button onClick={prevMonth} className="px-4 py-2 bg-gray-300 rounded">
+          Previous
+        </button>
+        <h3 className="text-xl font-medium">
+          {currentDate.toLocaleString("default", { month: "long" })} {currentDate.getFullYear()}
+        </h3>
+        <button onClick={nextMonth} className="px-4 py-2 bg-gray-300 rounded">
+          Next
+        </button>
+      </div>
+      <div className="grid grid-cols-7 gap-2">
+        <div className="font-bold">Sun</div>
+        <div className="font-bold">Mon</div>
+        <div className="font-bold">Tue</div>
+        <div className="font-bold">Wed</div>
+        <div className="font-bold">Thu</div>
+        <div className="font-bold">Fri</div>
+        <div className="font-bold">Sat</div>
+        {renderDays()}
+      </div>
+    </div>
+  );
+};
+
 export default AdminAppointment;

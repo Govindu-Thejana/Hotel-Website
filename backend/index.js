@@ -6,6 +6,7 @@ import bookedRoomRoutes from './routes/bookedRoomRoutes.js';
 import weddingRoute from "./routes/weddingRoute.js";
 import appointments from './routes/appointments.js';
 import dotenv from 'dotenv';
+import authRoutes from "./routes/auth.js";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -41,6 +42,7 @@ app.use('/rooms', roomRoute);
 app.use('/bookedRoom', bookedRoomRoutes);
 app.use('/appointments', appointments);
 app.use('/wedding', weddingRoute);
+app.use("/auth", authRoutes);
 
 
 // Connect to MongoDB and start the server

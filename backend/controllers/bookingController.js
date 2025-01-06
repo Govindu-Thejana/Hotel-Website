@@ -1,7 +1,7 @@
 import RoomModel from '../models/roomModel.js';
 import BookedRoomModel from '../models/bookedRoomModel.js';
 import { generateBookingId, generateConfirmationCode } from '../middleware/generators.js';
-import moment from 'moment-timezone';
+import moment from 'moment';
 
 // Function to create a new booking
 export const createBooking = async (req, res) => {
@@ -20,13 +20,11 @@ export const createBooking = async (req, res) => {
         } = req.body;
         console.log(req.body);
 
-        // Define the desired timezone
-        const timeZone = 'Asia/Colombo';
-
         // Create bookings for each item in the cart
         const bookings = [];
         for (const item of cart) {
             const { room, checkIn, checkOut, guests, totalAmount, addons } = item;
+            console.log(item.room.roomId, item.checkIn, item.checkOut);
 
             // Find room by ID
             const roomRecord = await RoomModel.findById(room._id);
@@ -34,13 +32,17 @@ export const createBooking = async (req, res) => {
                 return res.status(404).json({ message: 'Room not found' });
             }
 
+            // Adjust check-in and check-out dates
+            const adjustedCheckIn = moment(checkIn, "MM/DD/YYYY").add(1, 'days').toDate();
+            const adjustedCheckOut = moment(checkOut, "MM/DD/YYYY").add(1, 'days').toDate();
+
             // Check if room is already booked for the given dates
             const existingBooking = await BookedRoomModel.findOne({
                 roomId: room._id,
                 bookedDates: {
                     $elemMatch: {
-                        $gte: moment.tz(checkIn, "MM/DD/YYYY", timeZone).toDate(),
-                        $lt: moment.tz(checkOut, "MM/DD/YYYY", timeZone).toDate()
+                        $gte: checkIn,
+                        $lt: checkOut
                     }
                 }
             });
@@ -51,11 +53,10 @@ export const createBooking = async (req, res) => {
                 });
             }
 
-            // Generate bookedDates array (from check-in to one day before check-out)
+            // Generate bookedDates array (from adjusted check-in to one day before adjusted check-out)
             const bookedDates = [];
-            let currentDate = moment.tz(checkIn, "MM/DD/YYYY", timeZone).toDate();
-            const endDate = moment.tz(checkOut, "MM/DD/YYYY", timeZone).toDate();
-            while (currentDate < endDate) {
+            let currentDate = adjustedCheckIn;
+            while (currentDate < checkOut) {
                 bookedDates.push(new Date(currentDate));
                 currentDate.setDate(currentDate.getDate() + 1);
             }
@@ -67,8 +68,8 @@ export const createBooking = async (req, res) => {
                 fullName: `${prefix} ${firstName} ${lastName}`,
                 email,
                 phone,
-                checkIn: moment.tz(checkIn, "MM/DD/YYYY", timeZone).toDate(),
-                checkOut: moment.tz(checkOut, "MM/DD/YYYY", timeZone).toDate(),
+                checkIn: adjustedCheckIn,
+                checkOut: adjustedCheckOut,
                 bookedDates,
                 guests,
                 address: {

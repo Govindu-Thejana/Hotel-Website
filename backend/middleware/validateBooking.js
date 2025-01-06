@@ -45,12 +45,6 @@ export const validateBookingData = (req, res, next) => {
         const checkOutDate = new Date(checkOut);
 
 
-        if (checkOutDate <= checkInDate) {
-            return res.status(400).json({
-                message: 'Check-out date must be after check-in date'
-            });
-        }
-
         // Validate guests number
         if (guests < 1) {
             return res.status(400).json({

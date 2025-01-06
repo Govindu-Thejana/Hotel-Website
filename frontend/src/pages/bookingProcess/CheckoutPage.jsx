@@ -146,7 +146,7 @@ const CheckoutPage = () => {
             </div>
 
             {/* Policies Section */}
-            <div className="w-full lg:w-2/3 mt-8 lg:mt-0">
+            {/* <div className="w-full lg:w-2/3 mt-8 lg:mt-0">
                 <h2 className="text-2xl font-bold my-4">Policies</h2>
                 <div className="space-y-4">
                     <div>
@@ -163,7 +163,7 @@ const CheckoutPage = () => {
                         <p className="text-gray-600">Before 12:00 pm</p>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 };

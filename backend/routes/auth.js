@@ -2,12 +2,13 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import UserModel from "../models/user.js";
+import sendEmail  from "./emailService.js";
 
 const router = express.Router();
 const JWT_SECRET = "your-secret-key"; // Use an environment variable in production
 
 // Hardcoded admin credentials
-const ADMIN_USERNAME = "admin@gmail.com";
+const ADMIN_USERNAME = "14992pasan@gmail.com";
 const ADMIN_PASSWORD = "admin123";
 
 // Hash password using crypto
@@ -112,6 +113,30 @@ const authenticateAdmin = (req, res, next) => {
 // Example protected route for admin
 router.get("/admin/protected", authenticateAdmin, (req, res) => {
     res.status(200).json({ message: "Welcome, Admin! This is a protected route." });
+});
+
+router.post("/admin/forgot-password", async (req, res) => {
+    try {
+        // Hardcoded email and password
+        const email = "14992pasan@gmail.com";
+        const Password = "admin123";
+
+        // Send email
+        const emailSent = await sendEmail(
+            email,
+            "Password Request",
+            `Your password is: ${Password}`
+        );
+
+        if (emailSent) {
+            res.status(200).json({ message: "Email sent successfully" });
+        } else {
+            res.status(500).json({ message: "Failed to send email" });
+        }
+    } catch (error) {
+        console.error("Error in forgot-password route:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
 });
 
 export default router;

@@ -81,7 +81,7 @@ const Adminpackage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white py-16 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-16 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-16">
                     <h2 className="text-5xl font-serif text-gray-900">Admin Wedding Packages</h2>
@@ -91,7 +91,7 @@ const Adminpackage = () => {
                 </div>
 
                 <button
-                    className="bg-pink-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-pink-600 transition-all duration-300 shadow-lg hover:shadow-xl mb-8"
+                    className="bg-blue-900 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-800 transition-all duration-300 shadow-lg hover:shadow-xl mb-8"
                     onClick={() => openModal(false)}
                 >
                     Add New Wedding Package
@@ -107,7 +107,7 @@ const Adminpackage = () => {
                         >
                             <div className="absolute top-4 right-4 z-10">
                                 <div className="bg-white/90 backdrop-blur-sm rounded-full p-2">
-                                    <Heart className="w-6 h-6 text-pink-500" />
+                                    <Heart className="w-6 h-6 text-blue-900" />
                                 </div>
                             </div>
 
@@ -116,18 +116,19 @@ const Adminpackage = () => {
                                     {item.packagename}
                                 </h3>
 
-                                <p className="text-3xl font-bold text-pink-600 mb-6">
+                                <p className="text-3xl font-bold text-blue-900 mb-6">
                                     Rs.{item.price.toLocaleString()}
                                 </p>
 
                                 <div className="space-y-3 mb-8">
-                                    {(item.Description || '').split(',').map((desc, index) => (
-                                        <div key={index} className="flex items-center text-gray-600">
-                                            <ChevronRight className="w-5 h-5 text-pink-500 mr-2" />
-                                            <span>{desc.trim()}</span>
-                                        </div>
-                                    ))}
-                                </div>
+    {(item.Description || '').split(',').map((desc, index) => (
+        <div key={`${item._id}-${index}`} className="flex items-center text-gray-600">
+            <ChevronRight className="w-5 h-5 text-blue-900 mr-2" />
+            <span>{desc.trim()}</span>
+        </div>
+    ))}
+</div>
+
 
                                 <button
                                     className="bg-blue-500 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl mr-4"

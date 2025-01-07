@@ -8,6 +8,10 @@ build/
 # Environment variables
 .env
 .env.*.local
+HEAD
+node_modules
+
+
 
 # OS-specific files
 .DS_Store
@@ -36,3 +40,4 @@ coverage/
 *.sqlite
 *.sqlite-journal
 *.db
+              

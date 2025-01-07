@@ -16,7 +16,12 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Adminpackage from "./pages/Adminpackage";
 import PropTypes from 'prop-types';
-import BookingManagement from "./pages/BookingManagement";
+import BookingManagement from "./components/booking/BookingManagement";
+import RoomCreationForm from "./components/room/RoomCreationForm";
+import AdminRoomView from "./components/room/AdminRoomView";
+
+import BookingDetails from "./components/booking/BookingDetails";
+import TestUI from "./components/room/TestUI";
 import BookingPage from "./pages/bookingProcess/BookingPage";
 import CheckoutPage from "./pages/bookingProcess/CheckoutPage";
 import AddonsPage from "./pages/bookingProcess/AddonsPage";
@@ -76,6 +81,9 @@ const App = () => {
           <Route path="/admin-appointment" element={<AdminLayout><AdminAppointment /></AdminLayout>} />
           <Route path="/admin-package" element={<AdminLayout><Adminpackage /></AdminLayout>} />
           <Route path="/admin-bookings" element={<AdminLayout><BookingManagement /></AdminLayout>} />
+          <Route path="/add-newrooms" element={<AdminLayout><RoomCreationForm /></AdminLayout>} />
+          <Route path="/admin-roomview/:roomId" element={<AdminLayout><AdminRoomView /></AdminLayout>} />
+          <Route path="/admin-test" element={<AdminLayout><BookingDetails /></AdminLayout>} />
 
         </Routes>
       </div>

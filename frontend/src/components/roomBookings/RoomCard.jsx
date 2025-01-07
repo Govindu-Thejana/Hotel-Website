@@ -22,7 +22,11 @@ const RoomCard = ({ room, onAddToCart }) => {
                 {/* Image Section */}
                 <div className="relative md:w-2/5 h-56 md:h-auto">
                     <img
-                        src={room.images?.[currentImageIndex] || defaultImage}
+                        src={
+                            room.images && room.images[currentImageIndex]
+                                ? `http://localhost:5555/${room.images[currentImageIndex].replace(/\\/g, '/')}`
+                                : '/default-image.jpg' // Fallback image if images array is undefined or empty
+                        }
                         alt={`Room ${room.roomId}`}
                         className="w-full h-full object-cover"
                     />

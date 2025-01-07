@@ -73,7 +73,6 @@ const TransportOptions = () => {
                 <h3 className="text-xl font-bold text-gray-800">{addonNames[addonType]}</h3>
                 <div className="text-right">
                   <span className="text-2xl font-bold">${getAddonPrice(roomType, addonType)}</span>
-                  <div className="text-sm text-gray-600">Per Person</div>
                 </div>
               </div>
 

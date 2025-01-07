@@ -395,7 +395,7 @@ const RoomBookingSearchBar = () => {
             />
             <style jsx global>{`
             .rdrCalendarWrapper {
-              width: 700px;
+              width: 800px;
               font-size: 14px;
               background: white;
             }

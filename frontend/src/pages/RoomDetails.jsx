@@ -1,16 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
     FaWifi, FaSwimmingPool, FaParking, FaCoffee, FaDog,
-    FaCalendar, FaStar, FaUser, FaBed, FaBath
+    FaStar, FaUser, FaBath, FaChevronLeft, FaChevronRight
 } from 'react-icons/fa';
-import { format } from 'date-fns';
-import Calendar from 'react-calendar';
-import ImageGallery from 'react-image-gallery';
-import 'react-image-gallery/styles/css/image-gallery.css';
-import 'react-calendar/dist/Calendar.css';
 import Loader from '../components/Loader';
 
 const RoomDetails = () => {
@@ -19,22 +14,22 @@ const RoomDetails = () => {
     const [rooms, setRooms] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [selectedDate, setSelectedDate] = useState(new Date());
-    const [showCalendar, setShowCalendar] = useState(false);
+    const [similarRoomsLoading, setSimilarRoomsLoading] = useState(true);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [showAllPhotos, setShowAllPhotos] = useState(false);
     const navigate = useNavigate();
-
-    const formatImages = (images) => {
-        return images?.map(img => ({
-            original: img,
-            thumbnail: img,
-        })) || [];
-    };
 
     useEffect(() => {
         axios
             .get('http://localhost:5555/rooms')
-            .then((response) => setRooms(response.data.data))
-            .catch((error) => setError("Failed to load rooms"));
+            .then((response) => {
+                setRooms(response.data.data);
+                setSimilarRoomsLoading(false);
+            })
+            .catch((error) => {
+                setError("Failed to load rooms");
+                setSimilarRoomsLoading(false);
+            });
     }, []);
 
     useEffect(() => {
@@ -63,6 +58,16 @@ const RoomDetails = () => {
         Pets: <FaDog />,
     };
 
+    const handleImageNavigation = (direction) => {
+        if (room && room.images.length > 0) {
+            setCurrentImageIndex((prevIndex) =>
+                direction === 'next'
+                    ? (prevIndex + 1) % room.images.length
+                    : (prevIndex - 1 + room.images.length) % room.images.length
+            );
+        }
+    };
+
     if (loading) return <Loader />;
     if (error) return <div className="alert alert-error">{error}</div>;
     if (!room) return <div className="text-center py-10">Room not found</div>;
@@ -71,12 +76,36 @@ const RoomDetails = () => {
         <div className="min-h-screen bg-gray-50">
             {/* Hero Section */}
             <div className="relative h-[60vh] w-full">
-                <img
-                    src={room.images[0]}
-                    alt={room.roomType}
-                    className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-40">
+                {room.images && room.images.length > 0 ? (
+                    <img
+                        src={`http://localhost:5555/${room.images[currentImageIndex].replace(/\\/g, '/')}`}
+                        alt={room.roomType}
+                        className="w-full h-full object-cover"
+                    />
+                ) : (
+                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                        <span className="text-gray-500">No Image Available</span>
+                    </div>
+                )}
+                <button
+                    onClick={() => handleImageNavigation('prev')}
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full z-10"
+                >
+                    <FaChevronLeft size={24} />
+                </button>
+                <button
+                    onClick={() => handleImageNavigation('next')}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full z-10"
+                >
+                    <FaChevronRight size={24} />
+                </button>
+                <button
+                    onClick={() => setShowAllPhotos(true)}
+                    className="absolute bottom-4 right-4 bg-scolor text-white px-4 py-2 rounded-full shadow-md z-10"
+                >
+                    View all photos
+                </button>
+                <div className="absolute inset-0 bg-black bg-opacity-40 z-0">
                     <div className="container mx-auto px-4 h-full flex items-end pb-20">
                         <div className="text-white">
                             <h1 className="text-4xl md:text-6xl font-serif mb-4">{room.roomType}</h1>
@@ -85,7 +114,28 @@ const RoomDetails = () => {
                     </div>
                 </div>
             </div>
-
+            {showAllPhotos && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white p-6 rounded-lg max-w-4xl max-h-[90vh] overflow-auto">
+                        <div className="grid grid-cols-2 gap-4">
+                            {room.images.map((img, index) => (
+                                <img
+                                    key={index}
+                                    src={`http://localhost:5555/${img.replace(/\\/g, '/')}`}
+                                    alt={`Room view ${index + 1}`}
+                                    className="w-full h-64 object-cover"
+                                />
+                            ))}
+                        </div>
+                        <button
+                            onClick={() => setShowAllPhotos(false)}
+                            className="mt-4 bg-scolor text-white px-4 py-2 rounded-full"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
             {/* Main Content */}
             <div className="container mx-auto px-4 py-12">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -107,37 +157,26 @@ const RoomDetails = () => {
                                     <span>{room.capacity} Guests</span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <FaBed className="text-scolor" />
-                                    <span>{room.bedType}</span>
-                                </div>
-                                <div className="flex items-center gap-2">
                                     <FaBath className="text-scolor" />
                                     <span>Private Bathroom</span>
                                 </div>
                             </div>
                         </motion.section>
 
-                        {/* Image Gallery */}
-                        <section className="bg-white rounded-xl p-6 shadow-sm">
-                            <ImageGallery
-                                items={formatImages(room.images)}
-                                showPlayButton={false}
-                                showFullscreenButton={true}
-                                showThumbnails={true}
-                                thumbnailPosition="bottom"
-                            />
-                        </section>
-
                         {/* Amenities */}
                         <section className="bg-white rounded-xl p-6 shadow-sm">
                             <h2 className="text-2xl font-serif mb-6">Amenities</h2>
-                            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                                {Object.entries(amenityIcons).map(([name, icon]) => (
-                                    <div key={name} className="flex items-center gap-3">
-                                        <div className="text-scolor">{icon}</div>
-                                        <span>{name}</span>
-                                    </div>
-                                ))}
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                {room.amenities && Array.isArray(JSON.parse(room.amenities)) && JSON.parse(room.amenities).length > 0 ? (
+                                    JSON.parse(room.amenities).map((amenity, index) => (
+                                        <div key={index} className="flex items-center p-4 bg-acolor rounded-lg shadow-sm">
+                                            {amenityIcons[amenity] && <span className="mr-2">{amenityIcons[amenity]}</span>}
+                                            <span className="text-gray-700">{amenity}</span>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="col-span-2 text-gray-400">No amenities specified</div>
+                                )}
                             </div>
                         </section>
                     </div>
@@ -165,33 +204,6 @@ const RoomDetails = () => {
                                 </div>
 
                                 <button
-                                    onClick={() => setShowCalendar(!showCalendar)}
-                                    className="w-full flex items-center justify-center gap-2 
-                                             border border-gray-300 rounded-lg p-3 mb-4
-                                             hover:border-scolor transition duration-300"
-                                >
-                                    <FaCalendar />
-                                    Check Availability
-                                </button>
-
-                                <AnimatePresence>
-                                    {showCalendar && (
-                                        <motion.div
-                                            initial={{ opacity: 0, height: 0 }}
-                                            animate={{ opacity: 1, height: 'auto' }}
-                                            exit={{ opacity: 0, height: 0 }}
-                                        >
-                                            <Calendar
-                                                onChange={setSelectedDate}
-                                                value={selectedDate}
-                                                className="mb-4"
-                                                minDate={new Date()}
-                                            />
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
-
-                                <button
                                     onClick={handleBookNow}
                                     className="w-full bg-scolor text-white py-4 rounded-lg
                                              hover:bg-pcolor transition duration-300
@@ -207,33 +219,37 @@ const RoomDetails = () => {
                 {/* Similar Rooms */}
                 <section className="mt-16">
                     <h2 className="text-3xl font-serif text-center mb-10">Similar Rooms</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {rooms.slice(0, 3).map((similarRoom) => (
-                            <motion.div
-                                key={similarRoom._id}
-                                whileHover={{ y: -5 }}
-                                className="bg-white rounded-xl shadow-sm overflow-hidden"
-                            >
-                                <img
-                                    src={similarRoom.images[0]}
-                                    alt={similarRoom.roomType}
-                                    className="w-full h-48 object-cover"
-                                />
-                                <div className="p-6">
-                                    <h3 className="text-xl font-serif mb-2">{similarRoom.roomType}</h3>
-                                    <p className="text-gray-600 mb-4">{similarRoom.description}</p>
-                                    <button
-                                        onClick={() => handleFindOutMore(similarRoom._id)}
-                                        className="w-full bg-transparent border border-scolor text-scolor
-                                                 py-2 rounded hover:bg-scolor hover:text-white
-                                                 transition duration-300"
-                                    >
-                                        View Details
-                                    </button>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
+                    {similarRoomsLoading ? (
+                        <Loader />
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {rooms.slice(0, 3).map((similarRoom) => (
+                                <motion.div
+                                    key={similarRoom._id}
+                                    whileHover={{ y: -5 }}
+                                    className="bg-white rounded-xl shadow-sm overflow-hidden"
+                                >
+                                    <img
+                                        src={`http://localhost:5555/${similarRoom.images[0].replace(/\\/g, '/')}`}
+                                        alt={similarRoom.roomType}
+                                        className="w-full h-48 object-cover"
+                                    />
+                                    <div className="p-6">
+                                        <h3 className="text-xl font-serif mb-2">{similarRoom.roomType}</h3>
+                                        <p className="text-gray-600 mb-4">{similarRoom.description}</p>
+                                        <button
+                                            onClick={() => handleFindOutMore(similarRoom._id)}
+                                            className="w-full bg-transparent border border-scolor text-scolor
+                                                     py-2 rounded hover:bg-scolor hover:text-white
+                                                     transition duration-300"
+                                        >
+                                            View Details
+                                        </button>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    )}
                 </section>
             </div>
         </div>

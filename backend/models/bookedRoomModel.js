@@ -34,10 +34,20 @@ const bookingSchema = new mongoose.Schema({
         type: Date,
         required: [true, 'Check-out date is required'],
     },
+    bookedDates: [{
+        type: Date,
+        required: true
+    }],
     guests: {
-        type: Number,
-        min: [1, 'At least one guest is required'],
-        required: true,
+        adults: {
+            type: Number,
+            min: [1, 'At least one adult guest is required'],
+            required: true,
+        },
+        children: {
+            type: Number,
+            default: 0,
+        }
     },
     specialRequests: {
         type: String,
@@ -48,6 +58,17 @@ const bookingSchema = new mongoose.Schema({
         required: [true, 'Total amount is required'],
         min: [0, 'Total amount must be positive'],
     },
+    addons: [{
+        type: {
+            type: String,
+            required: true,
+        },
+        price: {
+            type: Number,
+            required: true,
+            min: [0, 'Addon price must be positive']
+        }
+    }],
     bookingConfirmationCode: {
         type: String,
         required: true,

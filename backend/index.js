@@ -5,15 +5,18 @@ import roomRoute from './routes/roomRoute.js';
 import bookedRoomRoutes from './routes/bookedRoomRoutes.js';
 import weddingRoute from "./routes/weddingRoute.js";
 import appointments from './routes/appointments.js';
+import paypalRoutes from './routes/paypalRoutes.js';
+import { createCheckoutSession } from "./services/stripe.js";
+
+
 import dotenv from 'dotenv';
-import authRoutes from "./routes/auth.js";
 
 // Load environment variables from .env file
 dotenv.config();
 
 // MongoDB connection string from .env
 const mongoURI = process.env.mongoDBURL;
-const PORT = process.env.PORT;
+const PORT = process.env.BACKEND_PORT;
 
 
 const app = express(); // Initialize the app first
@@ -35,14 +38,16 @@ app.use((err, req, res, next) => {
 
 app.get('/', (request, response) => {
     console.log(request);
-    return response.status(200).send("Welcome To SUNERAGIRA HOTEL"); // Change status code to 200
+    return response.status(200).send("Welcome To SUNERAGIRA HOTEL");
 });
 
 app.use('/rooms', roomRoute);
 app.use('/bookedRoom', bookedRoomRoutes);
 app.use('/appointments', appointments);
 app.use('/wedding', weddingRoute);
-app.use("/auth", authRoutes);
+app.use('/paypal', paypalRoutes);
+
+app.post("/checkout", createCheckoutSession); // Use the handler from the stripe module
 
 
 // Connect to MongoDB and start the server

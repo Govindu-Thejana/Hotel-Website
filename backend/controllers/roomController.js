@@ -82,6 +82,7 @@ export const getAllRooms = async (req, res) => {
     }
 };
 
+
 // Update a room by ID
 export const updateRoomById = async (req, res) => {
     try {
@@ -94,46 +95,61 @@ export const updateRoomById = async (req, res) => {
 
         const {
             roomId, roomType, description, capacity, pricePerNight,
-            availability, amenities, checkInTime, checkOutTime,
-            cancellationPolicy
+            availability, amenities, cancellationPolicy, existingImages,
         } = req.body;
 
-        // Process uploaded images
-        const uploadedImages = req.files ? req.files.map((file) => file.path) : [];
+        // Handle images
+        const uploadedImages = req.files?.map((file) => file.path) || [];
+        const finalImages = [
+            ...(existingImages ? JSON.parse(existingImages) : []),
+            ...uploadedImages,
+        ];
 
-        // Find the room to update
-        const room = await RoomModel.findById(id);
+        // Process amenities input
+        let processedAmenities;
+        if (amenities) {
+            if (Array.isArray(amenities) && amenities.length === 1 && typeof amenities[0] === 'string') {
+                // Handle case: ["[\"Air Conditioning\",\"Hot Water\",\"WiFi\"]"]
+                try {
+                    processedAmenities = JSON.stringify(JSON.parse(amenities[0])); // Parse and re-stringify the JSON string
+                } catch {
+                    processedAmenities = JSON.stringify(amenities); // Fallback if the inner string isn't valid JSON
+                }
+            } else if (typeof amenities === 'string' && amenities.trim().startsWith('[')) {
+                // Handle case: "[\"Air Conditioning\",\"Hot Water\",\"WiFi\"]"
+                processedAmenities = amenities; // Assume it's a valid JSON string
+            } else {
+                // Convert arrays or other data to JSON strings
+                processedAmenities = JSON.stringify(amenities);
+            }
+        }
+
+        // Prepare update fields
+        const updateFields = {
+            ...(roomId && { roomId }),
+            ...(roomType && { roomType }),
+            ...(description && { description }),
+            ...(capacity && { capacity }),
+            ...(pricePerNight && { pricePerNight }),
+            ...(availability && { availability }),
+            ...(processedAmenities && { amenities: processedAmenities }), // Store as JSON string
+            ...(cancellationPolicy && { cancellationPolicy }),
+            images: finalImages,
+        };
+
+        // Update the room
+        const room = await RoomModel.findByIdAndUpdate(id, updateFields, { new: true });
+
         if (!room) {
             return res.status(404).json({ message: 'Room not found' });
         }
 
-        // Update the room fields
-        const updatedRoom = await RoomModel.findByIdAndUpdate(
-            id,
-            {
-                roomId,
-                roomType,
-                description,
-                capacity,
-                pricePerNight,
-                availability,
-                amenities: amenities ? JSON.parse(amenities) : room.amenities, // Parse amenities if provided as JSON string
-                images: uploadedImages.length > 0 ? uploadedImages : room.images,
-                checkInTime,
-                checkOutTime,
-                cancellationPolicy,
-            },
-            { new: true }
-        );
-
-        return res.status(200).json({ message: 'Room updated successfully', room: updatedRoom });
-    } catch (error) {
-        console.error(error.message);
-        res.status(500).json({ message: error.message });
+        res.status(200).json(room);
+    } catch (err) {
+        console.error("Error updating room:", err);
+        res.status(500).json({ message: 'Server error, please try again.' });
     }
 };
-
-
 
 
 export const deleteRoomById = async (req, res) => {

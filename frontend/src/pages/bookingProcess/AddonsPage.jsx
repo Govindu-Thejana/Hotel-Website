@@ -82,7 +82,7 @@ const TransportOptions = () => {
 
               <button
                 onClick={() => addAddonToRoom(selectedRoomId, addonType, selectedRoom.guests.adults, selectedRoom.guests.children)}
-                className="bg-scolor text-white px-4 py-2 rounded w-full sm:w-auto float-right hover:bg-scolor transition-colors"
+                className="bg-scolor text-white px-4 py-1.5 rounded w-full sm:w-auto float-right hover:bg-pcolor transition-colors"
               >
                 ADD TO MY STAY
               </button>

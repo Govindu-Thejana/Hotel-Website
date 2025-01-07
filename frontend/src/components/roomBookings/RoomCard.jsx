@@ -1,8 +1,10 @@
 import React, { useState, useContext } from 'react';
 import {
     FaWifi, FaCoffee, FaParking, FaSwimmingPool,
-    FaMapMarkerAlt, FaBed, FaUsers, FaChevronLeft,
-    FaChevronRight, FaRegHeart, FaHeart
+    FaMapMarkerAlt, FaDog, FaUsers, FaChevronLeft,
+    FaChevronRight, FaRegHeart, FaHeart,
+    FaStar,
+    FaRegStar
 } from 'react-icons/fa';
 import { CartContext } from '../../contexts/CartContext'; // Import the CartContext
 
@@ -11,6 +13,14 @@ const RoomCard = ({ room, onAddToCart }) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [isFavorite, setIsFavorite] = useState(false);
     const [showDetails, setShowDetails] = useState(false);
+
+    const amenityIcons = {
+        Wifi: <FaWifi />,
+        Pool: <FaSwimmingPool />,
+        Parking: <FaParking />,
+        Coffee: <FaCoffee />,
+        Pets: <FaDog />,
+    };
 
     // Default image if none provided
     const defaultImage = '/images/roomImage.jpeg';
@@ -58,13 +68,13 @@ const RoomCard = ({ room, onAddToCart }) => {
                     {/* Favorite Button */}
                     <button
                         onClick={() => setIsFavorite(!isFavorite)}
-                        className="absolute top-4 right-4 p-2 rounded-full bg-white/80 
-                 hover:bg-white"
+                        className="absolute top-4 right-4 p-2 text-yellow rounded-full"
                     >
                         {isFavorite ? (
-                            <FaHeart className="text-red-500 text-xl" />
+                            <FaStar className="text-yellow-300 text-xl" />
                         ) : (
-                            <FaRegHeart className="text-gray-600 text-xl" />
+                            <FaRegStar className="text-yellow-300 text-xl" />
+
                         )}
                     </button>
                 </div>
@@ -91,10 +101,6 @@ const RoomCard = ({ room, onAddToCart }) => {
                     {/* Room Features */}
                     <div className="grid grid-cols-2 gap-2 mb-2">
                         <div className="flex items-center gap-2">
-                            <FaBed className="text-gray-500" />
-                            <span className="text-sm">Beds: {room.beds}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
                             <FaUsers className="text-gray-500" />
                             <span className="text-sm">Max: {room.capacity} guests</span>
                         </div>
@@ -104,15 +110,16 @@ const RoomCard = ({ room, onAddToCart }) => {
                     <div className="mb-2">
                         <h3 className="text-sm font-semibold text-gray-700 mb-1">Amenities</h3>
                         <div className="flex flex-wrap gap-2">
-                            {room.amenities?.map((amenity, index) => (
-                                <span
-                                    key={index}
-                                    className="inline-flex items-center px-2 py-1 rounded-full 
-                     text-sm bg-gray-100 text-gray-700"
-                                >
-                                    {amenity}
-                                </span>
-                            ))}
+                            {room.amenities && Array.isArray(JSON.parse(room.amenities)) && JSON.parse(room.amenities).length > 0 ? (
+                                JSON.parse(room.amenities).map((amenity, index) => (
+                                    <div key={index} className="flex items-center p-4 bg-acolor rounded-lg shadow-sm">
+                                        {amenityIcons[amenity] && <span className="mr-2">{amenityIcons[amenity]}</span>}
+                                        <span className="text-gray-700">{amenity}</span>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="col-span-2 text-gray-400">No amenities specified</div>
+                            )}
                         </div>
                     </div>
 
@@ -156,12 +163,16 @@ const RoomCard = ({ room, onAddToCart }) => {
                         <div>
                             <h3 className="font-semibold mb-2">Room Features</h3>
                             <ul className="space-y-1">
-                                {room.amenities?.map((amenity, index) => (
-                                    <li key={index} className="flex items-center gap-2 text-sm">
-                                        <span className="text-green-500">•</span>
-                                        {amenity}
-                                    </li>
-                                ))}
+                                {room.amenities && Array.isArray(JSON.parse(room.amenities)) && JSON.parse(room.amenities).length > 0 ? (
+                                    JSON.parse(room.amenities).map((amenity, index) => (
+                                        <div key={index} className="flex items-center p-4 bg-acolor rounded-lg shadow-sm">
+                                            {amenityIcons[amenity] && <span className="mr-2">{amenityIcons[amenity]}</span>}
+                                            <span className="text-gray-700">{amenity}</span>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="col-span-2 text-gray-400">No amenities specified</div>
+                                )}
                             </ul>
                         </div>
                         <div>

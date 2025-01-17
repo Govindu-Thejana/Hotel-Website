@@ -17,9 +17,6 @@ const PORT = process.env.PORT;
 const app = express(); // Initialize the app first
 const backendURL = "https://hotel-website-three-azure.vercel.app"; // Your backend URL
 
-const app = express(); // Initialize the app first
-const backendURL = "https://hotel-website-backend-drab.vercel.app/"; // Your backend URL
-
 // Middleware
 app.use(express.json());
 app.use(cors());

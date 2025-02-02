@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { motion } from 'framer-motion';
@@ -18,7 +18,25 @@ const RoomDetails = () => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [showAllPhotos, setShowAllPhotos] = useState(false);
     const navigate = useNavigate();
+    const modalRef = useRef(null); // Create a ref for the modal
+    // Handle clicks outside the modal
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (modalRef.current && !modalRef.current.contains(event.target)) {
+                setShowAllPhotos(false); // Close the modal
+            }
+        };
 
+        // Add event listener when the modal is open
+        if (showAllPhotos) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        // Clean up the event listener
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showAllPhotos]);
     useEffect(() => {
         axios
             .get('http://localhost:5555/rooms')
@@ -76,7 +94,7 @@ const RoomDetails = () => {
         <div className="min-h-screen bg-gray-50">
             {/* Hero Section */}
             <div className="relative h-[60vh] w-full">
-                {room.images && room.images.length > 0 ? (
+                {room.images && room.images.length > 0 && room.images[currentImageIndex] ? (
                     <img
                         src={`http://localhost:5555/${room.images[currentImageIndex].replace(/\\/g, '/')}`}
                         alt={room.roomType}
@@ -116,15 +134,17 @@ const RoomDetails = () => {
             </div>
             {showAllPhotos && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white p-6 rounded-lg max-w-4xl max-h-[90vh] overflow-auto">
+                    <div ref={modalRef} className="bg-white p-6 rounded-lg max-w-4xl max-h-[90vh] overflow-auto">
                         <div className="grid grid-cols-2 gap-4">
                             {room.images.map((img, index) => (
-                                <img
-                                    key={index}
-                                    src={`http://localhost:5555/${img.replace(/\\/g, '/')}`}
-                                    alt={`Room view ${index + 1}`}
-                                    className="w-full h-64 object-cover"
-                                />
+                                img && (
+                                    <img
+                                        key={index}
+                                        src={`http://localhost:5555/${img.replace(/\\/g, '/')}`}
+                                        alt={`Room view ${index + 1}`}
+                                        className="w-full h-64 object-cover"
+                                    />
+                                )
                             ))}
                         </div>
                         <button
@@ -223,31 +243,46 @@ const RoomDetails = () => {
                         <Loader />
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {rooms.slice(0, 6).map((similarRoom) => (
-                                <motion.div
-                                    key={similarRoom._id}
-                                    whileHover={{ y: -5 }}
-                                    className="bg-white rounded-xl shadow-sm overflow-hidden"
-                                >
-                                    <img
-                                        src={`http://localhost:5555/${similarRoom.images[0].replace(/\\/g, '/')}`}
-                                        alt={similarRoom.roomType}
-                                        className="w-full h-48 object-cover"
-                                    />
-                                    <div className="p-6">
-                                        <h3 className="text-xl font-serif mb-2">{similarRoom.roomType}</h3>
-                                        <p className="text-gray-600 mb-4">{similarRoom.description}</p>
-                                        <button
-                                            onClick={() => handleFindOutMore(similarRoom._id)}
-                                            className="w-full bg-transparent border border-scolor text-scolor
-                                                     py-2 rounded hover:bg-scolor hover:text-white
-                                                     transition duration-300"
-                                        >
-                                            View Details
-                                        </button>
-                                    </div>
-                                </motion.div>
-                            ))}
+                            {rooms
+                                .reduce((uniqueRooms, room) => {
+                                    // Check if a room of this type already exists in the uniqueRooms array
+                                    if (!uniqueRooms.some((r) => r.roomType === room.roomType)) {
+                                        uniqueRooms.push(room); // Add the room if it's the first of its type
+                                    }
+                                    return uniqueRooms;
+                                }, []) // Start with an empty array
+                                .slice(0, 6) // Limit to 6 rooms
+                                .map((similarRoom) => (
+                                    <motion.div
+                                        key={similarRoom._id}
+                                        whileHover={{ y: -5 }}
+                                        className="bg-white rounded-xl shadow-sm overflow-hidden"
+                                    >
+                                        {similarRoom.images && similarRoom.images.length > 0 && similarRoom.images[0] ? (
+                                            <img
+                                                src={`http://localhost:5555/${similarRoom.images[0].replace(/\\/g, '/')}`}
+                                                alt={similarRoom.roomType}
+                                                className="w-full h-48 object-cover"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
+                                                <span className="text-gray-500">No Image Available</span>
+                                            </div>
+                                        )}
+                                        <div className="p-6">
+                                            <h3 className="text-xl font-serif mb-2">{similarRoom.roomType}</h3>
+                                            <p className="text-gray-600 mb-4">{similarRoom.description}</p>
+                                            <button
+                                                onClick={() => handleFindOutMore(similarRoom._id)}
+                                                className="w-full bg-transparent border border-scolor text-scolor
+                                     py-2 rounded hover:bg-scolor hover:text-white
+                                     transition duration-300"
+                                            >
+                                                View Details
+                                            </button>
+                                        </div>
+                                    </motion.div>
+                                ))}
                         </div>
                     )}
                 </section>

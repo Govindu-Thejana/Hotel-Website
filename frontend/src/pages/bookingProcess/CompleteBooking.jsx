@@ -34,50 +34,67 @@ const BookingConfirmation = () => {
     );
   }
 
-  const bookingDetails = cart[0]; // Assuming only one room is booked for simplicity
+  // Calculate total amount for all rooms
+  const totalAmount = cart.reduce((sum, room) => sum + room.totalAmount, 0);
 
   return (
     <div className="max-w-4xl mx-auto p-6 py-12 flex flex-col items-center">
       <FaCheckCircle className="text-green-500 text-6xl mb-4" />
       <h1 className="text-3xl font-bold text-gray-800 mb-2">Booking Confirmed!</h1>
-      <p className="text-gray-600 mb-6 text-center">Thank you for your booking, {bookingDetails.fullName}</p>
+      <p className="text-gray-600 mb-6 text-center">Thank you for your booking.</p>
 
       <div className="bg-white p-6 rounded-xl shadow-lg w-full mb-6">
         <h2 className="text-xl font-bold text-gray-800 mb-4">Booking Details</h2>
 
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <p className="text-gray-500 text-sm">Check-in</p>
-            <p className="font-medium text-sm">{format(new Date(bookingDetails.checkIn), 'EEE, MMM d, yyyy')}</p>
+        {cart.map((booking, index) => (
+          <div key={index} className="mb-6 border-b pb-4 last:border-b-0">
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">
+              Room {index + 1}: {booking.room.roomType}
+            </h3>
+
+            <div className="grid grid-cols-2 gap-4 mb-2">
+              <div>
+                <p className="text-gray-500 text-sm">Check-in</p>
+                <p className="font-medium text-sm">{format(new Date(booking.checkIn), 'EEE, MMM d, yyyy')}</p>
+              </div>
+              <div>
+                <p className="text-gray-500 text-sm">Check-out</p>
+                <p className="font-medium text-sm">{format(new Date(booking.checkOut), 'EEE, MMM d, yyyy')}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 mb-2">
+              <div>
+                <p className="text-gray-500 text-sm">Guests</p>
+                <p className="font-medium text-sm">
+                  {booking.guests.adults} Adults, {booking.guests.children} Children
+                </p>
+              </div>
+              <div>
+                <p className="text-gray-500 text-sm">Room Price</p>
+                <p className="font-medium text-sm">${booking.totalAmount.toFixed(2)}</p>
+              </div>
+            </div>
+
+            <div>
+              <p className="text-gray-500 text-sm">Add-ons</p>
+              <p className="font-medium text-sm">
+                {booking.addons.length > 0
+                  ? booking.addons.map((addon, idx) => (
+                    <span key={idx}>
+                      {addon.type} (${addon.price.toFixed(2)})
+                      {idx < booking.addons.length - 1 ? ', ' : ''}
+                    </span>
+                  ))
+                  : 'None'}
+              </p>
+            </div>
           </div>
-          <div>
-            <p className="text-gray-500 text-sm">Check-out</p>
-            <p className="font-medium text-sm">{format(new Date(bookingDetails.checkOut), 'EEE, MMM d, yyyy')}</p>
-          </div>
-        </div>
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <p className="text-gray-500 text-sm">Room Type</p>
-            <p className="font-medium text-sm">{bookingDetails.room.roomType}</p>
-          </div>
-          <div>
-            <p className="text-gray-500 text-sm">Total Amount</p>
-            <p className="font-medium text-sm">${bookingDetails.totalAmount.toFixed(2)}</p>
-          </div>
-        </div>
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <p className="text-gray-500 text-sm">Guests</p>
-            <p className="font-medium text-sm">{bookingDetails.guests.adults} Adults, {bookingDetails.guests.children} Children</p>
-          </div>
-          <div>
-            <p className="text-gray-500 text-sm">Add-ons</p>
-            <p className="font-medium text-sm">
-              {bookingDetails.addons.length > 0 ? bookingDetails.addons.map((addon, index) => (
-                <span key={index}>{addon.type}{index < bookingDetails.addons.length - 1 ? ', ' : ''}</span>
-              )) : 'None'}
-            </p>
-          </div>
+        ))}
+
+        <div className="mt-4">
+          <p className="text-gray-500 text-sm font-bold">Total Amount</p>
+          <p className="font-bold text-lg">${totalAmount.toFixed(2)}</p>
         </div>
       </div>
 

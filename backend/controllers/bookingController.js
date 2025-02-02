@@ -2,9 +2,13 @@ import RoomModel from '../models/roomModel.js';
 import BookedRoomModel from '../models/bookedRoomModel.js';
 import { generateBookingId, generateConfirmationCode } from '../middleware/generators.js';
 import moment from 'moment';
+import mongoose from 'mongoose';
 
 // Function to create a new booking
 export const createBooking = async (req, res) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
     try {
         const {
             prefix,
@@ -18,18 +22,36 @@ export const createBooking = async (req, res) => {
             zipCode,
             cart
         } = req.body;
-        console.log(req.body);
 
-        // Create bookings for each item in the cart
-        const bookings = [];
+        console.log('Request Body:', req.body);
+
+        // Validate room IDs in the cart
+        const roomIds = cart.map(item => item.room._id);
+        if (!roomIds.every(id => mongoose.Types.ObjectId.isValid(id))) {
+            await session.abortTransaction();
+            session.endSession();
+            return res.status(400).json({ message: 'Invalid room IDs in the cart' });
+        }
+
+        // Fetch all rooms in a single query
+        const rooms = await RoomModel.find({ _id: { $in: roomIds } }).session(session);
+        if (rooms.length !== cart.length) {
+            await session.abortTransaction();
+            session.endSession();
+            return res.status(400).json({ message: 'One or more rooms not found' });
+        }
+
+        // 1. First pass: Check availability for all rooms
+        const availabilityErrors = [];
+        const bookingItems = [];
+
         for (const item of cart) {
-            const { room, checkIn, checkOut, guests, totalAmount, addons } = item;
-            console.log(item.room.roomId, item.checkIn, item.checkOut);
+            const { room, checkIn, checkOut } = item;
+            const roomRecord = rooms.find(r => r._id.toString() === room._id);
 
-            // Find room by ID
-            const roomRecord = await RoomModel.findById(room._id);
             if (!roomRecord) {
-                return res.status(404).json({ message: 'Room not found' });
+                availabilityErrors.push(`Room ${room.roomId} not found`);
+                continue;
             }
 
             // Adjust check-in and check-out dates
@@ -39,24 +61,37 @@ export const createBooking = async (req, res) => {
             // Check if room is already booked for the given dates
             const existingBooking = await BookedRoomModel.findOne({
                 roomId: room._id,
-                bookedDates: {
-                    $elemMatch: {
-                        $gte: checkIn,
-                        $lt: checkOut
-                    }
-                }
-            });
+                $or: [
+                    { checkIn: { $lte: checkOut }, checkOut: { $gte: checkIn } }
+                ]
+            }).session(session);
 
             if (existingBooking) {
-                return res.status(400).json({
-                    message: `Room ${room.roomId} is not available for the selected dates`
-                });
+                availabilityErrors.push(`Room ${room.roomId} is already booked for the selected dates.`);
+                continue;
             }
 
-            // Generate bookedDates array (from adjusted check-in to one day before adjusted check-out)
+            bookingItems.push({ item, roomRecord, adjustedCheckIn, adjustedCheckOut });
+        }
+
+        if (availabilityErrors.length > 0) {
+            await session.abortTransaction();
+            session.endSession();
+            return res.status(400).json({
+                message: 'Some rooms are unavailable',
+                errors: availabilityErrors
+            });
+        }
+
+        // 2. Second pass: Create bookings if all rooms are available
+        const bookings = [];
+        for (const { item, roomRecord, adjustedCheckIn, adjustedCheckOut } of bookingItems) {
+            const { room, guests, totalAmount, addons } = item;
+
+            // Generate bookedDates array
             const bookedDates = [];
-            let currentDate = adjustedCheckIn;
-            while (currentDate < checkOut) {
+            let currentDate = new Date(adjustedCheckIn);
+            while (currentDate < adjustedCheckOut) {
                 bookedDates.push(new Date(currentDate));
                 currentDate.setDate(currentDate.getDate() + 1);
             }
@@ -72,35 +107,43 @@ export const createBooking = async (req, res) => {
                 checkOut: adjustedCheckOut,
                 bookedDates,
                 guests,
-                address: {
-                    country,
-                    address1,
-                    city,
-                    zipCode
-                },
+                address: { country, address1, city, zipCode },
                 totalAmount,
                 addons,
                 bookingConfirmationCode: generateConfirmationCode()
             });
 
-            // Save booking
-            await booking.save();
-            bookings.push(booking);
+            await booking.save({ session });
 
             // Update room status
             roomRecord.isbooked = true;
-            await roomRecord.save();
+            await roomRecord.save({ session });
+
+            bookings.push(booking);
         }
 
-        // Send response after all bookings are created
-        res.status(201).json({
+        // Commit transaction if everything is successful
+        await session.commitTransaction();
+        session.endSession();
+
+        return res.status(201).json({
             message: 'Booking created successfully',
             bookings
         });
+
     } catch (error) {
-        // Log the error and send a single error response
-        console.error("Error creating booking:", error);
-        res.status(500).json({
+        console.error('Error creating booking:', error);
+
+        // Abort transaction on error
+        try {
+            await session.abortTransaction();
+        } catch (abortError) {
+            console.error('Error aborting transaction:', abortError);
+        }
+
+        session.endSession();
+
+        return res.status(500).json({
             message: 'Error creating booking',
             error: error.message
         });
@@ -310,61 +353,57 @@ export const getAvailableRooms = async (req, res) => {
 
         // Validate input dates
         if (!startDate || !endDate || !roomType || !guests) {
-            return res.status(400).json({ message: 'Missing required query parameters' });
+            return res.status(400).json({ message: "Missing required query parameters" });
         }
 
-        // Convert dates to Date objects
         const checkIn = new Date(startDate);
         const checkOut = new Date(endDate);
 
         // Validate date range
         if (checkIn >= checkOut || isNaN(checkIn.getTime()) || isNaN(checkOut.getTime())) {
-            return res.status(400).json({ message: 'Invalid date range' });
+            return res.status(400).json({ message: "Invalid date range" });
         }
 
-        // Find all rooms
-        const rooms = await RoomModel.find({});
-        if (!rooms.length) {
-            return res.status(404).json({ message: 'No rooms found' });
+        // Find all available rooms
+        const allRooms = await RoomModel.find({ availability: true });
+        if (!allRooms.length) {
+            return res.status(404).json({ message: "No rooms found" });
         }
 
-        // Filter rooms based on their availability
-        const availableRooms = [];
-        for (const room of rooms) {
-            if (!room.availability) {
-                continue; // Skip room if it is not available
-            }
+        const roomIds = allRooms.map((room) => room._id);
 
-            // Check if the room is already booked for the given dates
-            const existingBooking = await BookedRoomModel.findOne({
-                roomId: room._id,
-                $or: [
-                    {
-                        checkIn: { $lte: checkOut },
-                        checkOut: { $gte: checkIn }
-                    }
-                ]
-            });
+        // Find booked rooms within the requested date range
+        const bookedRooms = await BookedRoomModel.find({
+            roomId: { $in: roomIds },
+            $or: [
+                { checkIn: { $lt: checkOut }, checkOut: { $gt: checkIn } } // Overlapping booking check
+            ]
+        });
 
-            // Room is available if no booking exists for the requested dates or if there are no bookings at all
-            if (!existingBooking) {
-                availableRooms.push(room);
-                console.log(`Availble rooms :Room ID: ${room.roomId}, Room Type: ${room.roomType}`);
-            }
-        }
+        // Create a set of booked room IDs
+        const bookedRoomIds = new Set(bookedRooms.map((booking) => booking.roomId.toString()));
 
-        // Ensure the first room is of the requested room type if available
-        const requestedRoomIndex = availableRooms.findIndex(room => room.roomType === roomType);
+        // Filter rooms that are not booked
+        let availableRooms = allRooms.filter((room) => !bookedRoomIds.has(room._id.toString()));
+
+        // Prioritize requested room type
+        const requestedRoomIndex = availableRooms.findIndex((room) => room.roomType === roomType);
         if (requestedRoomIndex > -1) {
             const [requestedRoom] = availableRooms.splice(requestedRoomIndex, 1);
             availableRooms.unshift(requestedRoom);
         }
 
+        // Logging available rooms for debugging
+        console.log("Available Rooms:");
+        availableRooms.forEach((room) =>
+            console.log(`Room ID: ${room._id}, Room Type: ${room.roomType}`)
+        );
+
         res.status(200).json({ availableRooms });
     } catch (error) {
-        console.error('Error fetching available rooms:', error);
+        console.error("Error fetching available rooms:", error);
         res.status(500).json({
-            message: 'Internal Server Error',
+            message: "Internal Server Error",
             error: error.message
         });
     }

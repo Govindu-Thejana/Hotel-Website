@@ -46,6 +46,7 @@ export async function getRoomById(_id) {
 // Create a new booking
 export async function createBooking(bookingData) {
     try {
+        console.log(bookingData);
         const response = await api.post('/bookedRoom/bookings', bookingData, {
             headers: {
                 'Content-Type': 'application/json'
@@ -53,15 +54,18 @@ export async function createBooking(bookingData) {
         });
         return response.data;
     } catch (error) {
+        console.error('Booking creation failed:', error);
+
         if (error.response?.data?.message) {
             throw new Error(error.response.data.message);
         } else if (error.response?.status === 500) {
             throw new Error('Server error. Please try again later.');
         } else {
-            throw new Error('Failed to create booking. Please try again.');
+            throw new Error(`Failed to create booking. Please try again : ${error.message}`);
         }
     }
 }
+
 
 
 // Get booking details by ID

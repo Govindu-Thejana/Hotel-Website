@@ -46,6 +46,7 @@ const CheckoutPage = () => {
         }
 
         try {
+            console.log(bookingData.data)
             const response = await createBooking(bookingData);
             console.log("Booking created successfully:", response);
             alert('Booking created successfully!');

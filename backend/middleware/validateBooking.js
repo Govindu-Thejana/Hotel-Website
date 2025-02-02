@@ -43,7 +43,19 @@ export const validateBookingData = (req, res, next) => {
         // Validate dates
         const checkInDate = new Date(checkIn);
         const checkOutDate = new Date(checkOut);
+        const today = new Date();
 
+        if (checkInDate < today) {
+            return res.status(400).json({
+                message: 'Check-in date cannot be in the past'
+            });
+        }
+
+        if (checkOutDate <= checkInDate) {
+            return res.status(400).json({
+                message: 'Check-out date must be after check-in date'
+            });
+        }
 
         // Validate guests number
         if (guests < 1) {
@@ -53,7 +65,7 @@ export const validateBookingData = (req, res, next) => {
         }
         console.log('Validation successful');
 
-        next();
-
     }
+    next();
+
 }

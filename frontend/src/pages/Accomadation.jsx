@@ -11,7 +11,7 @@ const Accommodation = () => {
 
     useEffect(() => {
         axios
-            .get('http://localhost:5555/rooms')
+            .get('https://hotel-website-backend-drab.vercel.app/rooms')
             .then((response) => {
                 setRooms(response.data.data);
             })
@@ -149,7 +149,7 @@ const Accommodation = () => {
                                 className="w-full h-48 object-cover"
                                 src={
                                     room.images && room.images[0]
-                                        ? `http://localhost:5555/${room.images[0].replace(/\\/g, '/')}`
+                                        ? `https://hotel-website-backend-drab.vercel.app/${room.images[0].replace(/\\/g, '/')}`
                                         : '/default-image.jpg' // Fallback image if images array is undefined or empty
                                 }
                                 alt={room.roomType || 'Room'}

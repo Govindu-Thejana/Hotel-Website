@@ -12,7 +12,7 @@ const WeddingPackages = () => {
     useEffect(() => {
         const fetchWedding = async () => {
             try {
-                const response = await axios.get('http://localhost:5555/wedding');
+                const response = await axios.get('https://hotel-website-backend-drab.vercel.app/wedding');
                 if (response.status === 200) {
                     setWedding(response.data.data || response.data);
                 } else {
@@ -111,10 +111,10 @@ const WeddingPackages = () => {
                 </div>
             </div>
 
-            <Modal 
-                isOpen={isModalOpen} 
-                onClose={closeModal} 
-                packageDetails={selectedPackage} 
+            <Modal
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                packageDetails={selectedPackage}
             />
         </div>
     );

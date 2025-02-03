@@ -15,7 +15,7 @@ export const addRooms = async (roomId, roomType, description, capacity, pricePer
     };
 
     try {
-        const response = await axios.post('http://localhost:5555/rooms/', roomData, {
+        const response = await axios.post('https://hotel-website-backend-drab.vercel.app/rooms/', roomData, {
             headers: {
                 'Content-Type': 'application/json'
             }

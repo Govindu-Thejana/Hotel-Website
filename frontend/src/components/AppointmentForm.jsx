@@ -14,7 +14,7 @@ const AppointmentForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5555/appointments", {
+      const response = await fetch("https://hotel-website-backend-drab.vercel.app/appointments", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -95,7 +95,7 @@ const AppointmentForm = () => {
               required
             />
           </div>
-          
+
           <div className="mb-6">
             <label
               className="block text-left text-gray-700 font-semibold mb-2"

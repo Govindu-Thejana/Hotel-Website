@@ -17,7 +17,7 @@ const Login = () => {
         setSuccessMessage("");
 
         try {
-            const response = await axios.post("http://localhost:5555/auth/admin/login", {
+            const response = await axios.post("https://hotel-website-backend-drab.vercel.app/auth/admin/login", {
                 username,
                 password,
             });
@@ -45,9 +45,9 @@ const Login = () => {
         setSuccessMessage("");
 
         try {
-           
-            const response = await axios.post("http://localhost:5555/auth/admin/forgot-password", {
-                email: "14992pasan@gmail.com", 
+
+            const response = await axios.post("https://hotel-website-backend-drab.vercel.app/auth/admin/forgot-password", {
+                email: "14992pasan@gmail.com",
             });
 
             if (response.data.message === "Email sent successfully") {

@@ -43,7 +43,7 @@ const RoomCreationForm = () => {
     useEffect(() => {
         const fetchRoomTypes = async () => {
             try {
-                const response = await axios.get('http://localhost:5555/rooms');
+                const response = await axios.get('https://hotel-website-backend-drab.vercel.app/rooms');
                 const types = response.data.data.map((room) => room.roomType); // Adjust field name based on your API
                 setRoomTypes([...new Set(types)]); // Ensure no duplicates
             } catch (error) {
@@ -59,7 +59,7 @@ const RoomCreationForm = () => {
     useEffect(() => {
         const fetchAmenities = async () => {
             try {
-                const response = await axios.get('http://localhost:5555/rooms'); // Use the same endpoint
+                const response = await axios.get('https://hotel-website-backend-drab.vercel.app/rooms'); // Use the same endpoint
                 const allAmenities = response.data.data
                     .flatMap((room) => {
                         try {

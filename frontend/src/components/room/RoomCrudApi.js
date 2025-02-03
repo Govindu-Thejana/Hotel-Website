@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const api = axios.create({
-    baseURL: "http://localhost:5555", // Replace with your server URL
+    baseURL: "https://hotel-website-backend-drab.vercel.app", // Replace with your server URL
 });
 
 // Function to add a new room with file upload
@@ -96,7 +96,7 @@ export async function updateRoom(_id, roomData) {
         });
 
         // Make the API call
-        const response = await axios.put(`http://localhost:5555/rooms/${_id}`, formData, {
+        const response = await axios.put(`https://hotel-website-backend-drab.vercel.app/rooms/${_id}`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },

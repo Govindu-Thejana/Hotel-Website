@@ -39,7 +39,7 @@ const RoomDetails = () => {
     }, [showAllPhotos]);
     useEffect(() => {
         axios
-            .get('http://localhost:5555/rooms')
+            .get('https://hotel-website-backend-drab.vercel.app/rooms')
             .then((response) => {
                 setRooms(response.data.data);
                 setSimilarRoomsLoading(false);
@@ -54,7 +54,7 @@ const RoomDetails = () => {
         const fetchRoomData = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`http://localhost:5555/rooms/${roomId}`);
+                const response = await axios.get(`https://hotel-website-backend-drab.vercel.app/rooms/${roomId}`);
                 setRoom(response.data);
             } catch {
                 setError('Failed to fetch room data. Please try again later.');
@@ -96,7 +96,7 @@ const RoomDetails = () => {
             <div className="relative h-[60vh] w-full">
                 {room.images && room.images.length > 0 && room.images[currentImageIndex] ? (
                     <img
-                        src={`http://localhost:5555/${room.images[currentImageIndex].replace(/\\/g, '/')}`}
+                        src={`https://hotel-website-backend-drab.vercel.app/${room.images[currentImageIndex].replace(/\\/g, '/')}`}
                         alt={room.roomType}
                         className="w-full h-full object-cover"
                     />
@@ -140,7 +140,7 @@ const RoomDetails = () => {
                                 img && (
                                     <img
                                         key={index}
-                                        src={`http://localhost:5555/${img.replace(/\\/g, '/')}`}
+                                        src={`https://hotel-website-backend-drab.vercel.app/${img.replace(/\\/g, '/')}`}
                                         alt={`Room view ${index + 1}`}
                                         className="w-full h-64 object-cover"
                                     />
@@ -260,7 +260,7 @@ const RoomDetails = () => {
                                     >
                                         {similarRoom.images && similarRoom.images.length > 0 && similarRoom.images[0] ? (
                                             <img
-                                                src={`http://localhost:5555/${similarRoom.images[0].replace(/\\/g, '/')}`}
+                                                src={`https://hotel-website-backend-drab.vercel.app/${similarRoom.images[0].replace(/\\/g, '/')}`}
                                                 alt={similarRoom.roomType}
                                                 className="w-full h-48 object-cover"
                                             />

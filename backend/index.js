@@ -24,7 +24,11 @@ const backendURL = 'https://hotel-website-backend-drab.vercel.app/'; // Your bac
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: ['http://localhost:5173', 'https://suneragirahotel.vercel.app'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 app.use('/uploads', express.static('uploads')); // Serve uploaded files
 

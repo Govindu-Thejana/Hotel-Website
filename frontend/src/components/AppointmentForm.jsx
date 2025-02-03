@@ -4,8 +4,10 @@ const AppointmentForm = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "", // Added phone field
     date: "",
     time: "",
+    reason: "", // Added reason field
   });
   const [showSuccess, setShowSuccess] = useState(false); // State for success message
 
@@ -22,7 +24,7 @@ const AppointmentForm = () => {
 
       if (response.ok) {
         console.log("Form submitted successfully");
-        setFormData({ name: "", email: "", date: "", time: "" });
+        setFormData({ name: "", email: "", phone: "", date: "", time: "", reason: "" });
         setShowSuccess(true); // Show success message
         setTimeout(() => setShowSuccess(false), 3000); // Hide after 3 seconds
       } else {
@@ -93,6 +95,25 @@ const AppointmentForm = () => {
               required
             />
           </div>
+          
+          <div className="mb-6">
+            <label
+              className="block text-left text-gray-700 font-semibold mb-2"
+              htmlFor="phone"
+            >
+              Your Phone Number (preferably WhatsApp)
+            </label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+              placeholder="+94 712 345 678"
+              required
+            />
+          </div>
 
           <div className="mb-6">
             <label
@@ -130,6 +151,24 @@ const AppointmentForm = () => {
             />
           </div>
 
+          <div className="mb-6">
+            <label
+              className="block text-left text-gray-700 font-semibold mb-2"
+              htmlFor="reason"
+            >
+              Reason for Appointment
+            </label>
+            <textarea
+              id="reason"
+              name="reason"
+              value={formData.reason}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+              placeholder="Describe the reason for your appointment"
+              required
+            />
+          </div>
+
           <button
             type="submit"
             className="bg-scolor text-white py-3 px-6 rounded-md shadow-lg hover:bg-gradient-to-l transition duration-300"
@@ -140,13 +179,13 @@ const AppointmentForm = () => {
 
         {/* Success message popup */}
         {showSuccess && (
-  <div className="mt-8 bg-pcolor border border-pcolor text-white px-6 py-4 rounded-lg max-w-lg mx-auto shadow-lg">
-    <span className="block sm:inline text-xl font-semibold">
-      🎉 Appointment request successfully sent! We’ll be in touch soon to confirm the details.
-    </span>
-  </div>
-)}
-
+          <div className="mt-8 bg-pcolor border border-pcolor text-white px-6 py-4 rounded-lg max-w-lg mx-auto shadow-lg">
+            <span className="block sm:inline text-xl font-semibold">
+              🎉 Appointment request successfully sent! We’ll be in touch soon
+              to confirm the details.
+            </span>
+          </div>
+        )}
 
         <div className="mt-8 text-gray-600">
           <p className="text-sm">

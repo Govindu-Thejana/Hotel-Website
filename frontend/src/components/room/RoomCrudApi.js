@@ -73,52 +73,42 @@ export const getRoomDetails = async (roomId) => {
     }
 };
 
-export const updateRoom = async ({
-    id, // The room ID to update
-    roomId,
-    roomType,
-    description,
-    capacity,
-    pricePerNight,
-    availability,
-    cancellationPolicy,
-    amenities,
-    images, // New images to upload (optional)
-}) => {
-    const formData = new FormData();
-
-    // Append room details to FormData
-    formData.append("roomId", roomId);
-    formData.append("roomType", roomType);
-    formData.append("description", description);
-    formData.append("capacity", capacity);
-    formData.append("pricePerNight", pricePerNight);
-    formData.append("availability", availability === "true"); // Convert availability to boolean
-    formData.append("cancellationPolicy", cancellationPolicy);
-
-    // Append amenities as a JSON string
-    formData.append("amenities", JSON.stringify(amenities));
-
-    // Append image files (if provided)
-    if (images && images.length > 0) {
-        images.forEach((image) => {
-            formData.append("images", image); // `images` should be an array of File objects
-        });
-    }
-
+// Update a specific room by ID
+export async function updateRoom(_id, roomData) {
     try {
-        const response = await api.put(`/rooms/${id}`, formData, {
+        const formData = new FormData();
+
+        // Append room details to FormData
+        Object.entries(roomData).forEach(([key, value]) => {
+            if (key === "images") {
+                value.forEach((image) => {
+                    if (image instanceof File) {
+                        formData.append("images", image); // Append new images
+                    }
+                });
+            } else if (key === "existingImages") {
+                formData.append("existingImages", JSON.stringify(value)); // Append existing directories
+            } else if (key === "amenities") {
+                formData.append("amenities", JSON.stringify(value)); // Serialize amenities
+            } else {
+                formData.append(key, value); // Append other fields
+            }
+        });
+
+        // Make the API call
+        const response = await axios.put(`http://localhost:5555/rooms/${_id}`, formData, {
             headers: {
-                "Content-Type": "multipart/form-data", // Ensure proper handling of file uploads
+                "Content-Type": "multipart/form-data",
             },
         });
 
-        return response.data; // Return the response from the server
+        return response.data;
     } catch (error) {
-        console.error("Error updating room:", error.response?.data || error.message);
-        throw new Error(error.response?.data?.message || "Failed to update room");
+        console.error("Error in updateRoom:", error.response?.data || error.message);
+        throw error;
     }
-};
+}
+
 
 export const deleteRoom = async (id) => {
     try {

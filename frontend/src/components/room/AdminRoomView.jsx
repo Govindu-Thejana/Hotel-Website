@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Edit2, Save, X } from 'lucide-react';
 import { getRoomDetails, updateRoom } from './RoomCrudApi'; // Import your backend API functions
+import Alert from '@mui/material/Alert'; // Import the Alert component from Material UI
 
 function AdminRoomView() {
     const { roomId } = useParams(); // Get roomId from the URL
@@ -11,6 +12,8 @@ function AdminRoomView() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedImage, setSelectedImage] = useState(null); // For image preview modal
+    const [amenities, setAmenities] = useState([]);
+    const [alertMessage, setAlertMessage] = useState(null); // State for the alert message
 
     // Fetch room details from the backend
     useEffect(() => {
@@ -36,6 +39,31 @@ function AdminRoomView() {
 
         fetchRoom();
     }, [roomId]);
+
+    // Fetch amenities from the backend
+    useEffect(() => {
+        const fetchAmenities = async () => {
+            try {
+                const response = await axios.get('http://localhost:5555/rooms'); // Use the same endpoint
+                const allAmenities = response.data.data
+                    .flatMap((room) => {
+                        try {
+                            return JSON.parse(room.amenities[0]); // Parse JSON string
+                        } catch (error) {
+                            console.error('Failed to parse amenities for room:', room.roomId, error);
+                            return []; // Skip this room's amenities if parsing fails
+                        }
+                    })
+                    .filter((value, index, self) => self.indexOf(value) === index); // Deduplicate
+                setAmenities(allAmenities);
+            } catch (error) {
+                console.error('Error fetching amenities:', error);
+                setAmenities([]); // Fallback to empty list if API call fails
+            }
+        };
+
+        fetchAmenities();
+    }, []);
 
     const handleInputChange = (field, value) => {
         setRoomData((prev) => ({
@@ -66,10 +94,10 @@ function AdminRoomView() {
         });
     };
 
-    const handleAddImage = (image) => {
+    const handleAddImage = (file) => {
         setRoomData((prev) => ({
             ...prev,
-            images: [...(prev.images || []), image],
+            images: [...(prev.images || []), file], // Add File object directly
         }));
     };
 
@@ -82,17 +110,23 @@ function AdminRoomView() {
 
     const handleSave = async () => {
         try {
-            console.log("Saving room data:", roomData);
-            await updateRoom({
-                id: roomId, // Use roomId as the identifier
-                ...roomData,
-                availability: roomData.available.toString(), // Convert boolean to string
-                images: roomData.images || [], // Pass images as an array
+            await updateRoom(roomData._id, {
+                roomId: roomData.roomId,
+                roomType: roomData.roomType,
+                description: roomData.description,
+                capacity: roomData.capacity,
+                pricePerNight: roomData.pricePerNight,
+                availability: (roomData.availability).toString(),
+                cancellationPolicy: roomData.cancellationPolicy,
+                amenities: roomData.amenities,
+                images: roomData.images.filter((img) => img instanceof File)
             });
-            setIsEditing(false); // Exit editing mode
+
+            setIsEditing(false);
+            setAlertMessage({ type: 'success', message: 'Room updated successfully!' }); // Success message
         } catch (err) {
-            console.error('Failed to update room:', err);
-            alert('Error updating room. Please try again.');
+            console.error("Error updating room:", err.response || err);
+            setAlertMessage({ type: 'error', message: `Error updating room: ${err.response?.data?.message || "Please try again."}` });
         }
     };
 
@@ -100,11 +134,32 @@ function AdminRoomView() {
         setIsEditing(false);
     };
 
+    useEffect(() => {
+        if (alertMessage) {
+            // Set a timer to hide the alert after 3 seconds (3000 milliseconds)
+            const timer = setTimeout(() => {
+                setAlertMessage(null); // This will clear the alert after 3 seconds
+            }, 3000);
+
+            // Cleanup function to clear the timer if the component unmounts or if alertMessage changes
+            return () => clearTimeout(timer);
+        }
+    }, [alertMessage]);
+
     if (loading) return <div>Loading room details...</div>;
     if (error) return <div className="text-red-500">{error}</div>;
 
     return (
         <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow">
+            {/* Alert Message */}
+            {alertMessage && (
+                <div className="mb-4">
+                    <Alert severity={alertMessage.type}>
+                        {alertMessage.message}
+                    </Alert>
+                </div>
+            )}
+
             {/* Header */}
             <div className="mb-6">
                 <div className="flex justify-between items-center mb-4">
@@ -151,19 +206,21 @@ function AdminRoomView() {
                         <h1 className="text-2xl font-bold mb-2">Room - {roomData.roomId}</h1>
                         {isEditing ? (
                             <select
-                                value={roomData.available}
-                                onChange={(e) => handleInputChange('available', e.target.value === 'true')}
+                                value={roomData.availability}
+                                onChange={(e) => handleInputChange('availability', e.target.value === 'true')}
                                 className="px-3 py-1 border rounded-lg"
                             >
                                 <option value="true">Available</option>
                                 <option value="false">Unavailable</option>
                             </select>
                         ) : (
-                            <span className={`px-3 py-1 rounded-full text-sm ${roomData.available
-                                ? 'bg-green-100 text-green-800'
-                                : 'bg-red-100 text-red-800'
-                                }`}>
-                                {roomData.available ? 'Available' : 'Unavailable'}
+                            <span
+                                className={`px-3 py-1 rounded-full text-sm ${roomData.availability
+                                    ? 'bg-green-100 text-green-800'
+                                    : 'bg-red-100 text-red-800'
+                                    }`}
+                            >
+                                {roomData.availability ? 'Available' : 'Unavailable'}
                             </span>
                         )}
                     </div>
@@ -287,31 +344,40 @@ function AdminRoomView() {
                     <section>
                         <h2 className="text-lg font-semibold mb-3">Images</h2>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            {roomData.images && roomData.images.map((image, index) => (
-                                <div
-                                    key={index}
-                                    className="relative w-full h-32 bg-gray-100 rounded-lg overflow-hidden shadow"
-                                >
-                                    <img
-                                        src={image}
-                                        alt={`Room image ${index + 1}`}
-                                        className="w-full h-full object-cover"
-                                    />
-                                    {isEditing && (
-                                        <button
-                                            onClick={() => handleRemoveImage(index)}
-                                            className="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full p-1"
-                                        >
-                                            <X className="w-5 h-5" />
-                                        </button>
-                                    )}
-                                </div>
-                            ))}
+                            {roomData.images && roomData.images.map((image, index) => {
+                                const imageUrl = image instanceof File ? URL.createObjectURL(image) : image;
+                                return (
+
+                                    <div
+                                        key={index}
+                                        className="relative w-full h-32 bg-gray-100 rounded-lg overflow-hidden shadow"
+                                    >
+                                        <img
+                                            src={imageUrl}
+                                            alt={`Room image ${index + 1}`}
+                                            className="w-full h-full object-cover"
+                                        />
+                                        {isEditing && (
+                                            <button
+                                                onClick={() => handleRemoveImage(index)}
+                                                className="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full p-1"
+                                            >
+                                                <X className="w-5 h-5" />
+                                            </button>
+                                        )}
+                                    </div>
+                                );
+                            })}
                         </div>
+
                         {isEditing && (
                             <input
                                 type="file"
-                                onChange={(e) => handleAddImage(URL.createObjectURL(e.target.files[0]))}
+                                onChange={(e) => {
+                                    if (e.target.files && e.target.files[0]) {
+                                        handleAddImage(e.target.files[0]); // Pass the File object
+                                    }
+                                }}
                                 className="mt-4"
                             />
                         )}

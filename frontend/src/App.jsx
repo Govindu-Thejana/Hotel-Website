@@ -16,11 +16,18 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Adminpackage from "./pages/Adminpackage";
 import PropTypes from 'prop-types';
-import BookingManagement from "./pages/BookingManagement";
+import BookingManagement from "./components/booking/BookingManagement";
 import RoomCreationForm from "./components/room/RoomCreationForm";
 import AdminRoomView from "./components/room/AdminRoomView";
 
+import BookingDetails from "./components/booking/BookingDetails";
 import TestUI from "./components/room/TestUI";
+import BookingPage from "./pages/bookingProcess/BookingPage";
+import CheckoutPage from "./pages/bookingProcess/CheckoutPage";
+import AddonsPage from "./pages/bookingProcess/AddonsPage";
+import CompleteBooking from "./pages/bookingProcess/CompleteBooking";
+import CartProvider from "./contexts/CartContext";
+
 
 const MainLayout = ({ children }) => (
   <div>
@@ -51,30 +58,37 @@ AdminLayout.propTypes = {
 
 const App = () => {
   return (
-    <div>
-      <Routes>
-        {/* Website Routes */}
-        <Route path="/" element={<MainLayout><Home /></MainLayout>} />
-        <Route path="/login" element={<MainLayout><Login /></MainLayout>} />
-        <Route path="/register" element={<MainLayout><Register /></MainLayout>} />
-        <Route path="/accommodation" element={<MainLayout><Accomadation /></MainLayout>} />
-        <Route path="/roomDetails/:roomId" element={<MainLayout><RoomDetails /></MainLayout>} />
-        <Route path="/weddings" element={<MainLayout><WeddingPage /></MainLayout>} />
+    <CartProvider>
+      <div>
+        <Routes>
+          {/* Website Routes */}
+          <Route path="/" element={<MainLayout><Home /></MainLayout>} />
+          <Route path="/login" element={<MainLayout><Login /></MainLayout>} />
+          <Route path="/register" element={<MainLayout><Register /></MainLayout>} />
+          <Route path="/accommodation" element={<MainLayout><Accomadation /></MainLayout>} />
+          <Route path="/roomDetails/:roomId" element={<MainLayout><RoomDetails /></MainLayout>} />
+          <Route path="/weddings" element={<MainLayout><WeddingPage /></MainLayout>} />
+          <Route path="/reservation" element={<MainLayout><BookingPage /></MainLayout>} />
+          <Route path="/checkout" element={<MainLayout><CheckoutPage /></MainLayout>} />
+          <Route path="/addons" element={<MainLayout><AddonsPage /></MainLayout>} />
+          <Route path="/CompleteBooking" element={<MainLayout><CompleteBooking /></MainLayout>} />
 
-        {/* Admin Routes (Separate from the main website layout) */}
-        <Route path="/add-rooms" element={<AdminLayout><AddRooms /></AdminLayout>} />
-        <Route path="/admin-dashboard" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
-        <Route path="/room-management" element={<AdminLayout><RoomManagement /></AdminLayout>} />
-        <Route path="/edit-room/:roomId" element={<AdminLayout><EditRoom /></AdminLayout>} />
-        <Route path="/admin-appointment" element={<AdminLayout><AdminAppointment /></AdminLayout>} />
-        <Route path="/admin-package" element={<AdminLayout><Adminpackage /></AdminLayout>} />
-        <Route path="/admin-bookings" element={<AdminLayout><BookingManagement /></AdminLayout>} />
-        <Route path="/add-newrooms" element={<AdminLayout><RoomCreationForm /></AdminLayout>} />
-        <Route path="/admin-roomview/:roomId" element={<AdminLayout><AdminRoomView /></AdminLayout>} />
-        <Route path="/admin-test" element={<AdminLayout><TestUI /></AdminLayout>} />
+          {/* Admin Routes (Separate from the main website layout) */}
+          <Route path="/add-rooms" element={<AdminLayout><AddRooms /></AdminLayout>} />
+          <Route path="/admin-dashboard" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
+          <Route path="/room-management" element={<AdminLayout><RoomManagement /></AdminLayout>} />
+          <Route path="/edit-room/:roomId" element={<AdminLayout><EditRoom /></AdminLayout>} />
+          <Route path="/admin-appointment" element={<AdminLayout><AdminAppointment /></AdminLayout>} />
+          <Route path="/admin-package" element={<AdminLayout><Adminpackage /></AdminLayout>} />
+          <Route path="/admin-bookings" element={<AdminLayout><BookingManagement /></AdminLayout>} />
+          <Route path="/add-newrooms" element={<AdminLayout><RoomCreationForm /></AdminLayout>} />
+          <Route path="/admin-roomview/:roomId" element={<AdminLayout><AdminRoomView /></AdminLayout>} />
+          <Route path="/admin-test" element={<AdminLayout><BookingDetails /></AdminLayout>} />
 
-      </Routes>
-    </div>
+        </Routes>
+      </div>
+    </CartProvider>
+
   );
 }
 

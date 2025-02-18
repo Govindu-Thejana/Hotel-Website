@@ -12,7 +12,7 @@ const AdminAppointment = () => {
     const fetchAppointments = async () => {
       try {
         setLoading(true);
-        const response = await fetch("https://hotel-website-backend-drab.vercel.app/appointments");
+        const response = await fetch("http://localhost:5555/appointments");
         if (!response.ok) throw new Error("Failed to fetch appointments");
         const data = await response.json();
         setAppointments(data);
@@ -35,7 +35,7 @@ const AdminAppointment = () => {
     if (!userConfirmed) return;
 
     try {
-      const response = await fetch(`https://hotel-website-backend-drab.vercel.app/appointments/${id}`, {
+      const response = await fetch(`http://localhost:5555/appointments/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -65,7 +65,7 @@ const AdminAppointment = () => {
     if (!userConfirmed) return;
 
     try {
-      const response = await fetch(`https://hotel-website-backend-drab.vercel.app/appointments/${id}`, {
+      const response = await fetch(`http://localhost:5555/appointments/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -108,7 +108,7 @@ const AdminAppointment = () => {
 
     try {
       const response = await fetch(
-        `https://hotel-website-backend-drab.vercel.app/appointments/${editingAppointment._id}`,
+        `http://localhost:5555/appointments/${editingAppointment._id}`,
         {
           method: "PUT",
           headers: {
@@ -156,7 +156,7 @@ const AdminAppointment = () => {
     if (!userConfirmed) return;
 
     try {
-      const response = await fetch(`https://hotel-website-backend-drab.vercel.app/appointments/${id}`, {
+      const response = await fetch(`http://localhost:5555/appointments/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -331,10 +331,10 @@ const AppointmentList = ({
       <div
         key={appointment._id}
         className={`rounded-lg shadow-lg p-6 transition-transform transform hover:scale-105 ${appointment.status === "cancelled"
-            ? "bg-red-50"
-            : appointment.status === "confirmed"
-              ? "bg-green-50"
-              : "bg-gray-100"
+          ? "bg-red-50"
+          : appointment.status === "confirmed"
+            ? "bg-green-50"
+            : "bg-gray-100"
           }`}
       >
         <h3 className="text-xl font-semibold mb-2">{appointment.name}</h3>
@@ -347,10 +347,10 @@ const AppointmentList = ({
         <p className="text-gray-700">Reason: {appointment.reason}</p>
         <p
           className={`font-medium ${appointment.status === "cancelled"
-              ? "text-red-600"
-              : appointment.status === "confirmed"
-                ? "text-green-600"
-                : "text-gray-600"
+            ? "text-red-600"
+            : appointment.status === "confirmed"
+              ? "text-green-600"
+              : "text-gray-600"
             }`}
         >
           Status: {appointment.status || "pending"}

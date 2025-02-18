@@ -73,7 +73,7 @@ const RoomBookingSearchBar = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get(`https://hotel-website-backend-drab.vercel.app/bookedRoom/bookings/room/${roomType}`);
+      const response = await axios.get(`http://localhost:5555/bookedRoom/bookings/room/${roomType}`);
       const { commonBookedDates } = response.data.data;
       setCommonBookedDates(commonBookedDates.map(date => new Date(date)));
       setLoading(false);
@@ -194,7 +194,7 @@ const RoomBookingSearchBar = () => {
         roomType: tempSelectedPackage, // Use tempSelectedPackage for search
         guests: tempAdults + tempChildren,
       };
-      const response = await axios.get("https://hotel-website-backend-drab.vercel.app/bookedRoom/availableRooms", { params });
+      const response = await axios.get("http://localhost:5555/bookedRoom/availableRooms", { params });
       const availableRooms = response.data.availableRooms;
       setAvailableRooms(availableRooms);
       setLoading(false);

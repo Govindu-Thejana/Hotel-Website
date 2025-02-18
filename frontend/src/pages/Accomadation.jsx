@@ -13,7 +13,7 @@ const Accommodation = () => {
 
     useEffect(() => {
         axios
-            .get('https://hotel-website-backend-drab.vercel.app/rooms')
+            .get('http://localhost:5555/rooms')
             .then((response) => {
                 setRooms(response.data.data);
             })

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import WeddingPackages from '../components/WeddingPackages';
 import RoomCardHome from '../components/roomCardHome';
+import SearchBar from '../components/roomBookingSearchBar';
 
 
 const Home = () => {
@@ -49,16 +50,36 @@ const Home = () => {
     <div className="bg-gray-100">
 
 
-      {/* Hero Section */}
+      {/* hero section */}
       <section className="relative">
-        <img src="/images/bg.jpg" alt="Hotel Exterior" className="w-full h-128 object-cover" />
-        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="text-center text-white">
-            <h2 className="text-3xl font-bold mb-4">Your lavish home away from home</h2>
-            <p className="text-lg">Experience the best of comfort and luxury in the heart of the city.</p>
+        {/* Background image */}
+        <img
+          src="/images/bg.jpg"
+          alt="Hotel Exterior"
+          className="w-full h-screen object-cover"
+        />
+
+        {/* Overlay with logo */}
+        <div className="absolute inset-0 bg-black bg-opacity-10 flex items-center justify-center">
+          <div className="text-center flex flex-col items-center justify-center">
+            <img
+              alt="Suneragira Hotel"
+              src="/images/logo.png"
+              className="h-24 md:h-40 lg:h-48 w-auto px-5" // Responsive logo size
+            />
+            {/* Optional: Add a responsive heading or subtitle */}
+            <h1 className="text-gray-300 text-italian text-2xl md:text-4xl lg:text-5xl mt-4 font-bold">
+              Welcome to Suneragira Hotel
+            </h1>
           </div>
         </div>
+
+        {/* Search Bar at the bottom */}
+        <div className="absolute bottom-0 left-0 right-0 bg-opacity-80 px-10">
+          <SearchBar />
+        </div>
       </section>
+
 
       <section className="text-center py-14 px-28 mx-5">
 

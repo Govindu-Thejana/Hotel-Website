@@ -37,16 +37,13 @@ const WeddingPackages = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white py-16 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen py-16 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-16">
                     <div className="flex items-center justify-center mb-4">
-                        <Heart className="w-8 h-8 text-pink-500 mr-2" />
+                        <Heart className="w-8 h-8 text-pcolor mr-2" />
                         <h2 className="text-5xl font-serif text-gray-900">Wedding Packages</h2>
                     </div>
-                    <p className="mt-4 text-xl text-gray-600 max-w-2xl mx-auto">
-                        Create unforgettable memories with our carefully curated wedding packages
-                    </p>
                 </div>
 
                 {error && (
@@ -61,7 +58,7 @@ const WeddingPackages = () => {
                         >
                             <div className="absolute top-4 right-4 z-10">
                                 <div className="bg-white/90 backdrop-blur-sm rounded-full p-2">
-                                    <Heart className="w-6 h-6 text-pink-500" />
+                                    <Heart className="w-6 h-6 text-pcolor" />
                                 </div>
                             </div>
 
@@ -86,14 +83,14 @@ const WeddingPackages = () => {
                                     {item.packagename}
                                 </h3>
 
-                                <p className="text-3xl font-bold text-pink-600 mb-6">
+                                <p className="text-3xl font-bold text-scolor mb-6">
                                     Rs.{item.price.toLocaleString()}
                                 </p>
 
                                 <div className="space-y-3 mb-8">
                                     {(item.Description || "").split(',').map((desc, index) => (
                                         <div key={index} className="flex items-center text-gray-600">
-                                            <ChevronRight className="w-5 h-5 text-pink-500 mr-2" />
+                                            <ChevronRight className="w-5 h-5 text-pcolor mr-2" />
                                             <span>{desc.trim()}</span>
                                         </div>
                                     ))}

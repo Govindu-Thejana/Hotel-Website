@@ -37,10 +37,7 @@ const GalleryPage = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <section className="relative h-[400px] bg-cover bg-center flex items-center justify-center text-white text-center px-6 md:px-12" style={{ backgroundImage: `url('/images/bg.jpg')` }}>
-                
-            </section>
+        <div className="min-h-screen pt-10 bg-gray-50">
 
             <div className="max-w-6xl mx-auto px-6 py-8">
                 <div className="flex space-x-4 justify-center mb-6">
@@ -48,11 +45,10 @@ const GalleryPage = () => {
                         <button
                             key={category}
                             onClick={() => setSelectedCategory(category)}
-                            className={`py-2 px-4 rounded-full transition duration-300 whitespace-nowrap ${
-                                selectedCategory === category
-                                    ? "bg-blue-600 text-white"
-                                    : "bg-gray-200 text-gray-700 hover:bg-gray-400"
-                            }`}
+                            className={`py-2 px-4 rounded-full transition duration-300 whitespace-nowrap ${selectedCategory === category
+                                ? "bg-blue-600 text-white"
+                                : "bg-gray-200 text-gray-700 hover:bg-gray-400"
+                                }`}
                         >
                             {category}
                         </button>

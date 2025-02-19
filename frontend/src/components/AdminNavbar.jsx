@@ -44,6 +44,11 @@ const Navbar = () => {
             icon: <TbPackages className="w-5 h-5" />
         },
         {
+            href: "/gallery-test",
+            label: "Gallery",
+            icon: <TbPackages className="w-5 h-5" />
+        },
+        {
             href: "/overview",
             label: "Overview",
             icon: <Search className="w-5 h-5" />

@@ -8,6 +8,8 @@ import appointments from './routes/appointments.js';
 import paypalRoutes from './routes/paypalRoutes.js';
 import { createCheckoutSession } from "./services/stripe.js";
 
+import galleryRoute from './routes/galleryRoute.js';
+
 
 import dotenv from 'dotenv';
 
@@ -41,6 +43,7 @@ app.get('/', (request, response) => {
     return response.status(200).send("Welcome To SUNERAGIRA HOTEL");
 });
 
+app.use('/gallery', galleryRoute);
 app.use('/rooms', roomRoute);
 app.use('/bookedRoom', bookedRoomRoutes);
 app.use('/appointments', appointments);

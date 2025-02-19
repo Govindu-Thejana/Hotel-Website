@@ -154,7 +154,7 @@ const Home = () => {
                 className="w-full h-48 object-cover"
                 src={
                   room.images && room.images[0]
-                    ? `http://localhost:5555/${room.images[0].replace(/\\/g, '/')}`
+                    ? room.images[0] // Use the Cloudinary URL directly
                     : '/default-image.jpg' // Fallback image if images array is undefined or empty
                 }
                 alt={room.roomType || 'Room'}

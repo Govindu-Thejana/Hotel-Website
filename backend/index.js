@@ -26,7 +26,7 @@ const backendURL = 'https://hotel-website-backend-drab.vercel.app/'; // Your bac
 app.use(express.json());
 app.use(cors());
 
-app.use('/uploads', express.static('uploads')); // Serve uploaded files
+//app.use('/uploads', express.static('uploads')); // Serve uploaded files
 
 // Error handling middleware for Multer
 app.use((err, req, res, next) => {

@@ -37,6 +37,7 @@ const RoomDetails = () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [showAllPhotos]);
+
     useEffect(() => {
         axios
             .get('http://localhost:5555/rooms')
@@ -96,7 +97,7 @@ const RoomDetails = () => {
             <div className="relative h-[60vh] w-full">
                 {room.images && room.images.length > 0 && room.images[currentImageIndex] ? (
                     <img
-                        src={`http://localhost:5555/${room.images[currentImageIndex].replace(/\\/g, '/')}`}
+                        src={room.images[currentImageIndex]} // Use the Cloudinary URL directly
                         alt={room.roomType}
                         className="w-full h-full object-cover"
                     />
@@ -140,7 +141,7 @@ const RoomDetails = () => {
                                 img && (
                                     <img
                                         key={index}
-                                        src={`http://localhost:5555/${img.replace(/\\/g, '/')}`}
+                                        src={img} // Use the Cloudinary URL directly
                                         alt={`Room view ${index + 1}`}
                                         className="w-full h-64 object-cover"
                                     />
@@ -260,7 +261,7 @@ const RoomDetails = () => {
                                     >
                                         {similarRoom.images && similarRoom.images.length > 0 && similarRoom.images[0] ? (
                                             <img
-                                                src={`http://localhost:5555/${similarRoom.images[0].replace(/\\/g, '/')}`}
+                                                src={similarRoom.images[0]} // Use the Cloudinary URL directly
                                                 alt={similarRoom.roomType}
                                                 className="w-full h-48 object-cover"
                                             />

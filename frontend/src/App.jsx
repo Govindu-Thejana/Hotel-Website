@@ -8,6 +8,7 @@ import AdminDashboard from "./pages/AdminDashBoard";
 import Navbar from "./components/AdminNavbar";
 import RoomManagement from "./pages/RoomManagement";
 import EditRoom from "./pages/EditRoom";
+import Event from "./pages/Event";
 
 import AdminAppointment from "./components/AdminAppointment";
 import Accomadation from "./pages/Accomadation";
@@ -72,6 +73,7 @@ const App = () => {
           <Route path="/checkout" element={<MainLayout><CheckoutPage /></MainLayout>} />
           <Route path="/addons" element={<MainLayout><AddonsPage /></MainLayout>} />
           <Route path="/CompleteBooking" element={<MainLayout><CompleteBooking /></MainLayout>} />
+          <Route path="/event" element={<MainLayout><Event /></MainLayout>} />
 
           {/* Admin Routes (Separate from the main website layout) */}
           <Route path="/add-rooms" element={<AdminLayout><AddRooms /></AdminLayout>} />

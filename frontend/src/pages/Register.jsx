@@ -10,7 +10,7 @@ const Register = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post("https://hotel-website-backend-drab.vercel.app/register", { name, email, password })
+        axios.post("http://localhost:5555/register", { name, email, password })
             .then(result => {
                 console.log(result);
                 navigate('/login'); // Move navigate to be inside the then block

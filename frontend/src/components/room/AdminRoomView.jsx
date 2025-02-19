@@ -44,7 +44,7 @@ function AdminRoomView() {
     useEffect(() => {
         const fetchAmenities = async () => {
             try {
-                const response = await axios.get('https://hotel-website-backend-drab.vercel.app/rooms'); // Use the same endpoint
+                const response = await axios.get('http://localhost:5555/rooms'); // Use the same endpoint
                 const allAmenities = response.data.data
                     .flatMap((room) => {
                         try {
@@ -110,25 +110,61 @@ function AdminRoomView() {
 
     const handleSave = async () => {
         try {
+            // Ensure all images (new and old) are correctly handled
+            const updatedImages = await Promise.all(
+                roomData.images.map(async (img) => {
+                    if (img instanceof File) {
+                        console.log("Uploading new image:", img.name); // Debugging
+
+                        // Upload new image to Cloudinary
+                        const formData = new FormData();
+                        formData.append("file", img);
+                        formData.append("upload_preset", "your_upload_preset"); // Change this to your Cloudinary preset
+
+                        const response = await fetch("https://api.cloudinary.com/v1_1/your_cloud_name/image/upload", {
+                            method: "POST",
+                            body: formData,
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`Cloudinary upload failed: ${response.statusText}`);
+                        }
+
+                        const data = await response.json();
+                        console.log("Uploaded image URL:", data.secure_url); // Debugging
+
+                        return data.secure_url; // Return the Cloudinary URL
+                    }
+                    return img; // Keep existing URLs as they are
+                })
+            );
+
+            console.log("Final updated images array:", updatedImages); // Debugging
+
+            // Send updated data to backend
             await updateRoom(roomData._id, {
                 roomId: roomData.roomId,
                 roomType: roomData.roomType,
                 description: roomData.description,
                 capacity: roomData.capacity,
                 pricePerNight: roomData.pricePerNight,
-                availability: (roomData.availability).toString(),
+                availability: roomData.availability.toString(),
                 cancellationPolicy: roomData.cancellationPolicy,
                 amenities: roomData.amenities,
-                images: roomData.images.filter((img) => img instanceof File)
+                images: updatedImages, // Correctly updated images array
             });
 
             setIsEditing(false);
-            setAlertMessage({ type: 'success', message: 'Room updated successfully!' }); // Success message
+            setAlertMessage({ type: "success", message: "Room updated successfully!" });
         } catch (err) {
-            console.error("Error updating room:", err.response || err);
-            setAlertMessage({ type: 'error', message: `Error updating room: ${err.response?.data?.message || "Please try again."}` });
+            console.error("Error updating room:", err);
+            setAlertMessage({
+                type: "error",
+                message: `Error updating room: ${err.message || "Please try again."}`,
+            });
         }
     };
+
 
     const handleCancel = () => {
         setIsEditing(false);
@@ -345,7 +381,7 @@ function AdminRoomView() {
                         <h2 className="text-lg font-semibold mb-3">Images</h2>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                             {roomData.images && roomData.images.map((image, index) => {
-                                const imageUrl = image instanceof File ? URL.createObjectURL(image) : image;
+                                const imageUrl = image instanceof File ? URL.createObjectURL(image) : image.url || image;
                                 return (
 
                                     <div

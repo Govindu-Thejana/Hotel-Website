@@ -13,7 +13,7 @@ const Accommodation = () => {
 
     useEffect(() => {
         axios
-            .get('https://hotel-website-backend-drab.vercel.app/rooms')
+            .get('http://localhost:5555/rooms')
             .then((response) => {
                 setRooms(response.data.data);
             })
@@ -151,22 +151,33 @@ const Accommodation = () => {
                         {error}
                     </div>
                 ) : (
-                    rooms.length > 0 ? (
-                        // Filter rooms to only include one room per room type
-                        rooms.filter((room, index, self) =>
-                            index === self.findIndex(r => r.roomType === room.roomType)
-                        ).map((room) => (
-                            <RoomCardHome
-                                key={room._id} // Unique key for each room
-                                room={room} // Pass the room object
-                                handleFindOutMore={handleFindOutMore} // Pass the handleFindOutMore function
+
+                    rooms.map((room) => (
+                        <div key={room._id} className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+                            <img
+                                className="w-full h-48 object-cover"
+                                src={
+                                    room.images && room.images[0]
+                                        ? room.images[0] // Use the Cloudinary URL directly
+                                        : '/default-image.jpg' // Fallback image if images array is undefined or empty
+                                }
+                                alt={room.roomType || 'Room'}
                             />
-                        ))
-                    ) : (
-                        <div className="col-span-full text-center text-gray-500">
-                            No rooms available.
+                            <div className="p-6">
+                                <h2 className="text-2xl font-serif text-pcolor mb-2">{room.roomType}</h2>
+                                <p className="text-gray-600 mb-6">{room.description}</p>
+                                <div className="flex justify-between text-gray-800 mb-4">
+                                    {/* ... [occupancy and size info code] ... */}
+                                </div>
+                                <button
+                                    className="font-sans w-full bg-transparent border border-gray-500 text-scolor py-2 px-4 rounded hover:bg-scolor hover:text-white hover:border-white"
+                                    onClick={() => handleFindOutMore(room._id)} // Call function on button click
+                                >
+                                    Find Out More
+                                </button>
+                            </div>
                         </div>
-                    )
+                    ))
                 )}
             </section>
             <Testimonials />

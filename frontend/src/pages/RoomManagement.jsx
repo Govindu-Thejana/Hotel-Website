@@ -30,11 +30,11 @@ const RoomManagement = () => {
         setIsLoading(true);
         try {
             if (searchRoomId) {
-                const result = await axios.get(`https://hotel-website-backend-drab.vercel.app/rooms/search/${searchRoomId}`);
+                const result = await axios.get(`http://localhost:5555/rooms/search/${searchRoomId}`);
                 setRooms([result.data]);
                 setFilteredRooms([result.data]);
             } else {
-                const result = await axios.get("https://hotel-website-backend-drab.vercel.app/rooms");
+                const result = await axios.get("http://localhost:5555/rooms");
                 setRooms(result.data.data);
                 setFilteredRooms(result.data.data);
             }
@@ -66,7 +66,7 @@ const RoomManagement = () => {
 
     const handleConfirmDelete = async () => {
         try {
-            const result = await axios.delete(`https://hotel-website-backend-drab.vercel.app/rooms/${roomToDelete}`);
+            const result = await axios.delete(`http://localhost:5555/rooms/${roomToDelete}`);
             if (result.status === 200) {
                 setSuccessMessage(`Room was deleted successfully.`);
                 setRooms(rooms.filter((room) => room._id !== roomToDelete));

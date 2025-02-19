@@ -16,7 +16,7 @@ const Home = () => {
 
   useEffect(() => {
     axios
-      .get('https://hotel-website-backend-drab.vercel.app/rooms')
+      .get('http://localhost:5555/rooms')
       .then((response) => {
         setRooms(response.data.data);
       })
@@ -185,6 +185,7 @@ const Home = () => {
                 key={room._id} // Unique key for each room
                 room={room} // Pass the room object
                 handleFindOutMore={handleFindOutMore} // Pass the handleFindOutMore function
+
               />
             ))
           ) : (

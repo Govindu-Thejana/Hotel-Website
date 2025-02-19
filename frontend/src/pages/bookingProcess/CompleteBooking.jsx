@@ -13,7 +13,7 @@ const BookingConfirmation = () => {
     const timer = setTimeout(() => {
       clearCart();
       navigate('/');
-    }, 300000); // 30 seconds
+    }, 30000000); // 30 seconds
 
     return () => clearTimeout(timer);
   }, [navigate, clearCart]);
@@ -35,7 +35,20 @@ const BookingConfirmation = () => {
   }
 
   // Calculate total amount for all rooms
-  const totalAmount = cart.reduce((sum, room) => sum + room.totalAmount, 0);
+  // Calculate total amount for all rooms including addons
+  // Calculate total amount for all rooms including addons, VAT, and service fees
+  const totalAmount = cart.reduce((sum, room) => {
+    // Calculate add-ons total for the current room
+    const addonsTotal = room.addons.reduce((addonSum, addon) => addonSum + addon.price, 0);
+
+    // Calculate VAT and service fee for the current room
+    const vat = (room.totalAmount + addonsTotal) * 0.1;
+    const serviceFee = 3.00;
+
+    // Add room total, add-ons total, VAT, and service fee
+    return sum + room.totalAmount + addonsTotal + vat + serviceFee;
+  }, 0);
+
 
   return (
     <div className="max-w-4xl mx-auto p-6 py-12 flex flex-col items-center">

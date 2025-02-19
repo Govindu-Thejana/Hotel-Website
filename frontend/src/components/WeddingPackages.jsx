@@ -12,7 +12,7 @@ const WeddingPackages = () => {
     useEffect(() => {
         const fetchWedding = async () => {
             try {
-                const response = await axios.get('https://hotel-website-backend-drab.vercel.app/wedding');
+                const response = await axios.get('http://localhost:5555/wedding');
                 if (response.status === 200) {
                     setWedding(response.data.data || response.data);
                 } else {

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const api = axios.create({
-    baseURL: "https://hotel-website-backend-drab.vercel.app", // Replace with your server URL
+    baseURL: "http://localhost:5555", // Replace with your server URL
 });
 
 // Function to add a new room with file upload
@@ -47,7 +47,13 @@ export const getRoomDetails = async (roomId) => {
 
         // Convert image paths to fully qualified URLs
         if (Array.isArray(room.images)) {
-            room.images = room.images.map((image) => `${api.defaults.baseURL}/${image}`);
+            room.images = room.images.map((image) => {
+                // Check if the image is a URL or a relative path
+                if (image.startsWith('http')) {
+                    return image; // Return as is if it's already a URL
+                }
+                return `${api.defaults.baseURL}/${image}`; // Otherwise, prepend the base URL
+            });
         }
 
         // Handle amenities parsing
@@ -58,7 +64,7 @@ export const getRoomDetails = async (roomId) => {
                     return JSON.parse(amenity).map((item) => item.toString().trim());
                 } catch (err) {
                     console.warn('Failed to parse amenity:', amenity, err.message);
-                    return []; // Return an empty array if parsing fails
+                    return [amenity]; // Return the original amenity if parsing fails
                 }
             });
         } else {
@@ -96,7 +102,7 @@ export async function updateRoom(_id, roomData) {
         });
 
         // Make the API call
-        const response = await axios.put(`https://hotel-website-backend-drab.vercel.app/rooms/${_id}`, formData, {
+        const response = await axios.put(`http://localhost:5555/rooms/${_id}`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },

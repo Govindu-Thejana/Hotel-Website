@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import AdminCalendar from "./AdminCalendar";
 
 const AdminAppointment = () => {
   const [appointments, setAppointments] = useState([]);
@@ -40,7 +41,10 @@ const AdminAppointment = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ status: "confirmed", confirmedAt: new Date().toISOString() }),
+        body: JSON.stringify({
+          status: "confirmed",
+          confirmedAt: new Date().toISOString(),
+        }),
       });
 
       if (!response.ok) throw new Error("Failed to confirm appointment");
@@ -189,7 +193,8 @@ const AdminAppointment = () => {
     .filter((appointment) => appointment.status === "cancelled")
     .sort(
       (a, b) =>
-        new Date(b.cancelledAt || b.createdAt) - new Date(a.cancelledAt || a.createdAt)
+        new Date(b.cancelledAt || b.createdAt) -
+        new Date(a.cancelledAt || a.createdAt)
     );
 
   if (loading)
@@ -311,7 +316,7 @@ const AdminAppointment = () => {
           </div>
         )}
 
-        <Calendar appointments={confirmedAppointments} />
+        <AdminCalendar appointments={confirmedAppointments} />
       </div>
     </section>
   );
@@ -400,72 +405,5 @@ const AppointmentList = ({
     ))}
   </div>
 );
-
-const Calendar = ({ appointments }) => {
-  const [currentDate, setCurrentDate] = useState(new Date());
-
-  const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-  const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-  const startDay = startOfMonth.getDay();
-  const daysInMonth = endOfMonth.getDate();
-
-  const prevMonth = () => {
-    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
-  };
-
-  const nextMonth = () => {
-    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
-  };
-
-  const renderDays = () => {
-    const days = [];
-    for (let i = 0; i < startDay; i++) {
-      days.push(<div key={`empty-${i}`} className="border p-2"></div>);
-    }
-    for (let i = 1; i <= daysInMonth; i++) {
-      const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
-      const appointmentsOnDate = appointments.filter(
-        (appointment) => new Date(appointment.date).toDateString() === date.toDateString()
-      );
-      days.push(
-        <div key={i} className="border p-2">
-          <div>{i}</div>
-          {appointmentsOnDate.map((appointment) => (
-            <div key={appointment._id} className="text-xs text-green-600">
-              {appointment.name} at {appointment.time}
-            </div>
-          ))}
-        </div>
-      );
-    }
-    return days;
-  };
-
-  return (
-    <div className="mt-12">
-      <div className="flex justify-between items-center mb-4">
-        <button onClick={prevMonth} className="px-4 py-2 bg-gray-300 rounded">
-          Previous
-        </button>
-        <h3 className="text-xl font-medium">
-          {currentDate.toLocaleString("default", { month: "long" })} {currentDate.getFullYear()}
-        </h3>
-        <button onClick={nextMonth} className="px-4 py-2 bg-gray-300 rounded">
-          Next
-        </button>
-      </div>
-      <div className="grid grid-cols-7 gap-2">
-        <div className="font-bold">Sun</div>
-        <div className="font-bold">Mon</div>
-        <div className="font-bold">Tue</div>
-        <div className="font-bold">Wed</div>
-        <div className="font-bold">Thu</div>
-        <div className="font-bold">Fri</div>
-        <div className="font-bold">Sat</div>
-        {renderDays()}
-      </div>
-    </div>
-  );
-};
 
 export default AdminAppointment;

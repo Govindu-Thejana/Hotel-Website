@@ -8,6 +8,8 @@ import AdminDashboard from "./pages/AdminDashBoard";
 import Navbar from "./components/AdminNavbar";
 import RoomManagement from "./pages/RoomManagement";
 import EditRoom from "./pages/EditRoom";
+import Event from "./pages/Event";
+import GalleryPage from "./components/gallery/GalleryPage";
 
 import AdminAppointment from "./components/AdminAppointment";
 import Accomadation from "./pages/Accomadation";
@@ -27,6 +29,9 @@ import CheckoutPage from "./pages/bookingProcess/CheckoutPage";
 import AddonsPage from "./pages/bookingProcess/AddonsPage";
 import CompleteBooking from "./pages/bookingProcess/CompleteBooking";
 import CartProvider from "./contexts/CartContext";
+
+import AdminGalleryView from "./components/gallery/AdminGalleryView";
+import AddImages from "./components/gallery/AddImages"
 
 
 const MainLayout = ({ children }) => (
@@ -72,6 +77,8 @@ const App = () => {
           <Route path="/checkout" element={<MainLayout><CheckoutPage /></MainLayout>} />
           <Route path="/addons" element={<MainLayout><AddonsPage /></MainLayout>} />
           <Route path="/CompleteBooking" element={<MainLayout><CompleteBooking /></MainLayout>} />
+          <Route path="/event" element={<MainLayout><Event /></MainLayout>} />
+          <Route path="/gallery" element={<MainLayout><GalleryPage /></MainLayout>} />
 
           {/* Admin Routes (Separate from the main website layout) */}
           <Route path="/add-rooms" element={<AdminLayout><AddRooms /></AdminLayout>} />
@@ -85,6 +92,10 @@ const App = () => {
           <Route path="/admin-roomview/:roomId" element={<AdminLayout><AdminRoomView /></AdminLayout>} />
           <Route path="/admin-test" element={<AdminLayout><BookingDetails /></AdminLayout>} />
 
+
+          <Route path="/gallery-test" element={<AdminLayout><AdminGalleryView /></AdminLayout>} />
+          <Route path="/add-newimages" element={<AdminLayout><AddImages /></AdminLayout>} />
+  
         </Routes>
       </div>
     </CartProvider>

@@ -8,6 +8,8 @@ import appointments from './routes/appointments.js';
 import paypalRoutes from './routes/paypalRoutes.js';
 import stripeRoutes from './routes/stripeRoutes.js';
 
+import galleryRoute from './routes/galleryRoute.js';
+
 
 import dotenv from 'dotenv';
 
@@ -30,7 +32,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-app.use('/uploads', express.static('uploads')); // Serve uploaded files
+//app.use('/uploads', express.static('uploads')); // Serve uploaded files
 
 // Error handling middleware for Multer
 app.use((err, req, res, next) => {
@@ -45,6 +47,7 @@ app.get('/', (request, response) => {
     return response.status(200).send("Welcome To SUNERAGIRA HOTEL");
 });
 
+app.use('/gallery', galleryRoute);
 app.use('/rooms', roomRoute);
 app.use('/bookedRoom', bookedRoomRoutes);
 app.use('/appointments', appointments);

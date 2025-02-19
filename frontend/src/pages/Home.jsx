@@ -185,6 +185,7 @@ const Home = () => {
                 key={room._id} // Unique key for each room
                 room={room} // Pass the room object
                 handleFindOutMore={handleFindOutMore} // Pass the handleFindOutMore function
+
               />
             ))
           ) : (

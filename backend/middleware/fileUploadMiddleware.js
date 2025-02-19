@@ -1,4 +1,4 @@
-import multer from 'multer';
+/* import multer from 'multer';
 import path from 'path';
 
 // Configure Multer storage
@@ -23,3 +23,4 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({ storage, fileFilter });
 
 export default upload; // Export Multer instance
+ */

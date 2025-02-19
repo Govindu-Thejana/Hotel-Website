@@ -4,12 +4,12 @@ const AppointmentForm = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phone: "", // Added phone field
+    phone: "",
     date: "",
     time: "",
-    reason: "", // Added reason field
+    reason: "",
   });
-  const [showSuccess, setShowSuccess] = useState(false); // State for success message
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,8 +25,8 @@ const AppointmentForm = () => {
       if (response.ok) {
         console.log("Form submitted successfully");
         setFormData({ name: "", email: "", phone: "", date: "", time: "", reason: "" });
-        setShowSuccess(true); // Show success message
-        setTimeout(() => setShowSuccess(false), 3000); // Hide after 3 seconds
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 3000);
       } else {
         console.error("Failed to submit form");
       }
@@ -42,6 +42,15 @@ const AppointmentForm = () => {
       [name]: value,
     }));
   };
+
+  // Generate time options from 6 AM to 10 PM
+  const timeOptions = [];
+  for (let hour = 6; hour <= 22; hour++) {
+    const time = new Date();
+    time.setHours(hour, 0, 0); // Set the time to the start of the hour
+    const formattedTime = time.toTimeString().slice(0, 5); // Get HH:mm format
+    timeOptions.push(formattedTime);
+  }
 
   return (
     <section className="bg-white py-16">
@@ -95,7 +104,7 @@ const AppointmentForm = () => {
               required
             />
           </div>
-          
+
           <div className="mb-6">
             <label
               className="block text-left text-gray-700 font-semibold mb-2"
@@ -140,15 +149,21 @@ const AppointmentForm = () => {
             >
               Preferred Time
             </label>
-            <input
-              type="time"
+            <select
               id="time"
               name="time"
               value={formData.time}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               required
-            />
+            >
+              <option value="">Select a time</option>
+              {timeOptions.map((time) => (
+                <option key={time} value={time}>
+                  {time}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="mb-6">

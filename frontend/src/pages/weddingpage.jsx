@@ -184,8 +184,7 @@ const WeddingPage = () => {
           <div className="container mx-auto text-center">
             {/* Appointment Scheduling Form */}
             <AppointmentForm />
-            <div className="mt-8 text-gray-600">             
-            </div>
+            <div className="mt-8 text-gray-600"></div>
           </div>
         </section>
 

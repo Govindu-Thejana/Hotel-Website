@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const AdminCalendar = ({ appointments }) => {
+const AdminCalendarAdmin = ({ appointments }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
 
@@ -166,4 +166,4 @@ const AdminCalendar = ({ appointments }) => {
   );
 };
 
-export default AdminCalendar;
+export default AdminCalendarAdmin;

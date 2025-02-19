@@ -30,7 +30,7 @@ import CompleteBooking from "./pages/bookingProcess/CompleteBooking";
 import CartProvider from "./contexts/CartContext";
 
 import AdminGalleryView from "./components/gallery/AdminGalleryView";
-
+import AddImages from "./components/gallery/AddImages"
 
 
 const MainLayout = ({ children }) => (
@@ -92,7 +92,8 @@ const App = () => {
 
 
           <Route path="/gallery-test" element={<AdminLayout><AdminGalleryView /></AdminLayout>} />
-
+          <Route path="/add-newimages" element={<AdminLayout><AddImages /></AdminLayout>} />
+  
         </Routes>
       </div>
     </CartProvider>

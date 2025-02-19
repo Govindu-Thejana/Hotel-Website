@@ -52,7 +52,7 @@ router.post('/', async (req, res) => {
     await sendNotification(
       'yasirukularathne1234@gmail.com',
       'New Appointment Created',
-      `A new appointment has been created:
+      `A new appointment has been successfully created. Below are the details
       Name: ${name}
       Email: ${email}
       Phone: ${phone}

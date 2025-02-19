@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const AdminCalendar = ({ appointments }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -10,7 +10,7 @@ const AdminCalendar = ({ appointments }) => {
     return time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
-  // Render the list of days (left side) and time slots (right side)
+  // Render the calendar grid
   const renderCalendar = () => {
     const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
     const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
@@ -21,24 +21,27 @@ const AdminCalendar = ({ appointments }) => {
     for (let i = 0; i < startDay; i++) {
       days.push(<div key={`empty-${i}`} className="border p-2"></div>);
     }
+    
     for (let i = 1; i <= daysInMonth; i++) {
       const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
-      const appointmentsOnDate = appointments.filter(
+      const hasAppointments = appointments.some(
         (appointment) => new Date(appointment.date).toDateString() === date.toDateString()
       );
 
       days.push(
         <div
           key={i}
-          className="border p-2 cursor-pointer"
+          className={`border p-2 cursor-pointer ${
+            hasAppointments ? "bg-green-50" : ""
+          }`}
           onClick={() => setSelectedDate(date)}
         >
           <div>{i}</div>
-          {appointmentsOnDate.map((appointment) => (
-            <div key={appointment._id} className="text-xs text-green-600">
-              {appointment.name} at {formatTime(appointment.time)}
+          {hasAppointments && (
+            <div className="text-xs text-green-600">
+              Has appointments
             </div>
-          ))}
+          )}
         </div>
       );
     }
@@ -46,7 +49,7 @@ const AdminCalendar = ({ appointments }) => {
     return days;
   };
 
-  // Render the time slots (right side)
+  // Render time slots with appointments and reasons
   const renderTimeSlots = () => {
     if (!selectedDate) return null;
 
@@ -56,27 +59,41 @@ const AdminCalendar = ({ appointments }) => {
         new Date(appointment.date).toDateString() === selectedDate.toDateString()
     );
 
+    // Create a map of appointments by hour
+    const appointmentsByHour = {};
+    confirmedAppointments.forEach((appointment) => {
+      const hour = parseInt(appointment.time.split(':')[0]);
+      if (!appointmentsByHour[hour]) {
+        appointmentsByHour[hour] = [];
+      }
+      appointmentsByHour[hour].push(appointment);
+    });
+
     // Create time slots from 6 AM to 10 PM
     for (let hour = 6; hour < 22; hour++) {
       const timeSlotStart = `${hour}:00`;
       const timeSlotEnd = `${hour + 1}:00`;
-
-      // Check if there is an appointment at this time slot
-      const appointmentAtSlot = confirmedAppointments.find(
-        (appointment) =>
-          new Date(appointment.date).getHours() === hour &&
-          new Date(appointment.date).getMinutes() === 0
-      );
+      const appointmentsInSlot = appointmentsByHour[hour] || [];
 
       slots.push(
         <div key={hour} className="p-2 border-b">
           <div className="font-bold">{timeSlotStart} - {timeSlotEnd}</div>
-          {appointmentAtSlot ? (
-            <div className="text-xs text-green-700 mt-1">
-              {appointmentAtSlot.name} {/* Display the customer name */}
+          {appointmentsInSlot.length > 0 ? (
+            <div className="mt-1">
+              {appointmentsInSlot.map((appointment) => (
+                <div key={appointment._id} className="text-sm space-y-1">
+                  <div>
+                    <span className="text-red-600 font-bold">Booked:</span>{" "}
+                    {appointment.name} at {formatTime(appointment.time)}
+                  </div>
+                  <div className="text-gray-600 pl-4">
+                    Reason: {appointment.reason || "No reason provided"}
+                  </div>
+                </div>
+              ))}
             </div>
           ) : (
-            <div className="text-xs text-gray-500 mt-1">Available</div> // Show "Available" if no appointment is booked
+            <div className="text-xs text-gray-500 mt-1">Available</div>
           )}
         </div>
       );

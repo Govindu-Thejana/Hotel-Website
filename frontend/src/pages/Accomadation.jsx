@@ -177,7 +177,7 @@ const Accommodation = () => {
                                 </button>
                             </div>
                         </div>
-                    )
+                    ))
                 )}
             </section>
             <Testimonials />

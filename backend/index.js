@@ -6,7 +6,7 @@ import bookedRoomRoutes from './routes/bookedRoomRoutes.js';
 import weddingRoute from "./routes/weddingRoute.js";
 import appointments from './routes/appointments.js';
 import paypalRoutes from './routes/paypalRoutes.js';
-import { createCheckoutSession } from "./services/stripe.js";
+import stripeRoutes from './routes/stripeRoutes.js';
 
 
 import dotenv from 'dotenv';
@@ -51,7 +51,7 @@ app.use('/appointments', appointments);
 app.use('/wedding', weddingRoute);
 app.use('/paypal', paypalRoutes);
 
-app.post("/checkout", createCheckoutSession); // Use the handler from the stripe module
+app.use("/checkout", stripeRoutes); // Use the handler from the stripe module
 
 
 // Connect to MongoDB and start the server

@@ -30,6 +30,9 @@ import AddonsPage from "./pages/bookingProcess/AddonsPage";
 import CompleteBooking from "./pages/bookingProcess/CompleteBooking";
 import CartProvider from "./contexts/CartContext";
 
+import AdminGalleryView from "./components/gallery/AdminGalleryView";
+
+
 
 const MainLayout = ({ children }) => (
   <div>
@@ -88,6 +91,9 @@ const App = () => {
           <Route path="/add-newrooms" element={<AdminLayout><RoomCreationForm /></AdminLayout>} />
           <Route path="/admin-roomview/:roomId" element={<AdminLayout><AdminRoomView /></AdminLayout>} />
           <Route path="/admin-test" element={<AdminLayout><BookingDetails /></AdminLayout>} />
+
+
+          <Route path="/gallery-test" element={<AdminLayout><AdminGalleryView /></AdminLayout>} />
 
         </Routes>
       </div>

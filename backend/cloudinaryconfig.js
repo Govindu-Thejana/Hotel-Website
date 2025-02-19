@@ -35,3 +35,16 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({ storage, fileFilter });
 
 export default upload;
+
+// 🔹 Gallery Image Upload Configuration (stores in HotelSuneragira/Gallery/)
+const galleryStorage = new CloudinaryStorage({
+    cloudinary,
+    params: async (req, file) => ({
+        folder: "HotelSuneragira/Gallery", // ✅ Gallery images go here
+        format: file.mimetype.split("/")[1], // Keep original format
+        public_id: Date.now() + "-" + file.originalname.replace(/\s+/g, "_"),
+    }),
+});
+export const uploadGallery = multer({ storage: galleryStorage });
+
+

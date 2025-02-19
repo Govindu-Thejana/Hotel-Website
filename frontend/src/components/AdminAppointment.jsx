@@ -335,13 +335,12 @@ const AppointmentList = ({
     {appointments.map((appointment) => (
       <div
         key={appointment._id}
-        className={`rounded-lg shadow-lg p-6 transition-transform transform hover:scale-105 ${
-          appointment.status === "cancelled"
-            ? "bg-red-50"
-            : appointment.status === "confirmed"
+        className={`rounded-lg shadow-lg p-6 transition-transform transform hover:scale-105 ${appointment.status === "cancelled"
+          ? "bg-red-50"
+          : appointment.status === "confirmed"
             ? "bg-green-50"
             : "bg-gray-100"
-        }`}
+          }`}
       >
         <h3 className="text-xl font-semibold mb-2">{appointment.name}</h3>
         <p className="text-gray-700">Email: {appointment.email}</p>
@@ -352,13 +351,12 @@ const AppointmentList = ({
         <p className="text-gray-700">Time: {appointment.time}</p>
         <p className="text-gray-700">Reason: {appointment.reason}</p>
         <p
-          className={`font-medium ${
-            appointment.status === "cancelled"
-              ? "text-red-600"
-              : appointment.status === "confirmed"
+          className={`font-medium ${appointment.status === "cancelled"
+            ? "text-red-600"
+            : appointment.status === "confirmed"
               ? "text-green-600"
               : "text-gray-600"
-          }`}
+            }`}
         >
           Status: {appointment.status || "pending"}
         </p>

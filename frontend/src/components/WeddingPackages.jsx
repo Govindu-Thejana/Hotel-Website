@@ -111,10 +111,10 @@ const WeddingPackages = () => {
                 </div>
             </div>
 
-            <Modal 
-                isOpen={isModalOpen} 
-                onClose={closeModal} 
-                packageDetails={selectedPackage} 
+            <Modal
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                packageDetails={selectedPackage}
             />
         </div>
     );

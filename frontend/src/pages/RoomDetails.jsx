@@ -7,6 +7,7 @@ import {
     FaStar, FaUser, FaBath, FaChevronLeft, FaChevronRight
 } from 'react-icons/fa';
 import Loader from '../components/Loader';
+import RoomCardHome from '../components/roomCardHome';
 
 const RoomDetails = () => {
     const { roomId } = useParams();
@@ -240,52 +241,31 @@ const RoomDetails = () => {
                 {/* Similar Rooms */}
                 <section className="mt-16">
                     <h2 className="text-3xl font-serif text-center mb-10">Similar Rooms</h2>
-                    {similarRoomsLoading ? (
-                        <Loader />
-                    ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {rooms
-                                .reduce((uniqueRooms, room) => {
-                                    // Check if a room of this type already exists in the uniqueRooms array
-                                    if (!uniqueRooms.some((r) => r.roomType === room.roomType)) {
-                                        uniqueRooms.push(room); // Add the room if it's the first of its type
-                                    }
-                                    return uniqueRooms;
-                                }, []) // Start with an empty array
-                                .slice(0, 6) // Limit to 6 rooms
-                                .map((similarRoom) => (
-                                    <motion.div
-                                        key={similarRoom._id}
-                                        whileHover={{ y: -5 }}
-                                        className="bg-white rounded-xl shadow-sm overflow-hidden"
-                                    >
-                                        {similarRoom.images && similarRoom.images.length > 0 && similarRoom.images[0] ? (
-                                            <img
-                                                src={similarRoom.images[0]} // Use the Cloudinary URL directly
-                                                alt={similarRoom.roomType}
-                                                className="w-full h-48 object-cover"
-                                            />
-                                        ) : (
-                                            <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
-                                                <span className="text-gray-500">No Image Available</span>
-                                            </div>
-                                        )}
-                                        <div className="p-6">
-                                            <h3 className="text-xl font-serif mb-2">{similarRoom.roomType}</h3>
-                                            <p className="text-gray-600 mb-4">{similarRoom.description}</p>
-                                            <button
-                                                onClick={() => handleFindOutMore(similarRoom._id)}
-                                                className="w-full bg-transparent border border-scolor text-scolor
-                                     py-2 rounded hover:bg-scolor hover:text-white
-                                     transition duration-300"
-                                            >
-                                                View Details
-                                            </button>
-                                        </div>
-                                    </motion.div>
-                                ))}
-                        </div>
-                    )}
+                    <section className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5 px-20">
+                        {error ? (
+                            <div className="col-span-full text-center text-red-500">
+                                {error}
+                            </div>
+                        ) : (
+                            rooms.length > 0 ? (
+                                // Filter rooms to only include one room per room type
+                                rooms.filter((room, index, self) =>
+                                    index === self.findIndex(r => r.roomType === room.roomType)
+                                ).map((room) => (
+                                    <RoomCardHome
+                                        key={room._id} // Unique key for each room
+                                        room={room} // Pass the room object
+                                        handleFindOutMore={handleFindOutMore} // Pass the handleFindOutMore function
+                                    />
+                                ))
+                            ) : (
+                                <div className="col-span-full text-center text-gray-500">
+                                    No rooms available.
+                                </div>
+                            )
+                        )}
+                    </section>
+
                 </section>
             </div>
         </div>

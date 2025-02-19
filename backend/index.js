@@ -6,7 +6,7 @@ import bookedRoomRoutes from './routes/bookedRoomRoutes.js';
 import weddingRoute from "./routes/weddingRoute.js";
 import appointments from './routes/appointments.js';
 import paypalRoutes from './routes/paypalRoutes.js';
-import { createCheckoutSession } from "./services/stripe.js";
+import stripeRoutes from './routes/stripeRoutes.js';
 
 import galleryRoute from './routes/galleryRoute.js';
 
@@ -26,7 +26,11 @@ const backendURL = 'https://hotel-website-backend-drab.vercel.app/'; // Your bac
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: ['http://localhost:5173', 'https://suneragirahotel.vercel.app'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 //app.use('/uploads', express.static('uploads')); // Serve uploaded files
 
@@ -50,7 +54,7 @@ app.use('/appointments', appointments);
 app.use('/wedding', weddingRoute);
 app.use('/paypal', paypalRoutes);
 
-app.post("/checkout", createCheckoutSession); // Use the handler from the stripe module
+app.use("/checkout", stripeRoutes); // Use the handler from the stripe module
 
 
 // Connect to MongoDB and start the server

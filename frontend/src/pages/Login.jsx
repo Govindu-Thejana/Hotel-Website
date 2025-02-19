@@ -45,9 +45,9 @@ const Login = () => {
         setSuccessMessage("");
 
         try {
-           
+
             const response = await axios.post("http://localhost:5555/auth/admin/forgot-password", {
-                email: "14992pasan@gmail.com", 
+                email: "14992pasan@gmail.com",
             });
 
             if (response.data.message === "Email sent successfully") {

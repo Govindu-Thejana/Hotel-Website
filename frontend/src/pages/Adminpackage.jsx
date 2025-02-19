@@ -121,13 +121,13 @@ const Adminpackage = () => {
                                 </p>
 
                                 <div className="space-y-3 mb-8">
-    {(item.Description || '').split(',').map((desc, index) => (
-        <div key={`${item._id}-${index}`} className="flex items-center text-gray-600">
-            <ChevronRight className="w-5 h-5 text-blue-900 mr-2" />
-            <span>{desc.trim()}</span>
-        </div>
-    ))}
-</div>
+                                    {(item.Description || '').split(',').map((desc, index) => (
+                                        <div key={`${item._id}-${index}`} className="flex items-center text-gray-600">
+                                            <ChevronRight className="w-5 h-5 text-blue-900 mr-2" />
+                                            <span>{desc.trim()}</span>
+                                        </div>
+                                    ))}
+                                </div>
 
 
                                 <button

@@ -274,7 +274,7 @@ const AppointmentForm = () => {
 
           <button
             type="submit"
-            className="bg-scolor text-white py-3 px-6 rounded-md shadow-lg hover:bg-gradient-to-l transition duration-300"
+            className="bg-scolor text-white py-3 px-6 rounded-md shadow-lg hover:bg-pcolor transition duration-300"
           >
             Book Appointment
           </button>

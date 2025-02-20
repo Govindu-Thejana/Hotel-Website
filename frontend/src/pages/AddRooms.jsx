@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { addRooms } from '../components/RoomCrudApi';
 
 const AddRooms = () => {
@@ -58,7 +58,7 @@ const AddRooms = () => {
                         onChange={handleChange}
                         placeholder="Room ID"
                         required
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm "
                     />
                 </div>
 
@@ -69,7 +69,7 @@ const AddRooms = () => {
                         value={room.roomType}
                         onChange={handleChange}
                         required
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm "
                     >
                         <option value="Single">Single</option>
                         <option value="Double">Double</option>
@@ -86,7 +86,7 @@ const AddRooms = () => {
                         onChange={handleChange}
                         placeholder="Description"
                         required
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm "
                     />
                 </div>
 
@@ -100,7 +100,7 @@ const AddRooms = () => {
                         placeholder="Capacity"
                         required
                         min="1"
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm "
                     />
                 </div>
 
@@ -115,7 +115,7 @@ const AddRooms = () => {
                         required
                         min="0"
                         step="0.01"
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                     />
                 </div>
 
@@ -126,7 +126,7 @@ const AddRooms = () => {
                         value={room.availability}
                         onChange={handleChange}
                         required
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                     >
                         <option value="false">Unavailable</option>
                         <option value="true">Available</option>
@@ -141,7 +141,7 @@ const AddRooms = () => {
                         onChange={handleChange}
                         placeholder="Cancellation Policy"
                         required
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                     />
                 </div>
 
@@ -153,7 +153,7 @@ const AddRooms = () => {
                         value={room.amenities.join(', ')} // Display comma-separated values
                         onChange={(e) => setRoom({ ...room, amenities: e.target.value.split(',').map(item => item.trim()) })}
                         placeholder="e.g., Free Wi-Fi, Air Conditioning, Pool"
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm 0"
                     />
                     <small className="text-gray-500">Enter amenities separated by commas</small>
                 </div>
@@ -166,14 +166,14 @@ const AddRooms = () => {
                         value={room.images.join(', ')} // Display comma-separated image URLs
                         onChange={(e) => setRoom({ ...room, images: e.target.value.split(',').map(item => item.trim()) })}
                         placeholder="e.g., image1.jpg, image2.jpg"
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                     />
                     <small className="text-gray-500">Enter image URLs separated by commas</small>
                 </div>
 
                 <button
                     type="submit"
-                    className="w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
+                    className="w-full bg-scolor text-white font-semibold py-2 px-4 rounded-md hover:bg-pcolor focus:outline-none focus:ring-2  focus:ring-opacity-50"
                 >
                     Add Room
                 </button>

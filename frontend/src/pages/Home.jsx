@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import WeddingPackages from '../components/WeddingPackages';
+import RoomCardHome from '../components/roomCardHome';
+import SearchBar from '../components/roomBookingSearchBar';
+import { ChevronRight, Clock, MapPin, Star } from 'lucide-react';
 
 
 const Home = () => {
@@ -27,6 +30,7 @@ const Home = () => {
   const handleFindOutMore = (roomId) => {
     navigate(`/roomDetails/${roomId}`); // Navigate to the room details page
   };
+  const handleBooking = () => navigate('/reservation');
 
   const nextSlide = () => {
     setCurrentSlide(currentSlide === totalSlides - 1 ? 0 : currentSlide + 1);
@@ -47,16 +51,37 @@ const Home = () => {
     <div className="bg-gray-100">
 
 
-      {/* Hero Section */}
+      {/* hero section */}
       <section className="relative">
-        <img src="/images/bg.jpg" alt="Hotel Exterior" className="w-full h-128 object-cover" />
-        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="text-center text-white">
-            <h2 className="text-3xl font-bold mb-4">Your lavish home away from home</h2>
-            <p className="text-lg">Experience the best of comfort and luxury in the heart of the city.</p>
+        {/* Background image */}
+        <img
+          src="/images/bg.jpg"
+          alt="Hotel Exterior"
+          className="w-full h-screen object-cover"
+        />
+
+        {/* Overlay with logo */}
+        <div className="absolute inset-0 bg-black bg-opacity-10 flex items-center justify-center">
+          <div className="text-center flex flex-col items-center justify-center">
+            <img
+              alt="Suneragira Hotel"
+              src="/images/logo.png"
+              className="h-24 md:h-40 lg:h-48 w-auto px-5" // Responsive logo size
+            />
+            {/* Optional: Add a responsive heading or subtitle */}
+            <h1 className="text-gray-100 font-serif italic text-xl md:text-2xl lg:text-3xl font-extrabold mt-6 text-center tracking-wide drop-shadow-lg">
+              Welcome to Hotel Suneragira
+            </h1>
+
           </div>
         </div>
+
+        {/* Search Bar at the bottom */}
+        <div className="absolute bottom-0 left-0 right-0 bg-opacity-80 px-10">
+          <SearchBar />
+        </div>
       </section>
+
 
       <section className="text-center py-14 px-28 mx-5">
 
@@ -64,7 +89,7 @@ const Home = () => {
           Your lavish home away from home
         </h1>
         <p className="text-gray-500 text-base md:text-lg leading-relaxed">
-          Nestled in the vibrant city of [Your City], Hotel Suneragira is your gateway to a world of comfort and elegance. While we may not offer
+          Nestled in the vibrant city of Nikaweratiya, Hotel Suneragira is your gateway to a world of comfort and elegance. While we may not offer
           a sea view, our exceptional service and luxurious amenities ensure that your stay with us will be nothing short of extraordinary.
           Located just moments away from the city&apos;s bustling attractions, Hotel Suneragira offers a peaceful oasis where you can relax and unwind
           whether you&apos;re traveling for business or leisure.
@@ -72,26 +97,133 @@ const Home = () => {
 
       </section>
 
-      {/* Featured Room Section */}
-      <section className="container py-20 mx-auto p-4">
-        <div className="flex flex-col md:flex-row backdrop-blur-sm shadow-lg overflow-hidden">
-          <div className="md:w-2/3">
-            <img src="/images/bride.jpg" alt="Luxurious hotel room" className="w-full h-full object-cover" />
-          </div>
-          <div className="md:w-1/3 p-6 flex flex-col justify-center">
-            <h2 className="text-3xl font-serif mb-4 text-gray-800">Movement of elegance!</h2>
-            <p className="text-gray-600 mb-6">At Hotel Somewhere, we offer a variety of accommodation options to cater to both leisure travelers and business professionals alike.</p>
-            <button className="bg-scolor text-white py-2 px-4 hover:bg-pcolor transition duration-300">BOOK NOW</button>
+      {/* Bride card */}
+      <section className="container mx-auto py-2 w-full px-4">
+        <div className="relative group">
+          {/* Main Card Container */}
+          <div className="flex flex-col md:flex-row bg-white backdrop-blur-sm shadow-xl rounded-lg overflow-hidden transform transition-all duration-500 hover:scale-[1.02]">
+            {/* Image Section */}
+            <div className="relative md:w-2/3 overflow-hidden">
+              <img
+                src="/images/bride (2).jpg"
+                alt="Luxurious hotel room"
+                className="w-full h-[300px] md:h-[600px] object-cover transform transition-transform duration-700 group-hover:scale-110"
+              />
+              {/* Image Overlay */}
+              <div className="absolute inset-0 bg-black bg-opacity-20 transition-opacity duration-500 group-hover:bg-opacity-10"></div>
+            </div>
+
+            {/* Content Section */}
+            <div className="md:w-1/3 p-8 md:p-12 flex flex-col justify-center bg-gradient-to-br from-white to-gray-50">
+              {/* Decorative Element */}
+              <div className="w-20 h-1"></div>
+
+              <h2 className="text-4xl font-serif mb-6 text-gray-800 leading-tight">
+                Movement of <span className="italic text-scolor">elegance!</span>
+              </h2>
+
+              <p className="text-gray-600 mb-8 leading-relaxed font-light text-lg">
+                At Hotel Somewhere, we offer a variety of accommodation options to cater to both leisure travelers and business professionals alike.
+              </p>
+
+              {/* CTA Button */}
+              <button
+                className="group relative overflow-hidden bg-scolor text-white py-3 px-6 rounded-md transition-all duration-300 transform hover:shadow-xl"
+              >
+                <span className="relative z-10 text-sm tracking-wider font-medium">
+                  BOOK NOW
+                </span>
+                <div className="absolute inset-0 bg-pcolor transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+              </button>
+
+              {/* Decorative Corner */}
+              <div className="absolute bottom-0 right-0 w-20 h-20 bg-blue-50 rounded-tl-full opacity-50"></div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Wedding Package Section */}
       <WeddingPackages />
+
+      {/* Room Card Section */}
+      <div className="max-w-6xl mx-auto">
+        <div className="relative flex flex-col lg:flex-row bg-[#F8F5F0] rounded-lg shadow-lg overflow-hidden transform transition-transform duration-500 hover:scale-105">
+          {/* Left Section - Image Container */}
+          <div className="absolute top-0 left-0 w-full lg:w-1/2 h-96 lg:h-full">
+            <div className="relative w-full h-full overflow-hidden">
+              <img
+                src="/images/hotel-room.jpg"
+                alt="Executive Room"
+                className="w-full h-full object-cover transform transition-transform duration-500 hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-black bg-opacity-10 hover:bg-opacity-0 transition duration-500"></div>
+            </div>
+          </div>
+
+          {/* Right Section - Content */}
+          <div className="w-full lg:w-1/2 lg:ml-auto p-8 bg-white rounded-lg shadow-lg">
+            <div className="lg:ml-4">
+              <h2 className="text-3xl font-serif text-gray-900 uppercase mb-4">
+                Executive Room
+              </h2>
+
+              {/* Occupancy & Size */}
+              <div className="flex items-center gap-6 mt-4 text-gray-700">
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">👤</span>
+                  <span className="text-sm">2 Adults</span>
+                </div>
+                <div className="w-px h-6 bg-gray-400"></div>
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">📏</span>
+                  <span className="text-sm">315 ft²</span>
+                </div>
+              </div>
+
+              {/* Room Description */}
+              <p className="text-gray-600 mt-4 font-serif leading-relaxed">
+                Designed with the needs of business travelers in mind. Offering exclusive access to the Business Lounge, guests can enjoy 24-hour coffee and tea service, complimentary breakfast, and evening cocktails in a private and comfortable setting.
+              </p>
+
+              {/* Amenities Grid */}
+              <div className="grid grid-cols-2 gap-4 mt-6">
+                {[
+                  { icon: "☕", text: "Coffee & Tea" },
+                  { icon: "🍳", text: "Complimentary Breakfast" },
+                  { icon: "🍸", text: "Evening Cocktails" },
+                  { icon: "💼", text: "Business Lounge Access" },
+                ].map((amenity, index) => (
+                  <div key={index} className="flex items-center gap-2 text-gray-600">
+                    <span className="text-lg">{amenity.icon}</span>
+                    <span className="text-sm">{amenity.text}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* CTA Button */}
+              <div className="mt-8">
+                <a
+                  href="/accommodation"
+                  className="inline-block bg-scolor text-sm uppercase tracking-wider px-6 py-3 text-white hover:bg-pcolor hover:shadow-lg transition-all duration-300"
+                >
+                  Find Out More
+                </a>
+              </div>
+
+              {/* Pagination */}
+              <div className="mt-8 text-gray-500 text-sm italic">
+                <span className="font-bold text-gray-900">01</span> / <span>11</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Carousel */}
       <section className="container mx-auto py-12">
         <div className="relative">
-          <div className="h-128 overflow-hidden rounded-lg">
+          <div className="h-128 overflow-hidden ">
             <img src={`/images/${currentSlide === 0 ? 'weddinggroup.png' : currentSlide === 1 ? 'all.jpg' : 'bridal.png'}`} alt="Hotel" className="w-full h-full object-cover" />
           </div>
 
@@ -111,69 +243,35 @@ const Home = () => {
 
 
 
-      {/* Room Types Section */}
-
-      <div className="relative flex flex-col items-center mx-auto lg:flex-row-reverse lg:max-w-5xl lg:mt-12 xl:max-w-6xl">
-
-
-        <div className="w-full h-80 lg:w-3/4 lg:h-auto">
-          <img className="h-full w-full object-cover" src="/images/hotel-room.jpg" alt="our rooms" />
-        </div>
-        <div
-          className="max-w-lg bg-white md:max-w-2xl md:z-10 md:shadow-lg md:absolute md:top-0 md:mt-48 lg:w-3/5 lg:left-0 lg:mt-20 lg:ml-20 xl:mt-24 xl:ml-12">
-
-          <div className="flex flex-col p-12 md:px-16">
-            <h2 className="text-2xl font-medium uppercase text-pcolor lg:text-4xl">our room & Suite choices</h2>
-            <p className="mt-4">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-              ex ea commodo consequat.
-            </p>
-
-            <div className="mt-8">
-              <a href="#"
-                className="inline-block w-full text-center text-lg font-medium text-gray-100 bg-scolor border-solid border-2 border-gray-600 py-4 px-10 hover:bg-pcolor hover:shadow-md md:w-48">Read
-                More</a>
-            </div>
-          </div>
-
-        </div>
-
-
-      </div>
       <h2 className="text-center text-4xl font-serif text-gray-800 mb-10">ROOMS & RATES</h2>
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 px-20">
+      <section className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5 px-20">
         {error ? (
           <div className="col-span-full text-center text-red-500">
             {error}
           </div>
         ) : (
-          rooms.map((room) => (
-            <div key={room._id} className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
-              <img
-                className="w-full h-48 object-cover"
-                src={room.images[0]} // Assuming the first image in the array
-                alt={room.roomType}
+          rooms.length > 0 ? (
+            // Filter rooms to only include one room per room type
+            rooms.filter((room, index, self) =>
+              index === self.findIndex(r => r.roomType === room.roomType)
+            ).map((room) => (
+              <RoomCardHome
+                key={room._id} // Unique key for each room
+                room={room} // Pass the room object
+                handleFindOutMore={handleFindOutMore} // Pass the handleFindOutMore function
+
               />
-              <div className="p-6">
-                <h2 className="text-2xl font-serif text-pcolor mb-2">{room.roomType}</h2>
-                <p className="text-gray-600 mb-6">{room.description}</p>
-                <div className="flex justify-between text-gray-800 mb-4">
-                  {/* ... [occupancy and size info code] ... */}
-                </div>
-                <button
-                  className="font-sans w-full bg-transparent border border-gray-500 text-scolor py-2 px-4 rounded hover:bg-scolor hover:text-white hover:border-white"
-                  onClick={() => handleFindOutMore(room._id)} // Call function on button click
-                >
-                  Find Out More
-                </button>
-              </div>
+            ))
+          ) : (
+            <div className="col-span-full text-center text-gray-500">
+              No rooms available.
             </div>
-          ))
+          )
         )}
       </section>
 
-      {/*Menu */}
+
+      {/* Menu
       <div className="min-h-screen flex flex-col p-8 sm:p-16 md:p-24 justify-center bg-white">
         <div data-theme="teal" className="mx-auto max-w-6xl">
           <h2 className="sr-only">Featured case study</h2>
@@ -230,49 +328,142 @@ const Home = () => {
             </section>
           </section>
         </div>
-      </div>
-
+      </div> */}
 
 
       {/* Places to Visit Section */}
-      <section className="container mx-auto py-12">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-serif">Places You Can Visit Near Our Hotel</h2>
+      <section className="container mx-auto py-16 px-4">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-serif mb-4">
+            Explore Nearby Attractions
+          </h2>
+          <p className="text-scolor font-serif max-w-2xl mx-auto">
+            Discover these magnificent landmarks
+          </p>
         </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-            <img src="/images/sigiria.jpg" alt="Kandy Lake" className="w-full h-48 object-cover" />
+          {/* Sigiriya Card */}
+          <div className="group bg-white rounded-xl overflow-hidden shadow-lg transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
+            <div className="relative overflow-hidden">
+              <img
+                src="/images/sigiria.jpg"
+                alt="Sigiriya"
+                className="w-full h-64 object-cover transform transition-transform duration-300 group-hover:scale-110"
+              />
+              <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
+                <div className="flex items-center gap-1">
+                  <Star className="w-4 h-4 fill-yellow-400 stroke-yellow-400" />
+                  <span className="text-sm font-medium">4.8</span>
+                </div>
+              </div>
+            </div>
             <div className="p-6">
-              <h3 className="text-2xl font mb-2">Sigiriya</h3>
-
+              <h3 className="text-2xl font-serif mb-3">Sigiriya</h3>
+              <p className="text-gray-600 mb-4">Ancient palace and fortress complex with stunning views</p>
+              <div className="flex items-center gap-4 text-gray-500 mb-6">
+                <div className="flex items-center gap-1">
+                  <MapPin className="w-4 h-4" />
+                  <span className="text-sm">2.5 km</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Clock className="w-4 h-4" />
+                  <span className="text-sm">3-4 hours</span>
+                </div>
+              </div>
+              <button className="w-full bg-scolor text-white py-3 rounded-lg flex items-center justify-center gap-2 transform transition-colors duration-300 hover:bg-pcolor">
+                Learn More
+                <ChevronRight className="w-4 h-4" />
+              </button>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-            <img src="/images/kandy.jpg" alt="Temple of the Tooth" className="w-full h-48 object-cover" />
-            <div className="p-6">
-              <h3 className="text-2xl font mb-2">Temple of the Tooth</h3>
 
+          {/* Temple of the Tooth Card */}
+          <div className="group bg-white rounded-xl overflow-hidden shadow-lg transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
+            <div className="relative overflow-hidden">
+              <img
+                src="/images/kandy.jpg"
+                alt="Temple of the Tooth"
+                className="w-full h-64 object-cover transform transition-transform duration-300 group-hover:scale-110"
+              />
+              <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
+                <div className="flex items-center gap-1">
+                  <Star className="w-4 h-4 fill-yellow-400 stroke-yellow-400" />
+                  <span className="text-sm font-medium">4.9</span>
+                </div>
+              </div>
+            </div>
+            <div className="p-6">
+              <h3 className="text-2xl font-serif mb-3">Temple of the Tooth</h3>
+              <p className="text-gray-600 mb-4">Sacred Buddhist temple housing the relic of Buddha's tooth</p>
+              <div className="flex items-center gap-4 text-gray-500 mb-6">
+                <div className="flex items-center gap-1">
+                  <MapPin className="w-4 h-4" />
+                  <span className="text-sm">1.8 km</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Clock className="w-4 h-4" />
+                  <span className="text-sm">2-3 hours</span>
+                </div>
+              </div>
+              <button className="w-full bg-scolor text-white py-3 rounded-lg flex items-center justify-center gap-2 transform transition-colors duration-300 hover:pcolor">
+                Learn More
+                <ChevronRight className="w-4 h-4" />
+              </button>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-            <img src="/images/dambulla.jpg" alt="Botanical Garden" className="w-full h-48 object-cover" />
+
+          {/* Dambulla Cave Temple Card */}
+          <div className="group bg-white rounded-xl overflow-hidden shadow-lg transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
+            <div className="relative overflow-hidden">
+              <img
+                src="/images/dambulla.jpg"
+                alt="Dambulla Cave Temple"
+                className="w-full h-64 object-cover transform transition-transform duration-300 group-hover:scale-110"
+              />
+              <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
+                <div className="flex items-center gap-1">
+                  <Star className="w-4 h-4 fill-yellow-400 stroke-yellow-400" />
+                  <span className="text-sm font-medium">4.7</span>
+                </div>
+              </div>
+            </div>
             <div className="p-6">
-              <h3 className="text-2xl font mb-2">Dambulla Cave Temple</h3>
+              <h3 className="text-2xl font-serif mb-3">Dambulla Cave Temple</h3>
+              <p className="text-gray-600 mb-4">Ancient cave monastery with beautiful wall paintings</p>
+              <div className="flex items-center gap-4 text-gray-500 mb-6">
+                <div className="flex items-center gap-1">
+                  <MapPin className="w-4 h-4" />
+                  <span className="text-sm">3.2 km</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Clock className="w-4 h-4" />
+                  <span className="text-sm">2-3 hours</span>
+                </div>
+              </div>
+              <button className="w-full bg-scolor text-white py-3 rounded-lg flex items-center justify-center gap-2 transform transition-colors duration-300 hover:bg-pcolor">
+                Learn More
+                <ChevronRight className="w-4 h-4" />
+              </button>
             </div>
           </div>
         </div>
       </section>
-      <p className="flex justify-center items-center min-h-screen">
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15362.633136406359!2d80.10702796495386!3d7.7688024577783!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3afcd610a5b4ea93%3A0xefc5f088590da77d!2sSuneragira%20Reception%20Hall!5e0!3m2!1sen!2slk!4v1727886479261!5m2!1sen!2slk"
-          width="1280"
-          height="600"
-          style={{ border: 0 }}
-          allowFullScreen=""
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-        ></iframe>
-      </p>
+
+      {/* google map */}
+      <section className="w-screen px-4">
+        <div className="w-full relative overflow-hidden shadow-lg">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15362.633136406359!2d80.10702796495386!3d7.7688024577783!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3afcd610a5b4ea93%3A0xefc5f088590da77d!2sSuneragira%20Reception%20Hall!5e0!3m2!1sen!2slk!4v1727886479261!5m2!1sen!2slk"
+            className="w-full h-[600px]"
+            style={{ border: 0 }}
+            allowFullScreen=""
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+      </section>
+
 
     </div>
 

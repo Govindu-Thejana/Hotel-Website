@@ -1,5 +1,5 @@
 import express from 'express';
-import { wedding } from '../models/weddingModel.js'; 
+import wedding from '../models/weddingModel.js';
 
 const router = express.Router();
 
@@ -29,7 +29,7 @@ router.get('/:id', async (req, res) => {
 
 // POST a new wedding package
 router.post('/', async (req, res) => {
-    const { packagename, price,Description } = req.body;
+    const { packagename, price, Description } = req.body;
 
     if (!packagename || !price) {
         return res.status(400).json({ message: 'All fields are required' });

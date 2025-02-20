@@ -1,0 +1,43 @@
+# Dependency directories
+node_modules/
+
+# Build directories
+dist/
+build/
+
+# Environment variables
+.env
+.env.*.local
+HEAD
+node_modules
+
+
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE and editor files
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Coverage directory (used for testing reports)
+coverage/
+
+# Optional npm cache directory
+.npm
+
+# Lint and formatting cache
+.eslintcache
+.stylelintcache
+.prettiercache
+
+# Database-related files
+*.sqlite
+*.sqlite-journal
+*.db
+              

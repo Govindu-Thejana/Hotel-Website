@@ -1,17 +1,15 @@
 import { Disclosure } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-
+import { useLocation, useNavigate } from 'react-router-dom';
 
 // Navigation links
 const navigation = [
     { name: 'Home', href: '/', current: false },
     { name: 'Accommodation', href: '/accommodation', current: false },
     { name: 'Weddings', href: '/weddings', current: false },
-    { name: 'Events', href: '/events', current: false },
+    { name: 'Events', href: '/event', current: false },
     { name: 'Gallery', href: '/gallery', current: false },
-    { name: 'Offers', href: '/offers', current: false },
 ];
 
 function classNames(...classes) {
@@ -21,6 +19,9 @@ function classNames(...classes) {
 const Header = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const location = useLocation();
+    const navigate = useNavigate();
+    
+    const handleBooking = () => navigate('/reservation');
 
     // Handle scroll events to toggle background color
     const handleScroll = () => {
@@ -88,7 +89,8 @@ const Header = () => {
 
                         {/* Book Now button */}
                         <div className="sm:text-sm sm:flex lg:flex">
-                            <button className="bg-scolor hover:text-pcolor text-white font-semibold py-1 px-3 sm:py-2 sm:px-4 text-sm sm:text-base">
+                            <button onClick={handleBooking}
+                                className="bg-scolor hover:text-pcolor text-white font-semibold py-1 px-3 sm:py-2 sm:px-4 text-sm sm:text-base">
                                 Book Now
                             </button>
                         </div>

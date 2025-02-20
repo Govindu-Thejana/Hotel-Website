@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"
 import Testimonials from "../components/Testimonials";
 import AvailabilityCheck from "../components/BookingAvailability";
+import RoomCardHome from '../components/roomCardHome';
+import SearchBar from "../components/roomBookingSearchBar";
 
 const Accommodation = () => {
     const [rooms, setRooms] = useState([]);
@@ -29,22 +31,29 @@ const Accommodation = () => {
         <div className="bg-gray-100">
             {/* hero section */}
             <section className="relative">
-                <img src="/images/bgRooms.jpg" alt="Hotel Exterior" className="w-full h-screen object-cover" />
-                <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                    <div className=" justify-center">
+                {/* Background image */}
+                <img
+                    src="/images/Building.jpg"
+                    alt="Hotel Exterior"
+                    className="w-full h-screen object-cover"
+                />
+
+                {/* Overlay with logo */}
+                <div className="absolute inset-0 bg-black bg-opacity-10 flex items-center justify-center">
+                    <div className="text-center flex flex-col items-center justify-center">
                         <img
                             alt="Suneragira Hotel"
                             src="/images/logo.png"
-                            className="h-40 px-5 w-auto"
+                            className="h-24 md:h-40 lg:h-48 w-auto px-5" // Responsive logo size
                         />
                     </div>
                 </div>
+
+                {/* Search Bar at the bottom */}
+                <div className="absolute bottom-0 left-0 right-0 bg-opacity-80 px-10">
+                    <SearchBar />
+                </div>
             </section>
-
-            <div className="p">
-                <AvailabilityCheck />
-
-            </div>
 
 
             <section className="text-left py-14 px-28 mx-5">
@@ -136,18 +145,23 @@ const Accommodation = () => {
 
             {/* ROOMS packages cards */}
             <h2 className="text-center text-4xl font-serif text-gray-800 mb-10">ROOMS & RATES</h2>
-            <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 px-20">
+            <section className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5 px-20">
                 {error ? (
                     <div className="col-span-full text-center text-red-500">
                         {error}
                     </div>
                 ) : (
+
                     rooms.map((room) => (
                         <div key={room._id} className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
                             <img
                                 className="w-full h-48 object-cover"
-                                src={room.images[0]} // Assuming the first image in the array
-                                alt={room.roomType}
+                                src={
+                                    room.images && room.images[0]
+                                        ? room.images[0] // Use the Cloudinary URL directly
+                                        : '/default-image.jpg' // Fallback image if images array is undefined or empty
+                                }
+                                alt={room.roomType || 'Room'}
                             />
                             <div className="p-6">
                                 <h2 className="text-2xl font-serif text-pcolor mb-2">{room.roomType}</h2>

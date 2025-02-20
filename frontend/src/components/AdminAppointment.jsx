@@ -13,7 +13,7 @@ const AdminAppointment = () => {
     const fetchAppointments = async () => {
       try {
         setLoading(true);
-        const response = await fetch("http://localhost:5555/appointments");
+        const response = await fetch("https://hotel-website-backend-drab.vercel.app/appointments");
         if (!response.ok) throw new Error("Failed to fetch appointments");
         const data = await response.json();
         setAppointments(data);
@@ -36,7 +36,7 @@ const AdminAppointment = () => {
     if (!userConfirmed) return;
 
     try {
-      const response = await fetch(`http://localhost:5555/appointments/${id}`, {
+      const response = await fetch(`https://hotel-website-backend-drab.vercel.app/appointments/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -69,7 +69,7 @@ const AdminAppointment = () => {
     if (!userConfirmed) return;
 
     try {
-      const response = await fetch(`http://localhost:5555/appointments/${id}`, {
+      const response = await fetch(`https://hotel-website-backend-drab.vercel.app/appointments/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -112,7 +112,7 @@ const AdminAppointment = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5555/appointments/${editingAppointment._id}`,
+        `https://hotel-website-backend-drab.vercel.app/appointments/${editingAppointment._id}`,
         {
           method: "PUT",
           headers: {
@@ -160,7 +160,7 @@ const AdminAppointment = () => {
     if (!userConfirmed) return;
 
     try {
-      const response = await fetch(`http://localhost:5555/appointments/${id}`, {
+      const response = await fetch(`https://hotel-website-backend-drab.vercel.app/appointments/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

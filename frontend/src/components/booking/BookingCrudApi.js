@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create an axios instance
 const api = axios.create({
-    baseURL: 'http://localhost:5555/bookedRoom', // Replace with your backend's base URL
+    baseURL: 'https://hotel-website-backend-drab.vercel.app/bookedRoom', // Replace with your backend's base URL
 });
 
 // Function to create a new booking

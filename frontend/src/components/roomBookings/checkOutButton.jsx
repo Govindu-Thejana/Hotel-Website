@@ -2,7 +2,7 @@ import React from "react";
 
 const CheckoutButton = () => {
     const handleCheckout = () => {
-        fetch("http://localhost:5555/checkout", {
+        fetch("https://hotel-website-backend-drab.vercel.app/checkout", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

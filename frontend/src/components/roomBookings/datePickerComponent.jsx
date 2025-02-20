@@ -15,7 +15,7 @@ const BookedDatesByRoomType = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await axios.get(`http://localhost:5555/api/bookedRoom/bookings/room/${selectedRoomType}`);
+            const response = await axios.get(`https://hotel-website-backend-drab.vercel.app/api/bookedRoom/bookings/room/${selectedRoomType}`);
             setBookedDates(response.data.data);
             setLoading(false);
         } catch (err) {

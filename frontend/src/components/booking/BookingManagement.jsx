@@ -13,7 +13,7 @@ const RoomBookingCalendar = () => {
         // Fetch room data
         const fetchRooms = async () => {
             try {
-                const result = await axios.get("http://localhost:5555/rooms");
+                const result = await axios.get("https://hotel-website-backend-drab.vercel.app/rooms");
                 setRooms(result.data.data); // Assuming data is in result.data.data
             } catch (error) {
                 console.error("Error fetching rooms:", error);
@@ -24,7 +24,7 @@ const RoomBookingCalendar = () => {
         const fetchBookings = async () => {
             try {
                 const result = await axios.get(
-                    "http://localhost:5555/bookedRoom/bookings"
+                    "https://hotel-website-backend-drab.vercel.app/bookedRoom/bookings"
                 );
                 setBookings(result.data); // Assuming the API returns an array of bookings
             } catch (error) {

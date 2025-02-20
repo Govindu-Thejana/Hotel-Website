@@ -22,7 +22,7 @@ const AppointmentForm = () => {
   // Fetch all appointments from the backend
   const fetchAppointments = async () => {
     try {
-      const response = await fetch("http://localhost:5555/appointments");
+      const response = await fetch("https://hotel-website-backend-drab.vercel.app/appointments");
       if (response.ok) {
         const data = await response.json();
         setExistingAppointments(data);
@@ -63,7 +63,7 @@ const AppointmentForm = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5555/appointments", {
+      const response = await fetch("https://hotel-website-backend-drab.vercel.app/appointments", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

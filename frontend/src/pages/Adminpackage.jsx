@@ -16,7 +16,7 @@ const Adminpackage = () => {
     useEffect(() => {
         const fetchWedding = async () => {
             try {
-                const response = await axios.get('http://localhost:5555/wedding');
+                const response = await axios.get('https://hotel-website-backend-drab.vercel.app/wedding');
                 if (response.status === 200) {
                     setWedding(response.data.data || response.data);
                 } else {
@@ -44,7 +44,7 @@ const Adminpackage = () => {
     const handleSave = async () => {
         try {
             if (isEditing) {
-                const response = await axios.put(`http://localhost:5555/wedding/${currentPackage._id}`, currentPackage);
+                const response = await axios.put(`https://hotel-website-backend-drab.vercel.app/wedding/${currentPackage._id}`, currentPackage);
                 if (response.status === 200) {
                     alert('Wedding package updated successfully');
                     setWedding(
@@ -54,7 +54,7 @@ const Adminpackage = () => {
                     );
                 }
             } else {
-                const response = await axios.post('http://localhost:5555/wedding', currentPackage);
+                const response = await axios.post('https://hotel-website-backend-drab.vercel.app/wedding', currentPackage);
                 if (response.status === 201) {
                     alert('Wedding package added successfully');
                     setWedding([...wedding, response.data]);
@@ -69,7 +69,7 @@ const Adminpackage = () => {
 
     const handleDelete = async (weddingId) => {
         try {
-            const response = await axios.delete(`http://localhost:5555/wedding/${weddingId}`);
+            const response = await axios.delete(`https://hotel-website-backend-drab.vercel.app/wedding/${weddingId}`);
             if (response.status === 200) {
                 alert('Wedding package deleted successfully');
                 setWedding(wedding.filter((item) => item._id !== weddingId));

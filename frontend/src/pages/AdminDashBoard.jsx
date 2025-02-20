@@ -18,7 +18,7 @@ const AdminDashboard = () => {
   const fetchAvailableRooms = async () => {
     setIsLoading(true);
     try {
-      const result = await axios.get("http://localhost:5555/rooms");
+      const result = await axios.get("https://hotel-website-backend-drab.vercel.app/rooms");
       // Only filter rooms that are available (true)
       const availableRooms = result.data.data.filter(
         (room) => room.availability === true // Ensure availability is 'true'
@@ -33,7 +33,7 @@ const AdminDashboard = () => {
 
   const fetchAppointments = async () => {
     try {
-      const result = await axios.get("http://localhost:5555/appointments");
+      const result = await axios.get("https://hotel-website-backend-drab.vercel.app/appointments");
       setAppointments(result.data.data || []);
     } catch (error) {
       setErrorMessage("Failed to fetch appointments. Please try again.");

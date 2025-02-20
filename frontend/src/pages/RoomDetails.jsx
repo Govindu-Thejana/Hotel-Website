@@ -41,7 +41,7 @@ const RoomDetails = () => {
 
     useEffect(() => {
         axios
-            .get('http://localhost:5555/rooms')
+            .get('https://hotel-website-backend-drab.vercel.app/rooms')
             .then((response) => {
                 setRooms(response.data.data);
                 setSimilarRoomsLoading(false);
@@ -56,7 +56,7 @@ const RoomDetails = () => {
         const fetchRoomData = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`http://localhost:5555/rooms/${roomId}`);
+                const response = await axios.get(`https://hotel-website-backend-drab.vercel.app/rooms/${roomId}`);
                 setRoom(response.data);
             } catch {
                 setError('Failed to fetch room data. Please try again later.');

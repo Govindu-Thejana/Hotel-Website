@@ -34,7 +34,7 @@ const RoomCard = ({ room, onAddToCart }) => {
                     <img
                         src={
                             room.images && room.images[currentImageIndex]
-                                ? `http://localhost:5555/${room.images[currentImageIndex].replace(/\\/g, '/')}`
+                                ? `https://hotel-website-backend-drab.vercel.app/${room.images[currentImageIndex].replace(/\\/g, '/')}`
                                 : '/default-image.jpg' // Fallback image if images array is undefined or empty
                         }
                         alt={`Room ${room.roomId}`}

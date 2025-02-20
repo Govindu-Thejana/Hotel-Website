@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { CalendarDays, Users } from "lucide-react";
 import AppointmentForm from "../components/AppointmentForm";
+import SearchBar from "../components/roomBookingSearchBar";
 
 export default function EventPage() {
   // Scroll animation effect
@@ -15,22 +16,37 @@ export default function EventPage() {
         }
       });
     };
-
+ 
     handleScrollAnimation(); // Run initially
     window.addEventListener("scroll", handleScrollAnimation);
     return () => window.removeEventListener("scroll", handleScrollAnimation);
   }, []);
 
   return (
-    <div>
-      {/* Hero Section */}
-      <section className="relative h-[500px] bg-cover bg-center flex items-center justify-center text-white text-center px-6 md:px-12" style={{ backgroundImage: `url('/images/bg.jpg')` }}>
-        <div className=" p-10 rounded-xl animate-on-scroll opacity-0 transition-opacity duration-700">
-          {/*<h1 className="text-5xl md:text-6xl font-bold mb-4">Host Your Perfect Event</h1>
-          <p className="text-lg md:text-xl mb-6">Discover stunning venues and exceptional service to make your event unforgettable.</p>
-          <button className="bg-yellow-500 text-white px-8 py-3 rounded-md hover:bg-yellow-400 transition-transform transform hover:scale-105">
-            Get Started
-          </button>*/}
+    <div className="bg-gray-100">
+      {/* hero section */}
+      <section className="relative">
+        {/* Background image */}
+        <img
+          src="/images/gardenAtNight.jpg"
+          alt="Hotel Exterior"
+          className="w-full h-screen object-cover"
+        />
+
+        {/* Overlay with logo */}
+        <div className="absolute inset-0 bg-black bg-opacity-10 flex items-center justify-center">
+          <div className="text-center flex flex-col items-center justify-center">
+            <img
+              alt="Suneragira Hotel"
+              src="/images/logo.png"
+              className="h-24 md:h-40 lg:h-48 w-auto px-5" // Responsive logo size
+            />
+          </div>
+        </div>
+
+        {/* Search Bar at the bottom */}
+        <div className="absolute bottom-0 left-0 right-0 bg-opacity-80 px-10">
+          <SearchBar />
         </div>
       </section>
 
@@ -70,7 +86,7 @@ export default function EventPage() {
               <div className="p-6">
                 <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
                 <p className="text-gray-600">{event.description}</p>
-                <button className="mt-4 text-yellow-500 font-medium hover:text-yellow-400 transition-colors">
+                <button className="mt-4 text-scolor hover:text-pcolor transition-colors">
                   Find Out More →
                 </button>
               </div>
@@ -96,8 +112,8 @@ export default function EventPage() {
               <div className="p-8">
                 <h3 className="text-2xl font-semibold mb-2">{venue.title}</h3>
                 <p className="text-gray-600 mb-4">{venue.description}</p>
-                <p className="text-sm text-yellow-500 mb-6">{venue.capacity}</p>
-                <button className="bg-yellow-500 text-white px-6 py-2 rounded-md hover:bg-yellow-400 transition-transform transform hover:scale-105">
+                <p className="text-sm text-scolor">{venue.capacity}</p>
+                <button className="bg-scolor text-white px-6 py-2 rounded-md hover:bg-pcolor transition-transform transform hover:scale-105">
                   Appoiment
                 </button>
               </div>
@@ -109,7 +125,7 @@ export default function EventPage() {
       {/* Contact Section */}
       <section className="py-20 px-6 md:px-12 bg-gray-100">
         <div className="max-w-4xl mx-auto text-center animate-on-scroll opacity-0 transition-opacity duration-700">
-          
+
           <AppointmentForm />
         </div>
       </section>

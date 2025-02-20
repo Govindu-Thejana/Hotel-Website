@@ -27,7 +27,7 @@ const backendURL = 'https://hotel-website-backend-drab.vercel.app/'; // Your bac
 // Middleware
 app.use(express.json());
 app.use(cors({
-    origin: ['http://localhost:5173', 'https://suneragirahotel.vercel.app'],
+    origin: ['http://localhost:5173', 'https://suneragirahotel.vercel.app', /^https:\/\/.*-govindu-thejanas-projects\.vercel\.app$/],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));

@@ -14,7 +14,7 @@ export const addRooms = async (roomId, roomType, description, capacity, pricePer
     formData.append("description", description);
     formData.append("capacity", capacity);
     formData.append("pricePerNight", pricePerNight);
-    formData.append("availability", availability === 'true'); // Convert availability to boolean
+    formData.append("availability", 'true'); // Convert availability to boolean
     formData.append("cancellationPolicy", cancellationPolicy);
 
     // Append amenities as a JSON string

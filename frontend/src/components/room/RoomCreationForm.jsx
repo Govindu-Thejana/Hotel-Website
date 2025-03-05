@@ -10,7 +10,7 @@ const RoomCreationForm = () => {
         description: '',
         capacity: '',
         pricePerNight: '',
-        availability: false,
+        availability: true,
         amenities: [],
         cancellationPolicy: '',
         images: [],
@@ -169,7 +169,7 @@ const RoomCreationForm = () => {
                     description: '',
                     capacity: '',
                     pricePerNight: '',
-                    availability: false,
+                    availability: true,
                     amenities: [],
                     cancellationPolicy: '',
                     images: [],
@@ -280,15 +280,7 @@ const RoomCreationForm = () => {
                     <div>
                         <label className="block mb-2 text-gray-700">Availability</label>
                         <div className="flex items-center">
-                            <input
-                                type="checkbox"
-                                id="availability"
-                                name="availability"
-                                checked={roomData.availability}
-                                onChange={handleInputChange}
-                                className="mr-2 h-4 w-4"
-                            />
-                            <span>{roomData.availability ? 'Available' : 'Unavailable'}</span>
+
                         </div>
                     </div>
                 </div>

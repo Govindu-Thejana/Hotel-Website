@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import AdminCalendar from "./AdminCalendar";
+import AppointmentChatbot from "./AppointmentChatbot";
 import {
   FaCheck,
   FaTimes,
@@ -54,6 +55,11 @@ const AdminAppointment = () => {
   const [confirmedPage, setConfirmedPage] = useState(0);
   const [cancelledPage, setCancelledPage] = useState(0);
   const [upcomingPage, setUpcomingPage] = useState(0);
+
+  // Add state for confirmation popups
+  const [showCancelPopup, setShowCancelPopup] = useState(false);
+  const [showDeletePopup, setShowDeletePopup] = useState(false);
+  const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -109,11 +115,6 @@ const AdminAppointment = () => {
   };
 
   const handleCancel = async (id) => {
-    const userConfirmed = window.confirm(
-      "Are you sure you want to cancel this appointment?"
-    );
-    if (!userConfirmed) return;
-
     try {
       const response = await fetch(`http://localhost:5555/appointments/${id}`, {
         method: "PUT",
@@ -135,10 +136,19 @@ const AdminAppointment = () => {
           appointment._id === id ? updatedAppointment : appointment
         )
       );
+
+      // Close the popup after successful cancellation
+      setShowCancelPopup(false);
     } catch (error) {
       console.error("Error cancelling appointment:", error);
       setError("Failed to cancel appointment");
     }
+  };
+
+  // Initiate cancel process by showing popup
+  const initiateCancel = (id) => {
+    setSelectedAppointmentId(id);
+    setShowCancelPopup(true);
   };
 
   const handleEdit = (appointment) => {
@@ -223,11 +233,6 @@ const AdminAppointment = () => {
   };
 
   const handleDelete = async (id) => {
-    const userConfirmed = window.confirm(
-      "Are you sure you want to delete this appointment?"
-    );
-    if (!userConfirmed) return;
-
     try {
       const response = await fetch(`http://localhost:5555/appointments/${id}`, {
         method: "DELETE",
@@ -241,10 +246,19 @@ const AdminAppointment = () => {
       setAppointments((prevAppointments) =>
         prevAppointments.filter((appointment) => appointment._id !== id)
       );
+
+      // Close the popup after successful deletion
+      setShowDeletePopup(false);
     } catch (error) {
       console.error("Error deleting appointment:", error);
       setError("Failed to delete appointment");
     }
+  };
+
+  // Initiate delete process by showing popup
+  const initiateDelete = (id) => {
+    setSelectedAppointmentId(id);
+    setShowDeletePopup(true);
   };
 
   // Categorize and sort appointments
@@ -352,6 +366,18 @@ const AdminAppointment = () => {
     setUpcomingPage(0);
   }, [appointments]);
 
+  // Add handler for when a new appointment is created via chatbot
+  const handleAppointmentCreated = (newAppointment) => {
+    // Add the new appointment to the list
+    setAppointments((prevAppointments) => [
+      ...prevAppointments,
+      newAppointment,
+    ]);
+
+    // Show a toast notification or feedback (optional)
+    setError(null); // Clear any previous errors
+  };
+
   if (loading)
     return (
       <div className="flex items-center justify-center py-16">
@@ -458,7 +484,14 @@ const AdminAppointment = () => {
         )}
 
         <div
-          className={editingAppointment || showCalendarPopup ? "blur-sm" : ""}
+          className={
+            editingAppointment ||
+            showCalendarPopup ||
+            showCancelPopup ||
+            showDeletePopup
+              ? "blur-sm"
+              : ""
+          }
         >
           {/* Move Upcoming Appointments to the top */}
           <div className="mb-12">
@@ -489,9 +522,9 @@ const AdminAppointment = () => {
               appointments={
                 filterDate ? getFilteredAppointments() : confirmedAppointments
               }
-              handleCancel={handleCancel}
+              handleCancel={initiateCancel} // Changed from handleCancel to initiateCancel
               handleEdit={handleEdit}
-              handleDelete={handleDelete}
+              handleDelete={initiateDelete} // Changed from handleDelete to initiateDelete
               showConfirmationStatus={true}
               currentPage={upcomingPage}
               onNextPage={() => setUpcomingPage((prev) => prev + 1)}
@@ -512,9 +545,9 @@ const AdminAppointment = () => {
                 <AppointmentList
                   appointments={pendingAppointments}
                   handleConfirm={handleConfirm}
-                  handleCancel={handleCancel}
+                  handleCancel={initiateCancel} // Changed from handleCancel to initiateCancel
                   handleEdit={handleEdit}
-                  handleDelete={handleDelete}
+                  handleDelete={initiateDelete} // Changed from handleDelete to initiateDelete
                   currentPage={pendingPage}
                   onNextPage={() => setPendingPage((prev) => prev + 1)}
                   onPrevPage={() =>
@@ -537,9 +570,9 @@ const AdminAppointment = () => {
               {confirmedAppointments.length > 0 ? (
                 <AppointmentList
                   appointments={confirmedAppointments}
-                  handleCancel={handleCancel}
+                  handleCancel={initiateCancel} // Changed from handleCancel to initiateCancel
                   handleEdit={handleEdit}
-                  handleDelete={handleDelete}
+                  handleDelete={initiateDelete} // Changed from handleDelete to initiateDelete
                   showConfirmationStatus={true}
                   currentPage={confirmedPage}
                   onNextPage={() => setConfirmedPage((prev) => prev + 1)}
@@ -565,7 +598,7 @@ const AdminAppointment = () => {
                   appointments={cancelledAppointments}
                   handleConfirm={handleConfirm}
                   handleEdit={handleEdit}
-                  handleDelete={handleDelete}
+                  handleDelete={initiateDelete} // Changed from handleDelete to initiateDelete
                   showCancellationDate={true}
                   currentPage={cancelledPage}
                   onNextPage={() => setCancelledPage((prev) => prev + 1)}
@@ -662,6 +695,74 @@ const AdminAppointment = () => {
                     className="px-4 py-2 bg-scolor text-white rounded-lg hover:bg-pcolor transition-colors"
                   >
                     Save Changes
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Cancel Appointment Confirmation Popup */}
+        {showCancelPopup && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
+              <div className="text-center">
+                <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-6">
+                  <FaTimes className="h-8 w-8 text-red-600" />
+                </div>
+                <h3 className="text-xl font-medium text-gray-900 mb-2">
+                  Cancel Appointment
+                </h3>
+                <p className="text-gray-500 mb-6">
+                  Are you sure you want to cancel this appointment? This action
+                  cannot be undone.
+                </p>
+                <div className="flex justify-center space-x-4">
+                  <button
+                    onClick={() => setShowCancelPopup(false)}
+                    className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors"
+                  >
+                    No, Keep It
+                  </button>
+                  <button
+                    onClick={() => handleCancel(selectedAppointmentId)}
+                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                  >
+                    Yes, Cancel It
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Delete Appointment Confirmation Popup */}
+        {showDeletePopup && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
+              <div className="text-center">
+                <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-6">
+                  <FaTrash className="h-8 w-8 text-red-600" />
+                </div>
+                <h3 className="text-xl font-medium text-gray-900 mb-2">
+                  Delete Appointment
+                </h3>
+                <p className="text-gray-500 mb-6">
+                  Are you sure you want to permanently delete this appointment?
+                  This action cannot be undone.
+                </p>
+                <div className="flex justify-center space-x-4">
+                  <button
+                    onClick={() => setShowDeletePopup(false)}
+                    className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors"
+                  >
+                    No, Keep It
+                  </button>
+                  <button
+                    onClick={() => handleDelete(selectedAppointmentId)}
+                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                  >
+                    Yes, Delete It
                   </button>
                 </div>
               </div>
@@ -912,8 +1013,8 @@ const AdminAppointment = () => {
                                 </button>
                                 <button
                                   onClick={() => {
-                                    handleCancel(appointment._id);
                                     setShowCalendarPopup(false);
+                                    initiateCancel(appointment._id); // Changed from handleCancel to initiateCancel
                                   }}
                                   className="flex items-center text-sm px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
                                 >
@@ -921,8 +1022,8 @@ const AdminAppointment = () => {
                                 </button>
                                 <button
                                   onClick={() => {
-                                    handleDelete(appointment._id);
                                     setShowCalendarPopup(false);
+                                    initiateDelete(appointment._id); // Changed from handleDelete to initiateDelete
                                   }}
                                   className="flex items-center text-sm px-3 py-1.5 bg-white text-gray-700 rounded-lg hover:bg-gray-100 transition-colors border border-gray-300"
                                 >
@@ -949,6 +1050,13 @@ const AdminAppointment = () => {
             </div>
           </div>
         )}
+
+        {/* Add Chatbot component */}
+        <AppointmentChatbot
+          appointments={appointments}
+          isAdmin={true}
+          onAppointmentCreated={handleAppointmentCreated}
+        />
       </div>
     </section>
   );
@@ -957,9 +1065,9 @@ const AdminAppointment = () => {
 const AppointmentList = ({
   appointments,
   handleConfirm,
-  handleCancel,
+  handleCancel, // This is now initiateCancel
   handleEdit,
-  handleDelete,
+  handleDelete, // This is now initiateDelete
   showCancellationDate,
   showConfirmationStatus,
   currentPage = 0,
@@ -1104,7 +1212,7 @@ const AppointmentList = ({
                 </button>
               )}
             </div>
-            
+
             {/* Show navigation arrows only on the last card */}
             {index === visibleAppointments.length - 1 && (
               <div className="absolute flex space-x-2 right-6 -bottom-4">
@@ -1131,7 +1239,7 @@ const AppointmentList = ({
           </div>
         ))}
       </div>
-      
+
       {/* Add a small page indicator instead of full controls */}
       {totalPages > 1 && (
         <div className="text-center text-xs text-gray-500 mt-4">

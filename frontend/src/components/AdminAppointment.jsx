@@ -14,6 +14,8 @@ import {
   FaCommentAlt,
   FaExclamationCircle,
   FaFilter,
+  FaExpand,
+  FaWindowClose,
 } from "react-icons/fa";
 import "./custom-calendar.css"; // We'll create this file next
 
@@ -28,7 +30,11 @@ const AdminAppointment = () => {
 
   // For filtering appointments
   const [filterDate, setFilterDate] = useState(null);
-  const [showCalendarView, setShowCalendarView] = useState(false);
+
+  // Remove showCalendarView state
+
+  // Add state for popup calendar
+  const [showCalendarPopup, setShowCalendarPopup] = useState(false);
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -258,9 +264,18 @@ const AdminAppointment = () => {
   return (
     <section className="bg-white py-16">
       <div className="container mx-auto px-4">
-        <h2 className="text-4xl font-serif mb-12 text-center text-gray-800">
-          Admin Appointment View
-        </h2>
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8">
+          <h2 className="text-4xl font-serif text-center text-gray-800">
+            Admin Appointment View
+          </h2>
+
+          <button
+            onClick={() => setShowCalendarPopup(true)}
+            className="mt-4 md:mt-0 px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200 flex items-center"
+          >
+            <FaCalendarAlt className="mr-2" /> Full Calendar
+          </button>
+        </div>
 
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6 shadow-sm flex items-center">
@@ -269,7 +284,51 @@ const AdminAppointment = () => {
           </div>
         )}
 
-        <div className={editingAppointment ? "blur-sm" : ""}>
+        <div
+          className={editingAppointment || showCalendarPopup ? "blur-sm" : ""}
+        >
+          {/* Move Upcoming Appointments to the top */}
+          <div className="mb-12">
+            <div className="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center">
+              <h3 className="text-2xl font-medium text-gray-800">
+                Upcoming Appointments
+              </h3>
+              <div className="flex items-center mt-4 md:mt-0 space-x-4">
+                <button
+                  onClick={() => setShowCalendarPopup(true)}
+                  className="px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200 flex items-center"
+                >
+                  <FaExpand className="mr-2" /> Full Calendar
+                </button>
+
+                <div className="relative">
+                  <DatePicker
+                    selected={filterDate}
+                    onChange={(date) => setFilterDate(date)}
+                    dateFormat="MMMM d, yyyy"
+                    className="p-2 pl-10 border rounded-lg focus:ring-2 focus:ring-scolor focus:border-scolor"
+                    calendarClassName="bg-white shadow-lg rounded-lg border"
+                    placeholderText="Filter by date"
+                    isClearable
+                  />
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <FaFilter className="text-gray-400" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <AppointmentList
+              appointments={
+                filterDate ? getFilteredAppointments() : confirmedAppointments
+              }
+              handleCancel={handleCancel}
+              handleEdit={handleEdit}
+              handleDelete={handleDelete}
+              showConfirmationStatus={true}
+            />
+          </div>
+
           <div className="space-y-12">
             <div>
               <h3 className="text-2xl font-medium mb-4 text-gray-800 flex items-center">
@@ -333,51 +392,85 @@ const AdminAppointment = () => {
           </div>
         </div>
 
+        {/* Edit Appointment Modal */}
         {editingAppointment && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl">
-              <h3 className="text-xl font-semibold mb-4 text-gray-800 flex items-center">
-                <FaEdit className="text-scolor mr-2" />
-                Edit Appointment
-              </h3>
-              <p className="text-lg mb-4 font-medium text-gray-700">
-                Client: {editingAppointment.name}
-              </p>
+            <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-semibold text-gray-800">
+                  Edit Appointment
+                </h3>
+                <button
+                  onClick={handleCancelEdit}
+                  className="text-gray-500 hover:text-red-500 transition-colors p-2"
+                >
+                  <FaWindowClose size={20} />
+                </button>
+              </div>
+
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1 text-gray-700">
-                    Date & Time
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Appointment Date & Time
                   </label>
-                  <div className="relative">
-                    <DatePicker
-                      selected={selectedDateTime}
-                      onChange={(date) => setSelectedDateTime(date)}
-                      showTimeSelect
-                      timeFormat="HH:mm"
-                      timeIntervals={15}
-                      dateFormat="MMMM d, yyyy h:mm aa"
-                      className="w-full p-2 pl-10 border rounded-lg focus:ring-2 focus:ring-scolor focus:border-scolor"
-                      calendarClassName="bg-white shadow-lg rounded-lg border"
-                      placeholderText="Select date and time"
-                    />
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <FaCalendarAlt className="text-gray-400" />
-                    </div>
-                  </div>
+                  <DatePicker
+                    selected={selectedDateTime}
+                    onChange={(date) => setSelectedDateTime(date)}
+                    showTimeSelect
+                    timeFormat="HH:mm"
+                    timeIntervals={15}
+                    dateFormat="MMMM d, yyyy h:mm aa"
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-scolor focus:border-scolor"
+                    placeholderText="Select date and time"
+                  />
                 </div>
 
-                <div className="flex justify-end space-x-2 pt-2">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Phone
+                  </label>
+                  <input
+                    type="text"
+                    value={editingAppointment.phone || ""}
+                    onChange={(e) =>
+                      setEditingAppointment({
+                        ...editingAppointment,
+                        phone: e.target.value,
+                      })
+                    }
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-scolor focus:border-scolor"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Reason
+                  </label>
+                  <textarea
+                    value={editingAppointment.reason || ""}
+                    onChange={(e) =>
+                      setEditingAppointment({
+                        ...editingAppointment,
+                        reason: e.target.value,
+                      })
+                    }
+                    rows={3}
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-scolor focus:border-scolor"
+                  />
+                </div>
+
+                <div className="flex justify-end space-x-2 pt-4">
                   <button
                     onClick={handleCancelEdit}
-                    className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50"
+                    className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleSaveEdit}
-                    className="px-4 py-2 bg-scolor text-white rounded-lg hover:bg-pcolor transition-colors duration-200"
+                    className="px-4 py-2 bg-scolor text-white rounded-lg hover:bg-pcolor transition-colors"
                   >
-                    {editingAppointment.status === "pending" ? "OK" : "Confirm"}
+                    Save Changes
                   </button>
                 </div>
               </div>
@@ -385,142 +478,189 @@ const AdminAppointment = () => {
           </div>
         )}
 
-        <div className="mt-12">
-          <div className="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center">
-            <h3 className="text-2xl font-medium text-gray-800">
-              Upcoming Appointments
-            </h3>
-            <div className="flex items-center mt-4 md:mt-0 space-x-4">
-              <button
-                onClick={() => setShowCalendarView(!showCalendarView)}
-                className={`px-4 py-2 rounded-lg transition-colors duration-200 ${
-                  showCalendarView
-                    ? "bg-scolor text-white"
-                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                }`}
-              >
-                {showCalendarView ? "List View" : "Calendar View"}
-              </button>
-
-              <div className="relative">
-                <DatePicker
-                  selected={filterDate}
-                  onChange={(date) => setFilterDate(date)}
-                  dateFormat="MMMM d, yyyy"
-                  className="p-2 pl-10 border rounded-lg focus:ring-2 focus:ring-scolor focus:border-scolor"
-                  calendarClassName="bg-white shadow-lg rounded-lg border"
-                  placeholderText="Filter by date"
-                  isClearable
-                />
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <FaFilter className="text-gray-400" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {showCalendarView ? (
-            <div className="bg-white rounded-lg shadow-md p-6 calendar-container">
-              <div className="flex justify-between items-center mb-6">
-                <button
-                  onClick={() => setFilterDate(new Date())}
-                  className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-gray-700 transition-colors"
-                >
-                  <FaCalendarAlt /> Today
-                </button>
-
-                <h3 className="text-xl font-semibold text-center text-gray-800">
-                  {filterDate
-                    ? filterDate.toLocaleString("default", {
-                        month: "long",
-                        year: "numeric",
-                      })
-                    : new Date().toLocaleString("default", {
-                        month: "long",
-                        year: "numeric",
-                      })}
+        {/* Full Calendar Popup */}
+        {showCalendarPopup && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-5xl max-h-[90vh] overflow-auto shadow-xl">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-2xl font-semibold text-gray-800 flex items-center">
+                  <FaCalendarAlt className="text-scolor mr-2" />
+                  Appointment Calendar
                 </h3>
-
-                <div className="appointment-legend flex items-center gap-3">
-                  <div className="flex items-center gap-1">
-                    <div className="w-3 h-3 rounded-full bg-scolor"></div>
-                    <span className="text-xs text-gray-600">
-                      Has appointments
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <div className="w-3 h-3 rounded-full bg-gray-200"></div>
-                    <span className="text-xs text-gray-600">
-                      No appointments
-                    </span>
-                  </div>
-                </div>
+                <button
+                  onClick={() => setShowCalendarPopup(false)}
+                  className="text-gray-500 hover:text-red-500 transition-colors p-2"
+                >
+                  <FaWindowClose size={24} />
+                </button>
               </div>
 
-              <DatePicker
-                selected={filterDate || new Date()}
-                onChange={(date) => setFilterDate(date)}
-                inline
-                calendarClassName="admin-calendar"
-                monthClassName={() => "text-center"}
-                dayClassName={(date) => {
-                  // Check if date is today
-                  const isToday =
-                    new Date().toDateString() === date.toDateString();
+              <div className="bg-white rounded-lg shadow-md p-6 calendar-container">
+                <div className="flex items-center justify-between mb-4">
+                  <button
+                    onClick={() => setFilterDate(new Date())}
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-gray-700 transition-colors"
+                  >
+                    <FaCalendarAlt /> Today
+                  </button>
 
-                  // Highlight dates that have appointments
-                  const appointmentsOnDate = confirmedAppointments.filter(
-                    (appointment) => {
-                      const appointmentDate = new Date(appointment.date);
-                      return (
-                        appointmentDate.getDate() === date.getDate() &&
-                        appointmentDate.getMonth() === date.getMonth() &&
-                        appointmentDate.getFullYear() === date.getFullYear()
-                      );
-                    }
-                  );
-
-                  const hasAppointment = appointmentsOnDate.length > 0;
-
-                  // Return CSS classes based on conditions
-                  if (hasAppointment) {
-                    return `has-appointments ${isToday ? "today" : ""}`;
-                  }
-                  return isToday ? "today" : undefined;
-                }}
-                renderDayContents={(day, date) => {
-                  // Count appointments on this day
-                  const appointmentsOnDate = confirmedAppointments.filter(
-                    (appointment) => {
-                      const appointmentDate = new Date(appointment.date);
-                      return (
-                        appointmentDate.getDate() === date.getDate() &&
-                        appointmentDate.getMonth() === date.getMonth() &&
-                        appointmentDate.getFullYear() === date.getFullYear()
-                      );
-                    }
-                  );
-
-                  const count = appointmentsOnDate.length;
-
-                  return (
-                    <div className="relative w-full h-full flex flex-col items-center">
-                      <span>{day}</span>
-                      {count > 0 && (
-                        <span className="appointment-count">{count}</span>
-                      )}
+                  <div className="appointment-legend flex items-center gap-3">
+                    <div className="flex items-center gap-1">
+                      <div className="w-3 h-3 rounded-full bg-scolor"></div>
+                      <span className="text-xs text-gray-600">
+                        Has appointments
+                      </span>
                     </div>
-                  );
-                }}
-              />
+                    <div className="flex items-center gap-1">
+                      <div className="w-3 h-3 rounded-full bg-gray-200"></div>
+                      <span className="text-xs text-gray-600">
+                        No appointments
+                      </span>
+                    </div>
+                  </div>
+                </div>
 
-              {filterDate && (
-                <div className="mt-8 date-appointments">
-                  <h4 className="text-lg font-medium mb-4 flex items-center">
-                    <FaCalendarAlt className="text-scolor mr-2" />
-                    Appointments on {filterDate.toLocaleDateString()}
-                  </h4>
-                  {getFilteredAppointments().length > 0 ? (
+                <DatePicker
+                  selected={filterDate || new Date()}
+                  onChange={(date) => {
+                    setFilterDate(date);
+                    // Keep popup open after date selection
+                  }}
+                  inline
+                  calendarClassName="admin-calendar full-calendar"
+                  monthClassName={() => "text-center"}
+                  renderCustomHeader={({
+                    date,
+                    decreaseMonth,
+                    increaseMonth,
+                    prevMonthButtonDisabled,
+                    nextMonthButtonDisabled,
+                  }) => (
+                    <div className="flex items-center justify-between px-2 py-2">
+                      <button
+                        onClick={decreaseMonth}
+                        disabled={prevMonthButtonDisabled}
+                        type="button"
+                        className="p-1 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-50"
+                      >
+                        <svg
+                          className="h-6 w-6"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15 19l-7-7 7-7"
+                          />
+                        </svg>
+                      </button>
+
+                      <h3 className="text-xl font-semibold text-center text-gray-800">
+                        {date.toLocaleString("default", {
+                          month: "long",
+                          year: "numeric",
+                        })}
+                      </h3>
+
+                      <button
+                        onClick={increaseMonth}
+                        disabled={nextMonthButtonDisabled}
+                        type="button"
+                        className="p-1 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-50"
+                      >
+                        <svg
+                          className="h-6 w-6"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  )}
+                  dayClassName={(date) => {
+                    // Check if date is today
+                    const isToday =
+                      new Date().toDateString() === date.toDateString();
+
+                    // Highlight dates that have appointments
+                    const appointmentsOnDate = confirmedAppointments.filter(
+                      (appointment) => {
+                        const appointmentDate = new Date(appointment.date);
+                        return (
+                          appointmentDate.getDate() === date.getDate() &&
+                          appointmentDate.getMonth() === date.getMonth() &&
+                          appointmentDate.getFullYear() === date.getFullYear()
+                        );
+                      }
+                    );
+
+                    const hasAppointment = appointmentsOnDate.length > 0;
+
+                    // Return CSS classes based on conditions
+                    if (hasAppointment) {
+                      return `has-appointments ${isToday ? "today" : ""}`;
+                    }
+                    return isToday ? "today" : undefined;
+                  }}
+                  renderDayContents={(day, date) => {
+                    // Count appointments on this day
+                    const appointmentsOnDate = confirmedAppointments.filter(
+                      (appointment) => {
+                        const appointmentDate = new Date(appointment.date);
+                        return (
+                          appointmentDate.getDate() === date.getDate() &&
+                          appointmentDate.getMonth() === date.getMonth() &&
+                          appointmentDate.getFullYear() === date.getFullYear()
+                        );
+                      }
+                    );
+
+                    const count = appointmentsOnDate.length;
+                    const isCurrentMonth =
+                      date.getMonth() === (filterDate || new Date()).getMonth();
+
+                    return (
+                      <div className="calendar-day-cell">
+                        {count > 0 && (
+                          <div
+                            className="appointment-badge"
+                            data-count={count}
+                            title={`${count} appointment${
+                              count !== 1 ? "s" : ""
+                            }`}
+                          >
+                            <span>{count}</span>
+                          </div>
+                        )}
+                        <span
+                          className={`day-number ${
+                            !isCurrentMonth ? "other-month" : ""
+                          }`}
+                        >
+                          {day}
+                        </span>
+                      </div>
+                    );
+                  }}
+                />
+
+                {/* Only show appointment block if there are appointments for the selected date */}
+                {filterDate && getFilteredAppointments().length > 0 && (
+                  <div className="mt-8 date-appointments">
+                    <h4 className="text-lg font-medium mb-4 flex items-center">
+                      <FaCalendarAlt className="text-scolor mr-2" />
+                      Appointments on {filterDate.toLocaleDateString()}
+                    </h4>
                     <div className="space-y-4 appointment-list">
                       {getFilteredAppointments().map((appointment) => (
                         <div
@@ -549,22 +689,31 @@ const AdminAppointment = () => {
                             </div>
                             <div className="flex space-x-1">
                               <button
-                                onClick={() => handleEdit(appointment)}
-                                className="p-2 bg-yellow-100 text-yellow-600 rounded-full hover:bg-yellow-200 transition-colors"
+                                onClick={() => {
+                                  setShowCalendarPopup(false);
+                                  handleEdit(appointment);
+                                }}
+                                className="p-2 bg-white text-gray-600 rounded-full hover:bg-gray-100 transition-colors border border-gray-300"
                                 title="Edit appointment"
                               >
                                 <FaEdit />
                               </button>
                               <button
-                                onClick={() => handleCancel(appointment._id)}
-                                className="p-2 bg-red-100 text-red-600 rounded-full hover:bg-red-200 transition-colors"
+                                onClick={() => {
+                                  handleCancel(appointment._id);
+                                  setShowCalendarPopup(false);
+                                }}
+                                className="p-2 bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200 transition-colors"
                                 title="Cancel appointment"
                               >
                                 <FaTimes />
                               </button>
                               <button
-                                onClick={() => handleDelete(appointment._id)}
-                                className="p-2 bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200 transition-colors"
+                                onClick={() => {
+                                  handleDelete(appointment._id);
+                                  setShowCalendarPopup(false);
+                                }}
+                                className="p-2 bg-white text-gray-600 rounded-full hover:bg-gray-100 transition-colors border border-gray-300"
                                 title="Delete appointment"
                               >
                                 <FaTrash />
@@ -574,34 +723,21 @@ const AdminAppointment = () => {
                         </div>
                       ))}
                     </div>
-                  ) : (
-                    <div className="text-center py-8 bg-gray-50 rounded-lg border border-gray-200">
-                      <p className="text-gray-500 mb-2">
-                        No appointments scheduled for this date
-                      </p>
-                      <button
-                        onClick={() => setFilterDate(null)}
-                        className="text-scolor hover:text-pcolor transition-colors"
-                      >
-                        View all appointments
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-6 flex justify-end">
+                <button
+                  onClick={() => setShowCalendarPopup(false)}
+                  className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors"
+                >
+                  Close
+                </button>
+              </div>
             </div>
-          ) : (
-            <AppointmentList
-              appointments={
-                filterDate ? getFilteredAppointments() : confirmedAppointments
-              }
-              handleCancel={handleCancel}
-              handleEdit={handleEdit}
-              handleDelete={handleDelete}
-              showConfirmationStatus={true}
-            />
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </section>
   );
@@ -615,104 +751,135 @@ const AppointmentList = ({
   handleDelete,
   showCancellationDate,
   showConfirmationStatus,
-}) => (
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    {appointments.map((appointment) => (
-      <div
-        key={appointment._id}
-        className="rounded-lg shadow-md p-6 transition-transform transform hover:scale-102 hover:shadow-lg bg-white border border-gray-200"
-      >
-        <h3 className="text-xl font-semibold mb-2 text-gray-800">
-          {appointment.name}
-        </h3>
+}) => {
+  // Check if appointments array exists and has items
+  if (!appointments || appointments.length === 0) {
+    return (
+      <p className="text-gray-600 bg-gray-50 p-4 rounded-lg shadow-sm">
+        No appointments to display.
+      </p>
+    );
+  }
 
-        <div className="space-y-2 mb-4">
-          <p className="text-gray-700 flex items-center">
-            <FaEnvelope className="text-gray-500 mr-2" />
-            {appointment.email}
-          </p>
-          <p className="text-gray-700 flex items-center">
-            <FaPhone className="text-gray-500 mr-2" />
-            {appointment.phone}
-          </p>
-          <p className="text-gray-700 flex items-center">
-            <FaCalendarAlt className="text-gray-500 mr-2" />
-            {new Date(appointment.date).toLocaleDateString()}
-          </p>
-          <p className="text-gray-700 flex items-center">
-            <FaClock className="text-gray-500 mr-2" />
-            {appointment.time}
-          </p>
-          <p className="text-gray-700 flex items-center">
-            <FaCommentAlt className="text-gray-500 mr-2" />
-            {appointment.reason}
-          </p>
-        </div>
-
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {appointments.map((appointment) => (
         <div
-          className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium mb-4 ${
-            appointment.status === "cancelled"
-              ? "bg-red-100 text-red-800"
-              : appointment.status === "confirmed"
-              ? "bg-green-100 text-green-800"
-              : "bg-yellow-100 text-yellow-800"
-          }`}
+          key={appointment._id}
+          className="rounded-lg shadow-md p-6 transition-transform transform hover:scale-102 hover:shadow-lg bg-white border border-gray-200"
         >
-          {appointment.status === "cancelled" ? (
-            <FaTimes className="mr-1" />
-          ) : appointment.status === "confirmed" ? (
-            <FaCheck className="mr-1" />
-          ) : (
-            <FaExclamationCircle className="mr-1" />
-          )}
-          {appointment.status || "pending"}
-        </div>
+          <h3 className="text-xl font-semibold mb-2 text-gray-800">
+            {appointment.name}
+          </h3>
 
-        {showCancellationDate && appointment.status === "cancelled" && (
-          <p className="text-sm text-red-500 mb-4 italic">
-            Cancelled on: {new Date(appointment.cancelledAt).toLocaleString()}
-          </p>
-        )}
+          <div className="space-y-2 mb-4">
+            {appointment.email && (
+              <p className="text-gray-700 flex items-center">
+                <FaEnvelope className="text-gray-500 mr-2" />
+                {appointment.email}
+              </p>
+            )}
+            {appointment.phone && (
+              <p className="text-gray-700 flex items-center">
+                <FaPhone className="text-gray-500 mr-2" />
+                {appointment.phone}
+              </p>
+            )}
+            {appointment.date && (
+              <p className="text-gray-700 flex items-center">
+                <FaCalendarAlt className="text-gray-500 mr-2" />
+                {new Date(appointment.date).toLocaleDateString()}
+              </p>
+            )}
+            {appointment.time && (
+              <p className="text-gray-700 flex items-center">
+                <FaClock className="text-gray-500 mr-2" />
+                {appointment.time}
+              </p>
+            )}
+            {appointment.reason && (
+              <p className="text-gray-700 flex items-center">
+                <FaCommentAlt className="text-gray-500 mr-2" />
+                {appointment.reason}
+              </p>
+            )}
+          </div>
 
-        {showConfirmationStatus && appointment.status === "confirmed" && (
-          <p className="text-sm text-green-500 mb-4 italic">
-            Confirmed on: {new Date(appointment.confirmedAt).toLocaleString()}
-          </p>
-        )}
-
-        <div className="flex flex-wrap gap-2 mt-2">
-          {appointment.status === "pending" && (
-            <button
-              onClick={() => handleConfirm(appointment._id)}
-              className="flex items-center px-4 py-2 bg-scolor text-white rounded-lg hover:bg-pcolor transition-colors duration-200"
-            >
-              <FaCheck className="mr-1" /> Confirm
-            </button>
-          )}
-          {appointment.status !== "cancelled" && (
-            <button
-              onClick={() => handleCancel(appointment._id)}
-              className="flex items-center px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200"
-            >
-              <FaTimes className="mr-1" /> Cancel
-            </button>
-          )}
-          <button
-            onClick={() => handleEdit(appointment)}
-            className="flex items-center px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors duration-200"
+          <div
+            className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium mb-4 ${
+              appointment.status === "cancelled"
+                ? "bg-red-100 text-red-800"
+                : appointment.status === "confirmed"
+                ? "bg-green-100 text-green-800"
+                : "bg-yellow-100 text-yellow-800"
+            }`}
           >
-            <FaEdit className="mr-1" /> Edit
-          </button>
-          <button
-            onClick={() => handleDelete(appointment._id)}
-            className="flex items-center px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors duration-200"
-          >
-            <FaTrash className="mr-1" /> Delete
-          </button>
+            {appointment.status === "cancelled" ? (
+              <FaTimes className="mr-1" />
+            ) : appointment.status === "confirmed" ? (
+              <FaCheck className="mr-1" />
+            ) : (
+              <FaExclamationCircle className="mr-1" />
+            )}
+            {appointment.status || "pending"}
+          </div>
+
+          {showCancellationDate &&
+            appointment.status === "cancelled" &&
+            appointment.cancelledAt && (
+              <p className="text-sm text-red-500 mb-4 italic">
+                Cancelled on:{" "}
+                {new Date(appointment.cancelledAt).toLocaleString()}
+              </p>
+            )}
+
+          {showConfirmationStatus &&
+            appointment.status === "confirmed" &&
+            appointment.confirmedAt && (
+              <p className="text-sm text-green-500 mb-4 italic">
+                Confirmed on:{" "}
+                {new Date(appointment.confirmedAt).toLocaleString()}
+              </p>
+            )}
+
+          <div className="flex flex-wrap gap-2 mt-2">
+            {handleConfirm && appointment.status === "pending" && (
+              <button
+                onClick={() => handleConfirm(appointment._id)}
+                className="flex items-center px-4 py-2 bg-scolor text-white rounded-lg hover:bg-pcolor transition-colors duration-200"
+              >
+                <FaCheck className="mr-1" /> Confirm
+              </button>
+            )}
+            {handleCancel && appointment.status !== "cancelled" && (
+              <button
+                onClick={() => handleCancel(appointment._id)}
+                className="flex items-center px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors duration-200"
+              >
+                <FaTimes className="mr-1" /> Cancel
+              </button>
+            )}
+            {handleEdit && (
+              <button
+                onClick={() => handleEdit(appointment)}
+                className="flex items-center px-4 py-2 bg-white text-gray-700 rounded-lg hover:bg-gray-100 transition-colors duration-200 border border-gray-300"
+              >
+                <FaEdit className="mr-1" /> Edit
+              </button>
+            )}
+            {handleDelete && (
+              <button
+                onClick={() => handleDelete(appointment._id)}
+                className="flex items-center px-4 py-2 bg-white text-gray-700 rounded-lg hover:bg-gray-100 transition-colors duration-200 border border-gray-300"
+              >
+                <FaTrash className="mr-1" /> Delete
+              </button>
+            )}
+          </div>
         </div>
-      </div>
-    ))}
-  </div>
-);
+      ))}
+    </div>
+  );
+};
 
 export default AdminAppointment;

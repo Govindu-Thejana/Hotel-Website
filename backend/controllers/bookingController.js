@@ -3,6 +3,7 @@ import BookedRoomModel from '../models/bookedRoomModel.js';
 import { generateBookingId, generateConfirmationCode } from '../middleware/generators.js';
 import moment from 'moment';
 import mongoose from 'mongoose';
+import { sendBookingConfirmation } from '../services/bookingEmail.js';
 
 // Function to create a new booking
 export const createBooking = async (req, res) => {
@@ -125,6 +126,20 @@ export const createBooking = async (req, res) => {
         // Commit transaction if everything is successful
         await session.commitTransaction();
         session.endSession();
+
+        // Send confirmation email to customer
+        try {
+            for (const booking of bookings) {
+                await sendBookingConfirmation(booking);
+            }
+        } catch (emailError) {
+            console.error('Error sending confirmation emails:', emailError);
+            return res.status(201).json({
+                message: 'Booking created successfully, but confirmation emails failed to send',
+                bookings,
+                emailErrors: [`Failed to send confirmation email for booking ${booking.bookingConfirmationCode}`]
+            });
+        }
 
         return res.status(201).json({
             message: 'Booking created successfully',

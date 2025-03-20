@@ -423,3 +423,111 @@ export const getAvailableRooms = async (req, res) => {
         });
     }
 };
+
+
+// Get booking by confirmation code
+export const getBookingByConfirmationCode = async (req, res) => {
+    try {
+        const confirmationCode = req.params.confirmationCode;
+        console.log('Confirmation Code:', confirmationCode);
+
+        if (!confirmationCode) {
+            return res.status(400).json({ message: 'Confirmation code is required' });
+        }
+
+        const booking = await BookedRoomModel.findOne({ bookingConfirmationCode: confirmationCode }).populate('roomId');
+
+        if (!booking) {
+            return res.status(404).json({ message: 'Booking not found. Please check your confirmation code.' });
+        }
+
+        // Format response data to include all necessary booking information
+        const bookingData = {
+            _id: booking._id,
+            confirmationCode: booking.bookingConfirmationCode,
+            bookingId: booking.bookingId,
+            status: booking.status || 'Confirmed', // Default to 'Confirmed' if status is not set
+            guestName: booking.fullName,
+            email: booking.email,
+            phone: booking.phone,
+            checkIn: booking.checkIn,
+            checkOut: booking.checkOut,
+            roomType: booking.roomId ? booking.roomId.roomType : 'N/A',
+            roomNumber: booking.roomId ? booking.roomId.roomId : 'N/A',
+            guests: booking.guests,
+            totalPrice: booking.totalAmount,
+            addons: booking.addons,
+            cancellationPolicy: booking.roomId ? booking.roomId.cancellationPolicy : 'N/A',
+            createdAt: booking.createdAt
+        };
+
+        res.status(200).json(bookingData);
+    } catch (error) {
+        console.error('Error retrieving booking by confirmation code:', error);
+        res.status(500).json({
+            message: 'Error retrieving booking',
+            error: error.message
+        });
+    }
+};
+
+// Cancel booking by ID
+export const cancelBookingById = async (req, res) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+        const { id } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: 'Invalid booking ID' });
+        }
+
+        const booking = await BookedRoomModel.findById(id).session(session);
+
+        if (!booking) {
+            await session.abortTransaction();
+            session.endSession();
+            return res.status(404).json({ message: 'Booking not found' });
+        }
+        if (booking.status === 'Cancelled') {
+            await session.abortTransaction();
+            session.endSession();
+            return res.status(400).json({ message: 'Booking has already been cancelled' });
+        }
+        // Update booking status instead of deleting
+        booking.status = 'Cancelled';
+        await booking.save({ session });
+
+        // Update room availability status
+        if (booking.roomId) {
+            const room = await RoomModel.findById(booking.roomId).session(session);
+            if (room) {
+                room.isbooked = false;
+                await room.save({ session });
+            }
+        }
+
+        await session.commitTransaction();
+        session.endSession();
+
+        res.status(200).json({
+            message: 'Booking has been successfully Cancelled',
+            booking: {
+                _id: booking._id,
+                confirmationCode: booking.bookingConfirmationCode,
+                status: 'Cancelled'
+            }
+        });
+    } catch (error) {
+        console.error('Error cancelling booking:', error);
+
+        await session.abortTransaction();
+        session.endSession();
+
+        res.status(500).json({
+            message: 'Error cancelling booking',
+            error: error.message
+        });
+    }
+};

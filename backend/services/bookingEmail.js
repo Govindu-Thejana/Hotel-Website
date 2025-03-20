@@ -229,7 +229,7 @@ function generateBookingEmailContent(booking) {
                         <span class="value">${booking.roomId.cancellationPolicy}</span>
                     </div>
                     <p>Please present this confirmation at check-in. For any assistance, contact us anytime.</p>
-                    <a href="https://suneragirahotel.vercel.app/my-bookings" class="button">Manage Booking</a>
+                    <a href="https://suneragirahotel.vercel.app/mybookings" class="button">Manage Booking</a>
                 </div>
             </div>
             <div class="footer">

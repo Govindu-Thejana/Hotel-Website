@@ -186,7 +186,8 @@ const RoomBookingCalendar = () => {
                                 <strong>Full Name:</strong> {selectedBooking.fullName}
                             </p>
                             <p>
-                                <strong>No of Guests:</strong> {selectedBooking.guests}
+                                <strong>No of Guests:</strong> {selectedBooking.guests.adults} Adults,{" "}
+                                {selectedBooking.guests.children} Children
                             </p>
                             <p>
                                 <strong>Email:</strong> {selectedBooking.email}

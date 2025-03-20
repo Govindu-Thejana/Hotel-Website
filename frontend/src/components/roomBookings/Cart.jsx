@@ -10,7 +10,8 @@ import {
   FaUsers,
   FaCalendarAlt,
   FaCreditCard,
-  FaSpinner
+  FaSpinner,
+  FaShoppingCart
 } from 'react-icons/fa';
 
 const Cart = () => {
@@ -224,12 +225,24 @@ const Cart = () => {
         </p>
       )}
 
-      <div className="mb-4">
-        <h1 className="text-2xl font-bold text-gray-800">Your Cart</h1>
-        <p className="text-xl text-gray-500 mt-1">
-          {cart.length} {cart.length === 1 ? 'item' : 'items'}
-        </p>
+      <div className="mb-1 flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-bold text-gray-800">
+            <FaShoppingCart className="inline-block mr-2" />CART
+          </h1>
+        </div>
+        <div className="flex items-center">
+          <button
+            onClick={() => navigate('/mybookings')}
+            className="text-pcolor hover:text-scolor flex items-center space-x-1 text-xs mr-4"
+          >
+            <h1 className="text-xl font-bold text-scolor hover:text-pcolor underline">MY BOOKINGS</h1>
+          </button>
+        </div>
       </div>
+      <p className="text-md text-gray-500 mb-1">
+        {cart?.length} {cart?.length === 1 ? 'item' : 'items'}
+      </p>
 
       {loading ? (
         <div className="flex justify-center items-center h-64">

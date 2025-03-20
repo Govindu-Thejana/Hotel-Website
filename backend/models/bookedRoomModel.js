@@ -58,6 +58,12 @@ const bookingSchema = new mongoose.Schema({
         required: [true, 'Total amount is required'],
         min: [0, 'Total amount must be positive'],
     },
+    status: {
+        type: String,
+        enum: ['Confirmed', 'Cancelled', 'Completed'],
+        default: 'Confirmed',
+        required: true
+    },
     addons: [{
         type: {
             type: String,

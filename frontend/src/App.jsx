@@ -32,6 +32,7 @@ import CartProvider from "./contexts/CartContext";
 
 import AdminGalleryView from "./components/gallery/AdminGalleryView";
 import AddImages from "./components/gallery/AddImages"
+import MyBookings from "./pages/bookingProcess/MyBookings";
 
 
 const MainLayout = ({ children }) => (
@@ -79,6 +80,8 @@ const App = () => {
           <Route path="/CompleteBooking" element={<MainLayout><CompleteBooking /></MainLayout>} />
           <Route path="/event" element={<MainLayout><Event /></MainLayout>} />
           <Route path="/gallery" element={<MainLayout><GalleryPage /></MainLayout>} />
+          <Route path="/myBookings" element={<MainLayout><MyBookings /></MainLayout>} />
+
 
           {/* Admin Routes (Separate from the main website layout) */}
           <Route path="/add-rooms" element={<AdminLayout><AddRooms /></AdminLayout>} />

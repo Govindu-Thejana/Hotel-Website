@@ -29,7 +29,7 @@ const MyBookings = () => {
 
         try {
             const response = await axios.get(
-                `https://hotel-website-backend-drab.vercel/bookedroom/bookings/confirmation/${confirmationCode}`,
+                `https://hotel-website-backend-drab.vercel.app/bookedroom/bookings/confirmation/${confirmationCode}`,
                 { timeout: 5000 }
             );
             if (response.data) {

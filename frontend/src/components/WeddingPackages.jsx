@@ -41,10 +41,7 @@ const WeddingPackages = () => {
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-16">
                     <div className="flex items-center justify-center mb-4">
-
-                        <Heart className="w-8 h-8 text-pcolor mr-2" />
-
-                        <h2 className="text-5xl font-serif text-gray-900">Wedding Packages</h2>
+                        <h2 className="text-4xl font-serif text-gray-900">WEDDING PACKAGES</h2>
                     </div>
                 </div>
 

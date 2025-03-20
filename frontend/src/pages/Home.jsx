@@ -77,15 +77,15 @@ const Home = () => {
         </div>
 
         {/* Search Bar at the bottom */}
-        <div className="absolute bottom-0 left-0 right-0 bg-opacity-80 px-10">
+        <div className="absolute bottom-0 left-0 right-0 bg-opacity-80 px-4 md:px-10">
           <SearchBar />
         </div>
       </section>
 
 
-      <section className="text-center py-14 px-28 mx-5">
+      <section className="text-center py-14 px-4 md:px-28 mx-5">
 
-        <h1 className="font-serif italic text-4xl md:text-4xl tracking-wide text-gray-800 mb-6">
+        <h1 className="font-serif italic text-3xl md:text-4xl tracking-wide text-gray-800 mb-6">
           Your lavish home away from home
         </h1>
         <p className="text-gray-500 text-base md:text-lg leading-relaxed">
@@ -335,7 +335,7 @@ const Home = () => {
       <section className="container mx-auto py-16 px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-serif mb-4">
-            Explore Nearby Attractions
+            NEAR BY ATTRACTIONS
           </h2>
           <p className="text-scolor font-serif max-w-2xl mx-auto">
             Discover these magnificent landmarks

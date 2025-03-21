@@ -55,9 +55,13 @@ export const createBooking = async (req, res) => {
                 continue;
             }
 
-            // Adjust check-in and check-out dates
-            const adjustedCheckIn = moment(checkIn, "MM/DD/YYYY").add(1, 'days').toDate();
-            const adjustedCheckOut = moment(checkOut, "MM/DD/YYYY").add(1, 'days').toDate();
+            let adjustedCheckIn = new Date(Date.UTC(new Date(checkIn).getFullYear(), new Date(checkIn).getMonth(), new Date(checkIn).getDate(), 14, 0, 0));
+            console.log('adjustedCheckIn:', adjustedCheckIn);
+            let adjustedCheckOut = new Date(Date.UTC(new Date(checkOut).getFullYear(), new Date(checkOut).getMonth(), new Date(checkOut).getDate(), 11, 0, 0));
+            console.log('adjustedCheckOut:', adjustedCheckOut);
+            // Adjust check-in and check-out dates to the exact start and end of the day
+            //const adjustedCheckIn = moment(checkIn, "MM/DD/YYYY").startOf('day').toDate();
+            //const adjustedCheckOut = moment(checkOut, "MM/DD/YYYY").endOf('day').toDate();
 
             // Check if room is already booked for the given dates
             const existingBooking = await BookedRoomModel.findOne({

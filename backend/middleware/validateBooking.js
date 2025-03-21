@@ -42,13 +42,17 @@ export const validateBookingData = (req, res, next) => {
         }
 
         // Validate dates
-        const checkInDate = new Date(checkIn);
-        const checkOutDate = new Date(checkOut);
+        console.log('checkIn:', checkIn);
+        console.log('checkOut:', checkOut);
 
-        // Add 1 day to the dates because using new date() will set the checkin and checkout dates to prevous day of them
-        checkInDate.setDate(checkInDate.getDate() + 1);
-        checkOutDate.setDate(checkOutDate.getDate() + 1);
+        //Manually adjust the date
+        let checkInDate = new Date(Date.UTC(new Date(checkIn).getFullYear(), new Date(checkIn).getMonth(), new Date(checkIn).getDate()));
+        console.log('checkInDate after:', checkInDate);
+        let checkOutDate = new Date(Date.UTC(new Date(checkOut).getFullYear(), new Date(checkOut).getMonth(), new Date(checkOut).getDate()));
+        console.log('checkOutDate after:', checkOutDate);
+
         const todayColombo = DateTime.now().setZone("Asia/Colombo").startOf("day"); //get today date using luxon library
+        console.log('todayColombo:', todayColombo);
 
         if (checkInDate < todayColombo) {
             return res.status(400).json({

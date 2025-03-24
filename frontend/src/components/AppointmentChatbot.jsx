@@ -1106,10 +1106,24 @@ Would you like to confirm this appointment? (Yes/No)`;
 
       setIsTyping(true);
 
+      // Log the appointment creation attempt
+      logService.info(
+        `Creating new appointment for ${appointmentData.name} on ${formattedDate}`,
+        "AppointmentChatbot",
+        appointmentPayload
+      );
+
       // Make the API request
       const response = await axios.post(
         "http://localhost:5555/appointments",
         appointmentPayload
+      );
+
+      // Log successful creation
+      logService.info(
+        `Successfully created appointment with ID: ${response.data._id}`,
+        "AppointmentChatbot",
+        response.data
       );
 
       // Reset the appointment creation state
@@ -1143,6 +1157,13 @@ Would you like to confirm this appointment? (Yes/No)`;
       // Notify parent component (optional)
       onAppointmentCreated(response.data);
     } catch (error) {
+      // Log the error
+      logService.error(
+        "Error creating appointment",
+        "AppointmentChatbot",
+        error
+      );
+
       console.error("Error creating appointment:", error);
 
       // Send an error message

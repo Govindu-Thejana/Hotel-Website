@@ -408,3 +408,51 @@ export const getAvailableRooms = async (req, res) => {
         });
     }
 };
+
+// Backend controller function
+export const getBookingsCountFromToday = async (req, res) => {
+    try {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Set to start of the day
+
+        const bookingsCount = await BookedRoomModel.countDocuments({
+            createdAt: { $gte: today } // Uses the timestamp from mongoose timestamps
+        });
+
+        res.status(200).json({ count: bookingsCount });
+    } catch (error) {
+        res.status(500).json({
+            message: 'Error retrieving today\'s booking count',
+            error: error.message
+        });
+    }
+};
+
+// Function to get bookings from today onwards
+export const getBookingsFromTodayOnwards = async () => {
+    try {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Set to start of the day
+
+        const bookings = await BookedRoomModel.find({
+            checkIn: { $gte: today }
+        }).populate('roomId');
+
+        return bookings;
+    } catch (error) {
+        console.error("Error fetching bookings from today:", error);
+        throw error;
+    }
+};
+
+// Get total number of bookings
+export const getTotalBookings = async () => {
+    try {
+      const count = await BookedRoomModel.countDocuments({});
+      return count;
+    } catch (error) {
+      console.error("Error counting bookings:", error);
+      throw error;
+    }
+  };
+  

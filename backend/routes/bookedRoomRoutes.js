@@ -6,7 +6,8 @@ import {
     checkRoomAvailability,
     getAllBookings,
     getBookedDatesByRoomType,
-    getAvailableRooms
+    getAvailableRooms,
+    getTotalBookings
 } from '../controllers/bookingController.js';
 import { validateBookingData } from '../middleware/validateBooking.js';
 
@@ -19,5 +20,6 @@ router.get('/bookings/room/:roomType', getBookedDatesByRoomType); // Changed to 
 router.get('/availableRooms', getAvailableRooms);
 router.get('/rooms/availability', checkRoomAvailability);
 router.get('/bookings', getAllBookings);
+router.get('/bookings/totalcount', getTotalBookings);
 
 export default router;

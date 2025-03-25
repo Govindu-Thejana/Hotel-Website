@@ -3,7 +3,7 @@
   margin: 50px auto;
   padding: 20px;
   border: 1px solid #eee;
-  border-radius: 12px;
+  border-radius: 8px;
   background-color: #fff;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 }
@@ -16,7 +16,7 @@
   padding: 15px;
   background-color: #f9f9f9;
   border-bottom: 1px solid #eee;
-  border-radius: 8px;
+  border-radius: 8px 8px 0 0;
 }
 
 .orders-header h3 {
@@ -38,24 +38,23 @@
 }
 
 .search-bar {
-  padding: 10px 15px;
+  padding: 10px;
   width: 300px;
   border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 5px;
   font-size: 14px;
   outline: none;
-  transition: all 0.3s ease;
+  transition: border-color 0.3s;
 }
 
 .search-bar:focus {
   border-color: #bf9766;
-  box-shadow: 0 0 0 2px rgba(191, 151, 102, 0.2);
 }
 
 .loading,
 .no-orders {
   text-align: center;
-  padding: 30px;
+  padding: 20px;
   color: #666;
   font-size: 16px;
 }
@@ -72,14 +71,14 @@
   gap: 20px;
   padding: 15px;
   border: 1px solid #eee;
-  border-radius: 10px;
+  border-radius: 8px;
   background-color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
 }
 
 .order-item:hover {
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transform: translateY(-2px);
 }
 
@@ -134,7 +133,7 @@
   width: 60px;
   height: 60px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 5px;
   border: 1px solid #eee;
 }
 
@@ -169,10 +168,6 @@
   margin: 0;
 }
 
-.order-total span {
-  color: #bf9766;
-}
-
 .order-actions {
   display: flex;
   gap: 10px;
@@ -180,17 +175,17 @@
 }
 
 .status-select {
-  padding: 8px 12px;
+  padding: 8px;
   border: 1px solid #bf9766;
   background-color: #f9f5f0;
-  border-radius: 6px;
+  border-radius: 5px;
   font-size: 14px;
   cursor: pointer;
   width: 100%;
   max-width: 120px;
   outline: none;
   color: #2d2c2c;
-  transition: all 0.3s ease;
+  transition: border-color 0.3s;
 }
 
 .status-select:focus {
@@ -203,15 +198,46 @@
   background-color: #2d2c2c;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
   cursor: pointer;
   font-size: 14px;
   transition: all 0.3s ease;
 }
 
 .delete-btn:hover {
-  background-color: #444;
+  background-color: #bf9766;
   transform: translateY(-2px);
+}
+
+/* Define status styles with theme colors */
+.status-pending {
+  background-color: #f9f5f0;
+  border-color: #bf9766;
+  color: #bf9766;
+}
+
+.status-processing {
+  background-color: #f0f0f0;
+  border-color: #666;
+  color: #666;
+}
+
+.status-shipped {
+  background-color: #e8e8e8;
+  border-color: #555;
+  color: #555;
+}
+
+.status-delivered {
+  background-color: #f9f5f0;
+  border-color: #bf9766;
+  color: #bf9766;
+}
+
+.status-cancelled {
+  background-color: #f1f1f1;
+  border-color: #2d2c2c;
+  color: #2d2c2c;
 }
 
 @media (max-width: 1000px) {
@@ -223,11 +249,6 @@
     flex-direction: column;
     gap: 10px;
     text-align: center;
-  }
-
-  .orders-header h3::after {
-    left: 50%;
-    transform: translateX(-50%);
   }
 
   .search-bar {

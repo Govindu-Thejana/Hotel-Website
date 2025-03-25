@@ -1,148 +1,205 @@
-import React, { useState } from 'react';
-import './Add.css';
-import { assets } from '../../assets/assets';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import "./Add.css";
+import axios from "axios";
+import { toast } from "react-toastify";
+import {
+  FaUpload,
+  FaUtensils,
+  FaTag,
+  FaMoneyBillWave,
+  FaAlignLeft,
+} from "react-icons/fa";
 
 const Add = ({ url }) => {
-  const navigate = useNavigate();
-  const [file, setFile] = useState(null); // Use 'file' instead of 'image'
-  const [data, setData] = useState({
-    name: '',
-    description: '',
-    category: 'Salad',
-    price: ''
+  const [productData, setProductData] = useState({
+    name: "",
+    description: "",
+    price: "",
+    category: "",
   });
-  const [errors, setErrors] = useState({});
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const onChangeHandler = (event) => {
-    const name = event.target.name;
-    const value = event.target.value;
-    setData((data) => ({ ...data, [name]: value }));
-    setErrors((errors) => ({ ...errors, [name]: null }));
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setProductData({
+      ...productData,
+      [name]: value,
+    });
   };
 
-  const validateForm = () => {
-    const newErrors = {};
-    if (!data.name) newErrors.name = 'Product name is required';
-    if (!data.description) newErrors.description = 'Product description is required';
-    if (!data.price || isNaN(Number(data.price))) newErrors.price = 'Invalid price';
-    if (!file) newErrors.file = 'Product image is required'; // Use 'file' here
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
-  const onSubmitHandler = async (event) => {
-    event.preventDefault();
-    if (!validateForm()) return;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (
+      !productData.name ||
+      !productData.price ||
+      !productData.category ||
+      !image
+    ) {
+      toast.error("All fields are required");
+      return;
+    }
+
+    setLoading(true);
+    const formData = new FormData();
+    formData.append("name", productData.name);
+    formData.append("description", productData.description);
+    formData.append("price", productData.price);
+    formData.append("category", productData.category);
+    formData.append("product_image", image);
 
     try {
-      toast.info("Uploading image to Cloudinary...");
-      const formData = new FormData();
-      formData.append("file", file); // Use 'file' instead of 'image'
-      formData.append("upload_preset", "Restaurant"); // Your upload preset
-      formData.append("cloud_name", "dgdkvmijt"); // Your Cloudinary cloud name
-
-      // Upload image to Cloudinary
-      const res = await fetch("https://api.cloudinary.com/v1_1/dgdkvmijt/image/upload", {
-        method: "POST",
-        body: formData, // Send the formData, not data
+      const response = await axios.post(`${url}/api/products`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
 
-      if (!res.ok) {
-        const errorResponse = await res.json(); // Capture the response body
-        toast.error("Error uploading image to Cloudinary:", errorResponse.error.message);
-        throw new Error(`Error uploading image: ${errorResponse.error.message}`);
+      if (response.data.success) {
+        toast.success("Product added successfully!");
+        // Reset the form
+        setProductData({
+          name: "",
+          description: "",
+          price: "",
+          category: "",
+        });
+        setImage(null);
+        setImagePreview(null);
+      } else {
+        toast.error(response.data.message || "Failed to add product");
       }
-      if (res.ok) {
-        toast.success("Image uploaded successfully");
-      }
-      const uploadedImageURL = await res.json();
-      console.log('Uploaded Image URL:', uploadedImageURL.secure_url); // URL of the uploaded image
-
-      // Now you can send the product data along with the image URL
-      const productData = {
-        ...data,
-        price: Number(data.price),
-        image: uploadedImageURL.secure_url, // Add the uploaded image URL here
-      };
-
-      // Make a POST request to your server to save the product data
-      try {
-        toast.info("Adding product to the database...");
-        const response = await axios.post(`${url}/api/products/add`, productData);
-        console.log('Server Response:', response.data); // Log the server response
-        if (response.data.success) {
-          setData({
-            name: '',
-            description: '',
-            category: 'Salad',
-            price: ''
-          });
-          setFile(null);
-          toast.success(response.data.message);
-          navigate('/list'); // Navigate back to the list page
-
-        } else {
-          toast.error(response.data.message || "Failed to add product");
-        }
-      } catch (error) {
-        console.error("Error adding product:", error);
-        toast.error("Failed to add product. Please check your connection.");
-      }
-    } catch (uploadError) {
-      console.error('Error uploading image:', uploadError);
-      toast.error(`Failed to upload image. Details: ${uploadError.message}`);
+    } catch (error) {
+      console.error("Error adding product:", error);
+      toast.error(error.response?.data?.message || "Failed to add product");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className='add'>
-      <form className='flex-col' onSubmit={onSubmitHandler}>
-        <div className="add-img-upload flex-col">
-          <p>Upload Image</p>
-          {errors.file && <p style={{ color: 'red' }}>{errors.file}</p>}
-          <label htmlFor="file">
-            <img src={file ? URL.createObjectURL(file) : assets.upload_area} alt="" />
-          </label>
-          <input type="file" id="file" hidden required onChange={(e) => setFile(e.target.files[0])} />
+    <div className="add">
+      <div className="add-header">
+        <h2>Add New Menu Item</h2>
+        <p>
+          Fill in the details below to add a new dish to your restaurant menu
+        </p>
+      </div>
+
+      <form className="add-form" onSubmit={handleSubmit}>
+        <div className="add-form-row">
+          <div className="add-img-upload">
+            <label>
+              <FaUpload className="form-icon" /> Product Image
+            </label>
+            <div className="image-upload-container">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="image-input"
+                id="product-image"
+              />
+              <label htmlFor="product-image" className="upload-label">
+                {imagePreview ? "Change Image" : "Choose Image"}
+              </label>
+              {imagePreview && (
+                <div className="image-preview-wrapper">
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="image-preview"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="add-form-fields">
+            <div className="add-product-name">
+              <label>
+                <FaUtensils className="form-icon" /> Product Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={productData.name}
+                onChange={handleInputChange}
+                placeholder="Enter product name"
+                required
+              />
+            </div>
+
+            <div className="add-product-description">
+              <label>
+                <FaAlignLeft className="form-icon" /> Description
+              </label>
+              <textarea
+                name="description"
+                value={productData.description}
+                onChange={handleInputChange}
+                placeholder="Enter product description"
+                rows="4"
+              ></textarea>
+            </div>
+
+            <div className="add-category-price">
+              <div className="add-category">
+                <label>
+                  <FaTag className="form-icon" /> Category
+                </label>
+                <select
+                  name="category"
+                  value={productData.category}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="">Select Category</option>
+                  <option value="Appetizers">Appetizers</option>
+                  <option value="Main Course">Main Course</option>
+                  <option value="Desserts">Desserts</option>
+                  <option value="Beverages">Beverages</option>
+                  <option value="Specials">Specials</option>
+                </select>
+              </div>
+
+              <div className="add-price">
+                <label>
+                  <FaMoneyBillWave className="form-icon" /> Price (Rs.)
+                </label>
+                <input
+                  type="number"
+                  name="price"
+                  value={productData.price}
+                  onChange={handleInputChange}
+                  placeholder="Price"
+                  min="0"
+                  step="0.01"
+                  required
+                />
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="add-product-name flex-col">
-          <p>Product Name</p>
-          {errors.name && <p style={{ color: 'red' }}>{errors.name}</p>}
-          <input onChange={onChangeHandler} value={data.name} name="name" type="text" placeholder='Enter product name' />
+        <div className="add-btn-container">
+          <button type="submit" className="add-btn" disabled={loading}>
+            {loading ? "Adding..." : "Add Product"}
+          </button>
         </div>
-
-        <div className="add-product-description flex-col">
-          <p>Product description</p>
-          {errors.description && <p style={{ color: 'red' }}>{errors.description}</p>}
-          <textarea onChange={onChangeHandler} value={data.description} name="description" rows="6" placeholder='Enter product description'></textarea>
-        </div>
-
-        <div className="add-category-price">
-          <p>Product category</p>
-          <select name="category" id="category" onChange={onChangeHandler} value={data.category}>
-            <option value="Salad">Salad</option>
-            <option value="Rolls">Rolls</option>
-            <option value="Deserts">Deserts</option>
-            <option value="Sandwich">Sandwich</option>
-            <option value="Cake">Cake</option>
-            <option value="Pure Veg">Pure Veg</option>
-            <option value="Pasta">Pasta</option>
-            <option value="Noodles">Noodles</option>
-          </select>
-        </div>
-
-        <div className="add-price flex-col">
-          <p>Product price</p>
-          {errors.price && <p style={{ color: 'red' }}>{errors.price}</p>}
-          <input onChange={onChangeHandler} value={data.price} type="number" name='price' placeholder='Rs:20' />
-        </div>
-
-        <button type="submit" className='add-btn'>Add</button>
       </form>
     </div>
   );

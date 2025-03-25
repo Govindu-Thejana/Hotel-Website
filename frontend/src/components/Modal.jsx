@@ -50,7 +50,7 @@ const Modal = ({ isOpen, onClose, packageDetails }) => {
                     <div className="mt-8 flex justify-end">
                         <button
                             onClick={onClose}
-                            className="px-6 py-3 bg-scolor text-white py-3 px-6 rounded-lg font-semibold hover:bg-pcolor transition-all"
+                            className="px-6 py-3 bg-scolor text-white rounded-lg font-semibold hover:bg-pcolor transition-all"
                         >
                             Close
                         </button>

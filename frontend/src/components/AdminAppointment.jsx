@@ -1065,9 +1065,9 @@ const AdminAppointment = () => {
 const AppointmentList = ({
   appointments,
   handleConfirm,
-  handleCancel, // This is now initiateCancel
+  handleCancel, 
   handleEdit,
-  handleDelete, // This is now initiateDelete
+  handleDelete, 
   showCancellationDate,
   showConfirmationStatus,
   currentPage = 0,

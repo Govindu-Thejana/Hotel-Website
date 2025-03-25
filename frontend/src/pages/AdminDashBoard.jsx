@@ -88,7 +88,6 @@ const AdminDashboard = () => {
 
         {/* Appointment Stats in Sidebar */}
         <div className="pt-4 border-t border-gray-200">
-          <AppointmentStats />
         </div>
       </div>
 

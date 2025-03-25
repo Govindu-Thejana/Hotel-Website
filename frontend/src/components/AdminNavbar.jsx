@@ -69,15 +69,15 @@ const Navbar = () => {
                 <div className="h-full px-4 py-6 overflow-y-auto">
                     {/* Logo and Hotel Name */}
                     <div className="flex flex-col items-center mb-8 space-y-4">
-                        <div className="w-32 h-32 rounded-lg overflow-hidden shadow-lg bg-teal-900">
+                        <div className="w-32 h-32 rounded-lg overflow-hidden shadow-lg">
                             <img
-                                src="/images/Logo.jpg"
+                                src="/images/logo.png"
                                 className="w-full h-full object-contain p-2"
                                 alt="Suneragira Hotel"
                             />
                         </div>
-                        <h1 className="text-2xl font-semibold text-gray-800 dark:text-white font-serif">
-                            Suneragira Hotel
+                        <h1 className="text-xl font-semibold text-gray-800 text-center dark:text-white font-serif">
+                            Admin Dashboard
                         </h1>
                     </div>
 

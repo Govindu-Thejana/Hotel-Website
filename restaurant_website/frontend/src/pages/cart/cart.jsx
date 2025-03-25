@@ -1,15 +1,19 @@
-import React, { useState, useEffect, useContext } from 'react';
-import './Cart.css';
-import { StoreContext } from '../../context/StoreContext';
-import { FaTrash } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { assets } from '../../assets/assets'; // Add this import for the icons
-import { toast } from 'react-toastify';
-
+import React, { useState, useEffect, useContext } from "react";
+import "./Cart.css";
+import { StoreContext } from "../../context/StoreContext";
+import { FaTrash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { assets } from "../../assets/assets"; // Add this import for the icons
+import { toast } from "react-toastify";
 
 const Cart = () => {
-  const { cartItems, addToCart, removeFromCart, getTotalCartAmount } = useContext(StoreContext);
+  const {
+    cartItems,
+    addToCart,
+    removeFromCart,
+    getTotalCartAmount,
+  } = useContext(StoreContext);
   const [foods, setFoods] = useState([]);
   const [loading, setLoading] = useState(false);
   const url = "https://restaurant-backend-flame.vercel.app";
@@ -27,12 +31,13 @@ const Cart = () => {
       }
     } catch (error) {
       console.error("Fetch Error:", error);
-      alert("An error occurred while fetching menu items. Please try again later.");
+      alert(
+        "An error occurred while fetching menu items. Please try again later."
+      );
     } finally {
       setLoading(false);
     }
   };
-
 
   useEffect(() => {
     fetchFoods();
@@ -44,19 +49,20 @@ const Cart = () => {
 
   const handleCheckout = () => {
     if (Object.keys(cartItems).length === 0 || getTotalCartAmount() === 0) {
-      toast.error("Your cart is empty. Please add items before proceeding to checkout.",);
+      toast.error(
+        "Your cart is empty. Please add items before proceeding to checkout."
+      );
     } else {
-      navigate('/order');
+      navigate("/order");
     }
   };
 
-
   return (
-    <div className='cart-container'>
-      <h1 className='cart-title'>Your Cart</h1>
-      <div className='cart-content'>
-        <div className='cart-items'>
-          <div className='cart-items-header'>
+    <div className="cart-container">
+      <h1 className="cart-title">Your Cart</h1>
+      <div className="cart-content">
+        <div className="cart-items">
+          <div className="cart-items-header">
             <p>Item</p>
             <p>Price</p>
             <p>Quantity</p>
@@ -73,31 +79,39 @@ const Cart = () => {
                 foods.map((item) => {
                   if (cartItems[item._id] > 0) {
                     return (
-                      <div key={item._id} className='cart-item'>
-                        <div className='cart-item-details'>
-                          <img src={item.image} alt={item.name} className='cart-item-image' />
-                          <p className='cart-item-name'>{item.name}</p>
+                      <div key={item._id} className="cart-item">
+                        <div className="cart-item-details">
+                          <img
+                            src={item.image}
+                            alt={item.name}
+                            className="cart-item-image"
+                          />
+                          <p className="cart-item-name">{item.name}</p>
                         </div>
-                        <p className='cart-item-price'>Rs:{item.price.toFixed(2)}</p>
-                        <div className='cart-item-counter'>
+                        <p className="cart-item-price">
+                          Rs:{item.price.toFixed(2)}
+                        </p>
+                        <div className="cart-item-counter">
                           <img
                             onClick={() => removeFromCart(item._id)}
                             src={assets.remove_icon_red}
                             alt="Remove"
-                            className='cart-counter-icon'
+                            className="cart-counter-icon"
                           />
                           <p>{cartItems[item._id]}</p>
                           <img
                             onClick={() => addToCart(item._id)}
                             src={assets.add_icon_green}
                             alt="Add"
-                            className='cart-counter-icon'
+                            className="cart-counter-icon"
                           />
                         </div>
-                        <p className='cart-item-total'>Rs:{(item.price * cartItems[item._id]).toFixed(2)}</p>
+                        <p className="cart-item-total">
+                          Rs:{(item.price * cartItems[item._id]).toFixed(2)}
+                        </p>
                         <button
                           onClick={() => removeFromCart(item._id)}
-                          className='cart-item-remove'
+                          className="cart-item-remove"
                         >
                           <FaTrash />
                         </button>

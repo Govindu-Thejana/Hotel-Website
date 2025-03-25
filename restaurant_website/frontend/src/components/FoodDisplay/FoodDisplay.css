@@ -1,16 +1,92 @@
-.food-display{
-  margin-top: 30px;
-
+.food-display {
+  padding: 30px;
+  background-color: #f9f9f9;
+  border-radius: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  margin: 30px 0;
 }
-.food-display h2{
-  font-size: max(2vw,24px);
-  font-weight: 600;
 
+.food-display h2 {
+  font-size: 1.8rem;
+  margin-bottom: 25px;
+  color: #333;
+  position: relative;
+  padding-bottom: 10px;
 }
-.food-display-list{
-  display:grid;
-  grid-template-columns: repeat(auto-fill,minmax(240px,1fr));
-  margin-top: 30px;
-  gap: 30px;
-  row-gap: 50px;
+
+.food-display h2:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 80px;
+  height: 3px;
+  background-color: #bf9766;
+  border-radius: 2px;
+}
+
+.food-display-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+}
+
+/* Loading state styling */
+.food-display p {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #666;
+  padding: 30px;
+}
+
+/* For empty results */
+.food-display-list:empty {
+  min-height: 200px;
+  position: relative;
+}
+
+.food-display-list:empty:after {
+  content: "No items found in this category";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #999;
+  font-style: italic;
+}
+
+.food-item-image-container {
+  position: relative;
+  overflow: hidden;
+  height: 180px;
+  border-radius: 16px; /* Change from 50% (circle) to 16px for rounded rectangle */
+  width: 100%; /* Change from fixed width to 100% for responsive rectangle */
+  margin: 0 auto 15px; /* Adjust margins */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.food-item-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+  border-radius: 16px; /* Match container's border-radius */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .food-display {
+    padding: 20px;
+  }
+
+  .food-display-list {
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .food-display-list {
+    grid-template-columns: 1fr;
+  }
 }

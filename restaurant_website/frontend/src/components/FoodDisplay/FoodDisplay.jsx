@@ -34,25 +34,11 @@ const FoodDisplay = ({ category }) => {
         <p>Loading...</p>
       ) : (
         <div className="food-display-list">
-          {foods && foods.length > 0 ? (
-            foods.map((item, index) => {
-              if (category === 'All' || item.category === category) {
-                return (
-                  <FoodItem
-                    key={index}
-                    id={item._id}
-                    name={item.name}
-                    description={item.description}
-                    price={item.price}
-                    image={item.image}
-                  />
-                );
-              }
-              return null; // Render nothing if the category doesn't match
-            })
-          ) : (
-            <p>No items to display.</p>
-          )}
+          {foods.map((item, index) => {
+            if (category === 'All' || item.category === category) {
+              return <FoodItem key={index} id={item._id} name={item.name} description={item.description} price={item.price} image={item.image} />;
+            }
+          })}
         </div>
       )}
     </div>

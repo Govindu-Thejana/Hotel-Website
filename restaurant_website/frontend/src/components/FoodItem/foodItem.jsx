@@ -4,6 +4,28 @@ import { assets } from "../../assets/assets";
 import { StoreContext } from "../../context/StoreContext";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa"; // Import star icons
+
+// Star rating component
+const StarRating = ({ rating = 4.5 }) => {
+  const stars = [];
+  const maxStars = 5;
+
+  for (let i = 1; i <= maxStars; i++) {
+    if (i <= rating) {
+      // Full star
+      stars.push(<FaStar key={i} className="star-icon filled" />);
+    } else if (i - 0.5 <= rating) {
+      // Half star
+      stars.push(<FaStarHalfAlt key={i} className="star-icon filled" />);
+    } else {
+      // Empty star
+      stars.push(<FaRegStar key={i} className="star-icon" />);
+    }
+  }
+
+  return <div className="star-rating">{stars}</div>;
+};
 
 const FoodItem = ({ id, name, description, price, image }) => {
   const { cartItems, addToCart, removeFromCart } = useContext(StoreContext);
@@ -22,8 +44,8 @@ const FoodItem = ({ id, name, description, price, image }) => {
         <div className="food-item-info">
           <h3 className="food-item-name">{name}</h3>
           <div className="rating-price">
-            <img src={assets.rating_starts} alt="Rating" />
             <span className="food-item-price">Rs.{price}</span>
+            <StarRating rating={4.5} /> {/* Moved after the price */}
           </div>
           <p className="food-item-description">{description}</p>
 

@@ -62,9 +62,10 @@
 
 .rating-price {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
+  flex-direction: column; /* Stack items vertically */
+  align-items: center; /* Center items horizontally */
+  gap: 5px; /* Space between price and stars */
+  margin-bottom: 10px;
 }
 
 .rating-price img {
@@ -83,7 +84,7 @@
   line-height: 1.5;
   margin: 0 0 15px 0;
   display: -webkit-box;
-  
+
   -webkit-box-orient: vertical;
   overflow: hidden;
   flex-grow: 1;
@@ -134,19 +135,35 @@
 }
 
 .quantity-btn.decrease {
-  background-color: #fff1ee;
-  color: #a17e53;
+  background-color: #bf9766; /* Change from #fff1ee to #bf9766 */
+  color: white; /* Change text color to white for better contrast */
 }
 
 .quantity-btn.increase {
-  background-color: #edf7ed;
-  color: #a17e53;
+  background-color: #bf9766; /* Change from #edf7ed to #bf9766 */
+  color: white; /* Change text color to white for better contrast */
 }
 
 .quantity {
   font-weight: 700;
   font-size: 1rem;
   color: #333;
+}
+
+.star-rating {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center stars */
+  gap: 2px;
+}
+
+.star-icon {
+  font-size: 14px;
+  color: #d1d1d1;
+}
+
+.star-icon.filled {
+  color: #bf9766;
 }
 
 @media (max-width: 768px) {
@@ -157,7 +174,4 @@
   .food-item-name {
     font-size: 1rem;
   }
-
-  
-  
 }

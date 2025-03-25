@@ -1,0 +1,153 @@
+.footer {
+  padding: 40px 0 20px;
+  background-color: #2D2C2C;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.footer-content-left {
+  flex: 1;
+  min-width: 300px;
+  max-width: 400px;
+}
+
+.footer-content-left img {
+  width: 150px;
+  margin-bottom: 15px;
+}
+
+.footer-content-left p {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.footer-social-icons {
+  display: flex;
+  gap: 15px;
+}
+
+.footer-social-icons img {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.footer-social-icons img:hover {
+  transform: translateY(-5px);
+}
+
+.footer-content-center,
+.footer-content-right {
+  flex: 1;
+  min-width: 200px;
+}
+
+.footer-content-center h2,
+.footer-content-right h2 {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.footer-content-center ul,
+.footer-content-right ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-content-center li,
+.footer-content-right li {
+  margin-bottom: 12px;
+  color: #666;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.footer-content-center li:hover,
+.footer-content-right li:hover {
+  color: #bf9766;
+}
+
+hr {
+  border: none;
+  height: 1px;
+  background-color: #ddd;
+  margin: 30px auto;
+  max-width: 1200px;
+}
+
+.footer-copyright {
+  text-align: center;
+  color: #666;
+  font-size: 0.9rem;
+  padding: 0 20px;
+}
+
+.footer-copyright a {
+  color: #bf9766;
+  text-decoration: none;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 900px) {
+  .footer-content {
+    gap: 40px;
+  }
+
+  .footer-content-left,
+  .footer-content-center,
+  .footer-content-right {
+    min-width: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-content-left {
+    max-width: 100%;
+  }
+
+  .footer-social-icons {
+    justify-content: center;
+  }
+
+  .footer-content-center,
+  .footer-content-right {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    padding: 30px 0 15px;
+  }
+
+  .footer-content-left img {
+    width: 120px;
+  }
+
+  .footer-content-center h2,
+  .footer-content-right h2 {
+    font-size: 1.1rem;
+  }
+
+  .footer-copyright {
+    font-size: 0.8rem;
+  }
+}

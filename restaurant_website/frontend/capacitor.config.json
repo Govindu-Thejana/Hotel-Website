@@ -1,0 +1,10 @@
+{
+  "appId": "com.restaurantomato.app",
+  "appName": "foody",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "http://localhost:3000",
+    "cleartext": true
+  }
+}

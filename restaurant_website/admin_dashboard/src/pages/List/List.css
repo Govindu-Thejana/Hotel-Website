@@ -1,0 +1,215 @@
+.list-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem; /* Reduced padding to avoid excessive inward push */
+    min-height: 70vh; /* Ensure minimum height to fill vertical space */
+    width: 100%; /* Allow it to expand to full width if needed */
+    box-sizing: border-box;
+  }
+  
+  .list-header {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .title {
+    font-size: 2rem;
+    color: #1a1a1a;
+    margin-bottom: 1.5rem;
+  }
+  
+  .filters-container {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center; /* Center filters if content is sparse */
+  }
+  
+  .filter-group {
+    flex: 1;
+    min-width: 200px;
+    max-width: 300px; /* Prevent excessive stretching */
+  }
+  
+  .category-select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    background: white;
+    transition: border-color 0.2s;
+  }
+  
+  .category-select:focus {
+    outline: none;
+    border-color: tomato;
+  }
+  
+  .search-wrapper {
+    position: relative;
+    width: 100%;
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 0.75rem 2.5rem 0.75rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+  }
+  
+  .search-input:focus {
+    outline: none;
+    border-color: tomato;
+  }
+  
+  .search-icon {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+  }
+  
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    min-height: 60vh; /* Minimum height to avoid collapse when empty */
+  }
+  
+  .product-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.2s;
+  }
+  
+  .product-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .image-container {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+  }
+  
+  .product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .product-details {
+    padding: 1rem;
+  }
+  
+  .product-name {
+    font-size: 1.25rem;
+    margin: 0 0 0.5rem;
+    color: #333;
+  }
+  
+  .product-category {
+    color: #666;
+    margin: 0 0 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .product-price {
+    color: tomato;
+    font-weight: 600;
+    margin: 0 0 1rem;
+  }
+  
+  .edit-btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: green;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background 0.2s;
+  }
+  
+  .edit-btn:hover {
+    background: orangered;
+  }
+  
+  .empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+    min-height: 50vh; /* Ensure it takes up significant vertical space */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    border: 1px solid #ddd; /* Optional: Add border for visibility */
+    border-radius: 8px;
+    background: #f9f9f9; /* Optional: Light background for contrast */
+  }
+  
+  .reset-btn {
+    padding: 0.75rem 1.5rem;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .reset-btn:hover {
+    background: #e9ecef;
+  }
+  .delete-btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: red;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background 0.2s;
+    margin-left: 0.5rem; /* Add some space between buttons */
+  }
+  
+  .delete-btn:hover {
+    background: black;
+  }
+  
+  .button-group {
+    display: flex;
+    align-items: center;
+  }
+  
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .filters-container {
+      flex-direction: column;
+    }
+    
+    .filter-group {
+      width: 100%;
+    }
+    
+    .list-container {
+      padding: 0.5rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .title {
+      font-size: 1.5rem;
+    }
+    
+    .product-grid {
+      grid-template-columns: 1fr; /* Single column on very small screens */
+    }
+  }

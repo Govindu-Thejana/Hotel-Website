@@ -1,0 +1,218 @@
+/* General styling for form inputs */
+input[type="text"], input[type="number"], select {
+  width: 100%;
+  padding: 0.675em 1em;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #333;
+  box-sizing: border-box;
+}
+
+/* Specific styling for the select element */
+select {
+  background-repeat: no-repeat;
+  background-position: right 1em top 50%;
+  background-size: 10px;
+}
+
+/* Ensure consistent height between inputs and select */
+input[type="text"], input[type="number"], select {
+  height: 40px;
+}
+
+/* Optional hover effect for better UX */
+select:hover, input[type="text"]:hover, input[type="number"]:hover {
+  border-color: #888;
+}
+
+.update-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    min-height: 80vh;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .update-header {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .update-title {
+    font-size: 2.5rem;
+    color: #1a1a1a;
+    margin: 0;
+    font-weight: 700;
+  }
+  
+  .update-content {
+    background: #ffffff;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+  }
+  
+  .update-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .form-group.full-width {
+    grid-column: 1 / -1; /* Span across all columns */
+  }
+  
+  .form-group label {
+    font-weight: 600;
+    color: #333;
+    font-size: 1.1rem;
+  }
+  
+  .form-group input[type="text"],
+  .form-group input[type="number"] {
+    padding: 0.9rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    background: #fafafa;
+  }
+  
+  .form-group input[type="text"]:focus,
+  .form-group input[type="number"]:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+  }
+  
+  .form-group input[type="file"] {
+    padding: 0.5rem 0;
+    border: none;
+    background: transparent;
+  }
+  
+  .image-preview {
+    margin-top: 1rem;
+    text-align: center;
+  }
+  
+  .product-previews {
+    max-width: 250px;
+    max-height: 250px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+  }
+  
+  .product-previews:hover {
+    transform: scale(1.05);
+  }
+  
+  .form-actions {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+  
+  .update-btn,
+  .cancel-btn {
+    padding: 0.9rem 2rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: background 0.3s, transform 0.1s;
+    width: 180px;
+  }
+  
+  .update-btn {
+    background: tomato;
+    color: white;
+  }
+  
+  .update-btn:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+  }
+  
+  .cancel-btn {
+    background: #6c757d;
+    color: white;
+  }
+  
+  .cancel-btn:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+  }
+  
+  .update-btn:active,
+  .cancel-btn:active {
+    transform: translateY(0);
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .update-container {
+      padding: 1rem;
+    }
+  
+    .update-content {
+      padding: 1.5rem;
+    }
+  
+    .update-title {
+      font-size: 2rem;
+    }
+  
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .form-actions {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  
+    .update-btn,
+    .cancel-btn {
+      width: 100%;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .update-title {
+      font-size: 1.8rem;
+    }
+  
+    .product-previews {
+      max-width: 2000px;
+      max-height: 2000px;
+    }
+  
+    .form-group input[type="text"],
+    .form-group input[type="number"] {
+      padding: 0.75rem;
+    }
+  }

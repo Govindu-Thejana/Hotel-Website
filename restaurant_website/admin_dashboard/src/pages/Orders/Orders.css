@@ -1,0 +1,265 @@
+.orders-container {
+  max-width: 1400px; /* Increased width for better space utilization */
+  margin: 50px auto; /* Reduced top margin to decrease height */
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.orders-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px; /* Reduced to decrease height */
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #ddd;
+  border-radius: 8px 8px 0 0;
+}
+
+.orders-header h3 {
+  font-size: 24px;
+  color: #333;
+  margin: 0;
+}
+
+.search-bar {
+  padding: 10px;
+  width: 300px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  outline: none;
+}
+
+.loading, .no-orders {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  font-size: 16px;
+}
+
+.order-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Reduced gap to decrease height */
+}
+
+.order-item {
+  display: grid;
+  grid-template-columns: 80px 2fr 1fr; /* Adjusted for better width distribution */
+  gap: 20px;
+  padding: 15px; /* Reduced padding to decrease height */
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s;
+}
+
+.order-item:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.order-icon img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.order-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Reduced gap to decrease height */
+}
+
+.customer-info p {
+  margin: 3px 0; /* Reduced margin to decrease height */
+  font-size: 14px;
+  color: #505050;
+  word-break: break-word;
+}
+
+.customer-info p strong {
+  color: #333;
+}
+
+.order-items h4 {
+  margin: 8px 0; /* Reduced margin */
+  font-size: 16px;
+  color: #333;
+}
+
+.order-items ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.order-item-detail {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 8px 0; /* Reduced padding */
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.order-item-detail:last-child {
+  border-bottom: none;
+}
+
+.product-preview {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+.item-info {
+  flex: 1;
+}
+
+.item-info p {
+  margin: 2px 0;
+  font-size: 14px;
+  color: #505050;
+}
+
+.item-info p strong {
+  color: #333;
+}
+
+.order-summary-actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.order-total {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.order-total p {
+  margin: 0;
+}
+
+.order-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.status-select {
+  padding: 8px;
+  border: 1px solid #ff6347;
+  background-color: #ffe8e4;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  width: 100%;
+  max-width: 120px; /* Reduced width to fit better */
+  outline: none;
+}
+
+.delete-btn {
+  padding: 8px 15px;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.delete-btn:hover {
+  background-color: #e63939;
+}
+
+@media (max-width: 1000px) {
+  .orders-container {
+    margin: 30px 10px; /* Adjusted for smaller screens */
+  }
+
+  .orders-header {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .search-bar {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .order-item {
+    grid-template-columns: 60px 1fr 150px;
+    gap: 15px;
+    padding: 10px;
+  }
+
+  .order-icon img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .order-actions {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  .status-select {
+    max-width: 100px;
+    padding: 6px;
+    font-size: 12px;
+  }
+
+  .delete-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .product-preview {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+@media (max-width: 600px) {
+  .order-item {
+    grid-template-columns: 1fr;
+    padding: 10px;
+  }
+
+  .order-icon {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .order-details {
+    margin-bottom: 10px;
+  }
+
+  .order-summary-actions {
+    align-items: stretch;
+  }
+
+  .order-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .status-select {
+    max-width: 100%;
+  }
+
+  .product-preview {
+    width: 40px;
+    height: 40px;
+  }
+}

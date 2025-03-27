@@ -100,9 +100,9 @@ const PlaceOrder = () => {
       }),
       totalAmount: total,
     };
-
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
     try {
-      const response = await axios.post('http://localhost:3000/api/orders/new', orderData, {
+      const response = await axios.post(`${backendUrl}/api/orders/new`, orderData, {
         headers: {
           'Content-Type': 'application/json'
         }

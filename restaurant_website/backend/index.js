@@ -17,7 +17,7 @@ const mongoURI = process.env.mongoDBURL;
 
 const app = express();
 app.use(cors({
-    origin: ["https://amarasarestaurant.vercel.app", "http://localhost:5173", "http://localhost:5174", "http://localhost:5175"],
+    origin: ["https://amarasarestaurant.vercel.app", "https://amarasa-admin.vercel.app", "http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "http://localhost:5176"],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true // Allow credentials (cookies, authorization headers)

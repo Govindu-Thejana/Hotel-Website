@@ -3,6 +3,7 @@ import axios from 'axios';
 import { FaSearch, FaTimesCircle, FaHotel } from 'react-icons/fa';
 import { useMediaQuery } from 'react-responsive';
 import SearchBar from '../../components/roomBookingSearchBar';
+import { toast } from 'react-toastify';
 
 const MyBookings = () => {
     const [confirmationCode, setConfirmationCode] = useState('');
@@ -73,12 +74,15 @@ const MyBookings = () => {
         setSuccess('');
 
         try {
-            const response = await axios.put(`https://hotel-website-backend-drab.vercel/bookedroom/bookings/${booking._id}/cancel`);
+            const response = await axios.put(`https://hotel-website-backend-drab.vercel.app/bookedroom/bookings/${booking._id}/cancel`);
             setSuccess('Booking cancelled successfully');
             setBooking({ ...booking, status: 'Cancelled' });
             setShowCancelModal(false);
+            toast.success('Booking cancelled successfully');
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to cancel booking');
+            console.error('Error cancelling booking:', err);
+            toast.error('Failed to cancel booking. Please try again later.');
         } finally {
             setLoading(false);
         }

@@ -535,3 +535,59 @@ export const cancelBookingById = async (req, res) => {
         });
     }
 };
+
+//updateBooking by status from admin
+export const updateBookingStatus = async (req, res) => {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ message: 'Invalid booking ID' });
+    }
+    const { status } = req.body;
+
+    try {
+        // Validate status
+        const validStatuses = ["Confirmed", "Cancelled", "Completed"];
+        if (!status || !validStatuses.includes(status)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid status. Must be one of: Confirmed, Cancelled, Completed",
+            });
+        }
+
+        // Find the booking by booking._id
+        const booking = await BookedRoomModel.findById(id).populate("roomId", "roomId roomType");
+        if (!booking) {
+            return res.status(404).json({
+                success: false,
+                message: "Booking not found",
+            });
+        }
+
+        // Optional: Add business logic (e.g., restrict status changes)
+        /**
+         *         if (booking.status === "Cancelled" || booking.status === "Completed") {
+                    return res.status(400).json({
+                        success: false,
+                        message: `Cannot change status from ${booking.status}`,
+                    });
+                }
+         */
+
+        // Update the status
+        booking.status = status;
+        const updatedBooking = await booking.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Booking status updated successfully",
+            data: updatedBooking,
+        });
+    } catch (error) {
+        console.error("Error updating booking status:", error);
+        res.status(500).json({
+            success: false,
+            message: "Server error while updating booking status",
+        });
+    }
+};

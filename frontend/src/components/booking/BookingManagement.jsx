@@ -116,7 +116,7 @@ const RoomBookingCalendar = () => {
     if (filtered.length > 0) {
       toast.success(`Found ${filtered.length} bookings`);
     } else {
-      toast.info("No bookings match the applied filters");
+      toast.error("No bookings match the applied filters");
     }
   };
 

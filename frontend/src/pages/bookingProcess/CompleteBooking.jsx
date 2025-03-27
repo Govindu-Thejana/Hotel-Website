@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { CartContext } from '../../contexts/CartContext';
 import { format } from 'date-fns';
 import { FaCheckCircle } from 'react-icons/fa';
+import { toast } from "react-toastify";
 
 const BookingConfirmation = () => {
   const { cart, clearCart } = useContext(CartContext);
@@ -38,6 +39,7 @@ const BookingConfirmation = () => {
   // Calculate total amount for all rooms including addons
   // Calculate total amount for all rooms including addons, VAT, and service fees
   const totalAmount = cart.reduce((sum, room) => {
+    toast.success("Booking confirmed successfully!");
     // Calculate add-ons total for the current room
     const addonsTotal = room.addons.reduce((addonSum, addon) => addonSum + addon.price, 0);
 

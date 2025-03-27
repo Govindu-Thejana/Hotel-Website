@@ -5,12 +5,13 @@ import PropTypes from "prop-types";
 import CheckoutButton from "./checkOutButton";
 import { differenceInDays } from 'date-fns';
 
-const PayPalButton = () => {
+const PayPalButton = ({ totalAmount, onSuccess, onError, disabled, data }) => {
     const { cart } = useContext(CartContext);
     const navigate = useNavigate();
 
-    // Calculate the total amount from cart
+    // Calculate the total amount from cart if not provided via props
     const calculateOverallTotal = () => {
+        if (totalAmount) return totalAmount; // Use prop if provided
         return cart.reduce((total, item) => {
             const nights = differenceInDays(new Date(item.checkOut), new Date(item.checkIn));
             const perNightRate = item.totalAmount / nights;
@@ -33,6 +34,7 @@ const PayPalButton = () => {
             script.onload = () => initPayPalButton();
             script.onerror = () => {
                 console.error("PayPal script failed to load.");
+                if (onError) onError(new Error("PayPal script failed to load"));
             };
             document.body.appendChild(script);
         };
@@ -49,7 +51,6 @@ const PayPalButton = () => {
                                         value: total.toFixed(2),
                                     },
                                     description: `Booking for ${cart.length} room(s)`,
-                                    // Add custom fields for your booking
                                     custom_id: `BOOKING-${Date.now()}`,
                                     soft_descriptor: "Hotel Booking",
                                 },
@@ -59,14 +60,14 @@ const PayPalButton = () => {
                     onApprove: (data, actions) => {
                         return actions.order.capture().then((details) => {
                             console.log("Payment completed:", details);
-                            // Handle successful payment
-                            handlePaymentSuccess(details);
+                            // Call the onSuccess prop with payment details
+                            if (onSuccess) onSuccess(details, data);
                         });
                     },
                     onError: (err) => {
                         console.error("Payment Error:", err);
-                        // Handle payment error
-                        handlePaymentError(err);
+                        // Call the onError prop with the error
+                        if (onError) onError(err);
                     },
                     style: {
                         layout: "vertical",
@@ -108,7 +109,7 @@ const PayPalButton = () => {
             const script = document.querySelector(`script[src*="${clientID}"]`);
             if (script) document.body.removeChild(script);
         };
-    }, [cart, navigate]);
+    }, [cart, navigate, onSuccess, onError, totalAmount, disabled]);
 
     return (
         <div className="bg-white p-4 rounded-2xl shadow-lg">
@@ -127,7 +128,7 @@ const PayPalButton = () => {
                     </div>
                     <div
                         id="paypal-button-container"
-                        className="w-full bg-white p-4 rounded-xl border border-gray-200"
+                        className={`w-full bg-white p-4 rounded-xl border border-gray-200 ${disabled ? 'opacity-50 pointer-events-none' : ''}`}
                     />
                     <div className="mt-4">
                         <CheckoutButton />
@@ -142,8 +143,10 @@ const PayPalButton = () => {
 };
 
 PayPalButton.propTypes = {
+    totalAmount: PropTypes.number,
     onSuccess: PropTypes.func,
     onError: PropTypes.func,
+    disabled: PropTypes.bool,
 };
 
 export default PayPalButton;

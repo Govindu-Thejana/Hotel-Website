@@ -83,7 +83,7 @@ export const createBooking = async (req, res) => {
             await session.abortTransaction();
             session.endSession();
             return res.status(400).json({
-                message: 'Some rooms are unavailable',
+                message: 'Some rooms are not available for the selected dates. Please select different dates.',
                 errors: availabilityErrors
             });
         }

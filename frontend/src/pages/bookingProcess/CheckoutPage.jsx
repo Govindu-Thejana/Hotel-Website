@@ -109,6 +109,7 @@ const CheckoutPage = () => {
     };
 
     const handlePayPalSuccess = async (details, data) => {
+        console.log('PayPal Success Callback - Details:', details);
         if (!validateForm()) {
             return;
         }
@@ -126,14 +127,17 @@ const CheckoutPage = () => {
             cart,
             paymentDetails: details,
             paymentMethod: 'paypal',
-            paypalOrderId: data.orderID,
-            paypalPayerId: data.payerID,
+            paypalOrderId: details.id || (data?.orderID || 'unknown'),
+            paypalPayerId: details.payer?.payer_id || (data?.payerID || 'unknown'),
         };
 
         try {
+            console.log('Sending booking data:', bookingData);
             const response = await createBooking(bookingData);
+            console.log('Booking created:', response.data);
             navigate('/CompleteBooking', { state: { booking: response.data } });
         } catch (error) {
+            console.error('Booking creation error:', error);
             setPaypalError(error.message || 'An error occurred while processing your payment or booking');
         } finally {
             setLoading(false);
@@ -256,7 +260,7 @@ const CheckoutPage = () => {
                                             )}
                                         </button>
 
-                                        <div className="relative">
+                                        {/* <div className="relative">
                                             <PayPalButton
                                                 totalAmount={totalAmount}
                                                 onSuccess={handlePayPalSuccess}
@@ -274,7 +278,7 @@ const CheckoutPage = () => {
                                             <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg animate-fade-in">
                                                 {paypalError}
                                             </div>
-                                        )}
+                                        )} */}
                                     </div>
                                 </div>
                             </form>

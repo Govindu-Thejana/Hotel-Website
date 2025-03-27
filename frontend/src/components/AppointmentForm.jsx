@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 
 const AppointmentForm = () => {
   const [formData, setFormData] = useState({
@@ -72,6 +73,7 @@ const AppointmentForm = () => {
       });
 
       if (response.ok) {
+        toast.success("Appointment request sent successfully!");
         console.log("Form submitted successfully");
         setFormData({
           name: "",
@@ -90,6 +92,7 @@ const AppointmentForm = () => {
         setError(errorData.message || "Failed to submit appointment");
       }
     } catch (error) {
+      toast.error("Error submitting appointment");
       console.error("Error:", error);
       setError("Failed to submit appointment. Please try again.");
     }

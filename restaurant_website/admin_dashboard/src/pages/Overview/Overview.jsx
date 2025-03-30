@@ -123,8 +123,8 @@ const Overview = ({ url }) => {
         fetchOverviewData();
 
         // WebSocket connection
-        const ws = new WebSocket(`ws://${url.replace('http://', '')}/api/orders/ws`);
-
+        const wsUrl = url.replace('http://', 'wss://').replace('https://', 'wss://') + '/api/orders/ws';
+        const ws = new WebSocket(wsUrl);
         ws.onopen = () => {
             console.log('WebSocket connected');
         };

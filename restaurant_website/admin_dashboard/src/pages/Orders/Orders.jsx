@@ -79,8 +79,7 @@ const Orders = ({ url }) => {
         return { backgroundColor: '#FFD700', borderColor: '#FFA500' };
       case 'Processing':
         return { backgroundColor: '#87CEEB', borderColor: '#4682B4' };
-      case 'Shipped':
-        return { backgroundColor: '#98FB98', borderColor: '#2E8B57' };
+
       case 'Delivered':
         return { backgroundColor: '#32CD32', borderColor: '#228B22' };
       case 'Cancelled':
@@ -163,7 +162,6 @@ const Orders = ({ url }) => {
                   >
                     <option value="Pending">Pending</option>
                     <option value="Processing">Processing</option>
-                    <option value="Shipped">Shipped</option>
                     <option value="Delivered">Delivered</option>
                     <option value="Cancelled">Cancelled</option>
                   </select>

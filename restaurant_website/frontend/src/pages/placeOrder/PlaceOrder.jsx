@@ -8,6 +8,9 @@ import './PlaceOrder.css';
 const PlaceOrder = () => {
   const { cartItems, getTotalCartAmount, clearCart, products } = useContext(StoreContext);
   const [formErrors, setFormErrors] = useState({});
+  const now = new Date();
+  now.setHours(now.getHours() + 5);
+  now.setMinutes(now.getMinutes() + 30);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -15,7 +18,9 @@ const PlaceOrder = () => {
     city: '',
     zipCode: '',
     country: '',
-    paymentMethod: 'credit_card',
+    paymentMethod: 'Cash_On_Delivery',
+    orderType: 'Immediate',
+    scheduleDateTime: now.toISOString().slice(0, 16),
   });
 
   const handleInputChange = (e) => {
@@ -48,16 +53,16 @@ const PlaceOrder = () => {
       errors.country = "Country is required";
     }
 
+    // Validate scheduling information
+    if (formData.orderType === 'Scheduled' && !formData.scheduleDateTime) {
+      errors.scheduleDateTime = "Please select a delivery date and time";
+    }
+
     setFormErrors(errors);
     return errors;
   };
 
   const handleSubmit = async (e) => {
-    Swal.fire({
-      title: "Done!",
-      text: "Your Order Placed Successfully!",
-      icon: "success"
-    });
     e.preventDefault();
     const validationErrors = validateForm();
 
@@ -99,7 +104,10 @@ const PlaceOrder = () => {
         };
       }),
       totalAmount: total,
+      orderType: formData.orderType,
+      scheduleDateTime: formData.scheduleDateTime,
     };
+
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
     try {
       const response = await axios.post(`${backendUrl}/api/orders/new`, orderData, {
@@ -128,6 +136,14 @@ const PlaceOrder = () => {
   const subtotal = getTotalCartAmount();
   const deliveryFee = 2;
   const total = subtotal + deliveryFee;
+
+  // Calculate minimum date and time for scheduling (at least 2 hours from now)
+  const getMinDateTime = () => {
+    const now = new Date();
+    now.setHours(now.getHours() + 5);
+    now.setMinutes(now.getMinutes() + 30);
+    return now.toISOString().slice(0, 16); // Format as YYYY-MM-DDTHH:MM
+  };
 
   return (
     <div className="place-order-container">
@@ -166,16 +182,64 @@ const PlaceOrder = () => {
             <input type="text" id="country" name="country" value={formData.country} onChange={handleInputChange} required />
             {formErrors.country && <div className="error">{formErrors.country}</div>}
           </div>
+
+          {/* Order Type Selection */}
+          <div className="form-group">
+            <label>Delivery Type</label>
+            <div className="delivery-options">
+              <label>
+                <input
+                  type="radio"
+                  name="orderType"
+                  value="Immediate"
+                  checked={formData.orderType === 'Immediate'}
+                  onChange={handleInputChange}
+                />
+                Immediate Delivery
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="orderType"
+                  value="Scheduled"
+                  checked={formData.orderType === 'Scheduled'}
+                  onChange={handleInputChange}
+                />
+                Schedule for Later
+              </label>
+            </div>
+          </div>
+
+          {/* Conditional Date/Time Picker */}
+          {formData.orderType === 'Scheduled' && (
+            <div className="form-group">
+              <label htmlFor="scheduleDateTime">Select Delivery Date & Time</label>
+              <input
+                type="datetime-local"
+                id="scheduleDateTime"
+                name="scheduleDateTime"
+                value={formData.scheduleDateTime}
+                onChange={handleInputChange}
+                min={getMinDateTime()}
+                required={formData.orderType === 'Scheduled'}
+              />
+              {formErrors.scheduleDateTime && <div className="error">{formErrors.scheduleDateTime}</div>}
+              <div className="schedule-note">
+                Please select a delivery time at least 2 hours from now.
+              </div>
+            </div>
+          )}
+
           <div className="form-group">
             <label>Payment Method</label>
             <div className="payment-options">
               <label>
-                <input type="radio" name="paymentMethod" value="credit_card" checked={formData.paymentMethod === 'credit_card'} onChange={handleInputChange} />
-                Credit Card
+                <input type="radio" name="paymentMethod" value="Cash_On_Delivery" checked={formData.paymentMethod === 'Cash_On_Delivery'} onChange={handleInputChange} />
+                Cash On delivery
               </label>
               <label>
-                <input type="radio" name="paymentMethod" value="paypal" checked={formData.paymentMethod === 'paypal'} onChange={handleInputChange} />
-                PayPal
+                <input type="radio" name="paymentMethod" value="credit_card" checked={formData.paymentMethod === 'credit_card'} onChange={handleInputChange} />
+                Credit/Debit Card
               </label>
             </div>
           </div>
@@ -183,9 +247,36 @@ const PlaceOrder = () => {
         </form>
         <div className="order-summary">
           <h2>Order Summary</h2>
-          <div className="summary-row"><span>Subtotal:</span><span>Rs:{subtotal.toFixed(2)}</span></div>
-          <div className="summary-row"><span>Delivery Fee:</span><span>Rs:{deliveryFee.toFixed(2)}</span></div>
-          <div className="summary-row total"><span>Total:</span><span>Rs:{total.toFixed(2)}</span></div>
+          <div className="cart-items">
+            {Object.keys(cartItems).length > 0 ? (
+              Object.keys(cartItems).map(itemId => {
+                const itemInfo = products.find(product => product._id === itemId);
+                return (
+                  <div key={itemId} className="cart-item">
+                    <div>{itemInfo.name} x {cartItems[itemId]}</div>
+                    <div>Rs.{(itemInfo.price * cartItems[itemId]).toFixed(2)}</div>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="empty-cart-message">Your cart is empty</div>
+            )}
+          </div>
+          <div className="summary-row"><span>Subtotal:</span><span>Rs.{subtotal.toFixed(2)}</span></div>
+          <div className="summary-row"><span>Delivery Fee:</span><span>Rs.{deliveryFee.toFixed(2)}</span></div>
+          <div className="summary-row total"><span>Total:</span><span>Rs.{total.toFixed(2)}</span></div>
+
+          {formData.orderType === 'Scheduled' && formData.scheduleDateTime && (
+            <div className="scheduled-delivery-info">
+              <div className="schedule-label">Scheduled Delivery:</div>
+              <div className="schedule-time">
+                {new Date(formData.scheduleDateTime).toLocaleString('en-US', {
+                  dateStyle: 'short',
+                  timeStyle: 'short'
+                })}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

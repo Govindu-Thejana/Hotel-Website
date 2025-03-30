@@ -18,12 +18,18 @@ const orderSchema = new mongoose.Schema({
     image: String,
   }],
   totalAmount: { type: Number, required: true, min: 0 },
+  orderType: {
+    type: String,
+    enum: ["Immediate", "Scheduled"],
+    default: "Immediate", // Default to immediate orders
+  },
+  scheduleDateTime: { type: String },
   status: {
     type: String,
-    enum: ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"], // Predefined values
-    default: "Pending", // Default status
+    enum: ["Pending", "Processing", "Delivered", "Cancelled"],
+    default: "Pending",
   },
-}, { timestamps: true }); // Automatically adds createdAt and updatedAt fields
+}, { timestamps: true });
 
 const Order = mongoose.model("Order", orderSchema);
 export default Order;

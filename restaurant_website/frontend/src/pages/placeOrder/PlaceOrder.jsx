@@ -123,6 +123,11 @@ const PlaceOrder = () => {
           text: "Your Order Placed Successfully!",
           icon: "success"
         });
+        clearCart();
+        toast.success("Your order has been placed successfully!", {
+          position: "top-right",
+          autoClose: 2000,
+        });
       } else {
         toast.error("Failed to place order. Please try again.");
         console.error('Error placing order:', response.data);

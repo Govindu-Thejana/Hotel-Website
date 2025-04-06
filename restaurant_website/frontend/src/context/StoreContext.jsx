@@ -8,6 +8,7 @@ const StoreContextProvider = (props) => {
   const [cartItems, setCartItems] = useState({});
   const [products, setProducts] = useState([]);
 
+  // Load products from backend
   useEffect(() => {
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const fetchProducts = async () => {
@@ -20,6 +21,19 @@ const StoreContextProvider = (props) => {
     };
     fetchProducts();
   }, []);
+
+  // Load cart from localStorage when component mounts
+  useEffect(() => {
+    const savedCart = localStorage.getItem('cartItems');
+    if (savedCart) {
+      setCartItems(JSON.parse(savedCart));
+    }
+  }, []);
+
+  // Save cart to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  }, [cartItems]);
 
   const addToCart = (itemId) => {
     try {
@@ -62,6 +76,9 @@ const StoreContextProvider = (props) => {
     return totalAmount;
   };
 
+  const clearCart = () => {
+    setCartItems({});
+  };
 
   const contextValue = {
     products,
@@ -70,6 +87,7 @@ const StoreContextProvider = (props) => {
     addToCart,
     removeFromCart,
     getTotalCartAmount,
+    clearCart,
   };
 
   return (

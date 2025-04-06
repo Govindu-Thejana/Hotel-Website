@@ -1,8 +1,17 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WGMK44VBFX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-WGMK44VBFX');
+    </script>
     <meta charset="UTF-8" />
     <meta name="google-site-verification" content="oiCznwNnBhPlaTmhFhQRnNMyWhuJgb9wqptUpzjAnuE" />
+    <meta name="description" content="Discover Suneragira Grand Hotel Hotel - a cozy retreat offering comfortable rooms, great amenities, and a perfect location for your next getaway." />
     <link rel="icon" type="image/jpg" href="/images/logo.png" />
 
      <!-- Add Google Fonts here -->
@@ -15,7 +24,13 @@
     <title>Suneragira Hotel</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Fallback content for crawlers -->
+      <noscript>
+        <h1>Welcome to Suneragira Hotel</h1>
+        <p>A cozy retreat offering comfortable rooms, great amenities, and a perfect location for your next getaway.</p>
+      </noscript>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

@@ -80,14 +80,18 @@ const Overview = ({ url }) => {
             switch (update.operation) {
                 case 'insert':
                     newOrders = [update.order, ...prev];
-                    toast.success(`New order received from ${update.order.name} for Rs. ${update.order.totalAmount}`);
+                    toast.success(`New order received from ${update.order.name} for Rs. ${update.order.totalAmount}`, {
+                        autoClose: false,
+                    });
                     break;
                 case 'update':
                     const index = prev.findIndex(o => o._id === update.order._id);
                     newOrders = index >= 0
                         ? [...prev.slice(0, index), update.order, ...prev.slice(index + 1)]
                         : prev;
-                    toast.info(`Order ${update.order._id.slice(-6)} updated to status: ${update.order.status}`);
+                    toast.info(`Order ${update.order._id.slice(-6)} updated to status: ${update.order.status}`, {
+                        autoClose: false,
+                    });
                     break;
                 case 'delete':
                     newOrders = prev.filter(o => o._id !== update.orderId);

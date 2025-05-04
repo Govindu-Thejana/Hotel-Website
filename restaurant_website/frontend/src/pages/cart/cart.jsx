@@ -16,7 +16,7 @@ const Cart = () => {
   } = useContext(StoreContext);
   const [foods, setFoods] = useState([]);
   const [loading, setLoading] = useState(false);
-  const url = "https://restaurant-backend-flame.vercel.app";
+  const url = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
 
   const fetchFoods = async () => {

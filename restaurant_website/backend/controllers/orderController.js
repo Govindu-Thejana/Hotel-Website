@@ -3,12 +3,24 @@ import Order from "../models/order.js";
 
 export const createOrder = async (req, res) => {
   try {
-    const { name, email, street, city, country, zipCode, paymentMethod, items, totalAmount, userId, cart } = req.body;
+    const { name, email, street, city, country, zipCode, paymentMethod, items, totalAmount, userId, cart, orderType, scheduleDateTime } = req.body;
     console.log('Request Body:', req.body);
-    console.log('items:', items);
 
-    if (!name || !email || !street || !city || !zipCode || !paymentMethod || !items || !totalAmount) {
+    // Validate required fields
+    if (!name || !email || !street || !city || !zipCode || !paymentMethod || !items || !totalAmount || !orderType) {
       return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    // Validate orderType if provided
+    if (orderType && !["Immediate", "Scheduled"].includes(orderType)) {
+      return res.status(400).json({ message: "Invalid order type" });
+    }
+
+    // Validate scheduleDateTime if orderType is Scheduled
+    if (orderType === "Scheduled") {
+      if (!scheduleDateTime) {
+        return res.status(400).json({ message: "Schedule date and time required for scheduled orders" });
+      }
     }
 
     const newOrder = new Order({
@@ -18,10 +30,13 @@ export const createOrder = async (req, res) => {
       paymentMethod,
       items,
       totalAmount,
+      orderType: orderType || "Immediate",
+      scheduleDateTime: scheduleDateTime || null,
     });
     const savedOrder = await newOrder.save();
     res.status(201).json(savedOrder);
   } catch (error) {
+    console.log("Error--", error.message);
     res.status(400).json({ message: error.message });
   }
 };
@@ -48,7 +63,6 @@ export const getUserOrders = async (req, res) => {
   }
 };
 
-
 export const getOrderById = async (req, res) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
@@ -64,13 +78,12 @@ export const getOrderById = async (req, res) => {
   }
 };
 
-
 export const updateOrderStatus = async (req, res) => {
   try {
     const { orderId } = req.params;
     const { status } = req.body;
 
-    const validStatuses = ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"];
+    const validStatuses = ["Pending", "Processing", "Delivered", "Cancelled"];
     if (!validStatuses.includes(status)) {
       return res.status(400).json({ success: false, message: "Invalid status value" });
     }
@@ -88,7 +101,6 @@ export const updateOrderStatus = async (req, res) => {
   }
 };
 
-
 export const cancelOrder = async (req, res) => {
   try {
     const { orderId } = req.params;
@@ -100,14 +112,25 @@ export const cancelOrder = async (req, res) => {
   }
 };
 
-
 export const addItemToOrder = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
     if (!order) return res.status(404).json({ message: "Order not found" });
 
-    order.items.push(req.body);
-    order.totalAmount += req.body.price * req.body.quantity;
+    if (order.status !== "Pending") {
+      return res.status(400).json({ message: "Can only add items to pending orders" });
+    }
+
+    const newItem = {
+      productId: req.body.productId,
+      name: req.body.name,
+      quantity: req.body.quantity,
+      price: req.body.price,
+      image: req.body.image
+    };
+
+    order.items.push(newItem);
+    order.totalAmount += newItem.price * newItem.quantity;
 
     const updatedOrder = await order.save();
     res.json(updatedOrder);
@@ -120,6 +143,10 @@ export const removeItemFromOrder = async (req, res) => {
   try {
     const order = await Order.findById(req.params.orderId);
     if (!order) return res.status(404).json({ message: "Order not found" });
+
+    if (order.status !== "Pending") {
+      return res.status(400).json({ message: "Can only remove items from pending orders" });
+    }
 
     const itemIndex = order.items.findIndex((item) => item._id.toString() === req.params.itemId);
     if (itemIndex === -1) return res.status(404).json({ message: "Item not found in order" });

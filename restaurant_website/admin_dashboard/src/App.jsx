@@ -5,29 +5,31 @@ import { Routes, Route } from 'react-router-dom'
 import Add from './pages/Add/Add'
 import List from './pages/List/List'
 import Orders from './pages/Orders/Orders'
+import Overview from './pages/Overview/Overview'
 import UpdateProduct from './pages/Update/Update'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
 
-  const url = "http://localhost:3000";
+  const url = import.meta.env.VITE_BACKEND_URL;
 
   return (
     <div>
       <ToastContainer />
       <Navbar />
-      <hr/>
+      <hr />
       <div className='app-content'>
-        <Sidebars/>
+        <Sidebars />
         <Routes>
-        <Route path="/add" element={<Add url={url}/>}/>
-        <Route path="/list" element={<List url={url}/>}/>
-        <Route path="/orders" element={<Orders url={url}/>}/>
-        <Route path="/update-product/:productId" element={<UpdateProduct url={url} />} />
+          <Route path="/" element={<Overview url={url} />} />
+          <Route path="/add" element={<Add url={url} />} />
+          <Route path="/list" element={<List url={url} />} />
+          <Route path="/orders" element={<Orders url={url} />} />
+          <Route path="/update-product/:productId" element={<UpdateProduct url={url} />} />
 
         </Routes>
-    </div>
+      </div>
     </div>
   )
 }

@@ -30,7 +30,7 @@ const Home = () => {
   const handleFindOutMore = (roomId) => {
     navigate(`/roomDetails/${roomId}`); // Navigate to the room details page
   };
-  const handleBooking = () => navigate('/reservation');
+  const handleWeddingBooking = () => navigate('/weddings');
 
   const nextSlide = () => {
     setCurrentSlide(currentSlide === totalSlides - 1 ? 0 : currentSlide + 1);
@@ -127,7 +127,7 @@ const Home = () => {
               </p>
 
               {/* CTA Button */}
-              <button
+              <button onClick={handleWeddingBooking}
                 className="group relative overflow-hidden bg-scolor text-white py-3 px-6 rounded-md transition-all duration-300 transform hover:shadow-xl"
               >
                 <span className="relative z-10 text-sm tracking-wider font-medium">

@@ -9,7 +9,8 @@ import "react-date-range/dist/theme/default.css";
 import RoomCard from "../../components/roomBookings/RoomCard";
 import { CartContext } from "../../contexts/CartContext";
 import Cart from "../../components/roomBookings/Cart";
-import ClipLoader from "react-spinners/ClipLoader"; // Import ClipLoader
+import { toast } from "react-toastify";
+import Loader from "../../components/Loader";
 
 const RoomBookingSearchBar = () => {
   const [dateRange, setDateRange] = useState([
@@ -199,6 +200,7 @@ const RoomBookingSearchBar = () => {
       setAvailableRooms(availableRooms);
       setLoading(false);
     } catch (err) {
+      toast.error('Error fetching available rooms');
       let errorMessage = 'Error fetching available rooms';
       if (err.response) {
         // Server responded with a status outside the 2xx range
@@ -570,8 +572,8 @@ const RoomBookingSearchBar = () => {
 
         <div className="mt-10 w-full">
           {loading ? (
-            <div className="flex justify-center  min-h-screen">
-              <ClipLoader size={100} color={"#3182ce"} loading={loading} />
+            <div className=" min-h-screen">
+              <Loader color={"#3182ce"} loading={loading} />
             </div>
           ) : error ? (
             <div>{error}</div>
@@ -586,7 +588,7 @@ const RoomBookingSearchBar = () => {
               </div>
             </div>
           ) : (
-            <div className=" bg-blue-300">"No rooms available for the selected dates"</div>
+            <div className=" bg-blue-300">No rooms available for the selected dates</div>
           )}
         </div>
       </div>

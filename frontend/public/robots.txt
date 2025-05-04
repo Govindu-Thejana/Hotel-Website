@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://suneragirahotel.vercel.app/sitemap.xml

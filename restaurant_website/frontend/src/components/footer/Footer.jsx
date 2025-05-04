@@ -16,7 +16,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="footer-content-center">
-          <h2>COMPANY</h2>
+          <h2 style={{ color: '#bf9766' }}>COMPANY</h2>
           <ul>
             <li><b>Home</b></li>
             <li><b>About Us</b></li>
@@ -25,7 +25,7 @@ const Footer = () => {
           </ul>
         </div>
         <div className="footer-content-right">
-          <h2>GET IN TOUCH</h2>
+          <h2 style={{ color: '#bf9766' }}>GET IN TOUCH</h2>
           <ul>
             <li><b>0372260002</b></li>
             <li><u><b>suneragira@gmail.com</b></u></li>
@@ -34,7 +34,7 @@ const Footer = () => {
       </div>
       <hr />
       <p className="footer-copyright">Copyright 2025 © Amarasa.com <a href="" target="_blank" rel="noopener noreferrer"><u><b>Amarasa</b></u></a> - All Right Reserved.</p>
-    </div>
+    </div >
   )
 }
 

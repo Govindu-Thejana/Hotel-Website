@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 
 const AppointmentForm = () => {
   const [formData, setFormData] = useState({
@@ -22,7 +23,7 @@ const AppointmentForm = () => {
   // Fetch all appointments from the backend
   const fetchAppointments = async () => {
     try {
-      const response = await fetch("http://localhost:5555/appointments");
+      const response = await fetch("https://hotel-website-backend-drab.vercel.app/appointments");
       if (response.ok) {
         const data = await response.json();
         setExistingAppointments(data);
@@ -63,7 +64,7 @@ const AppointmentForm = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5555/appointments", {
+      const response = await fetch("https://hotel-website-backend-drab.vercel.app/appointments", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -72,6 +73,7 @@ const AppointmentForm = () => {
       });
 
       if (response.ok) {
+        toast.success("Appointment request sent successfully!");
         console.log("Form submitted successfully");
         setFormData({
           name: "",
@@ -90,6 +92,7 @@ const AppointmentForm = () => {
         setError(errorData.message || "Failed to submit appointment");
       }
     } catch (error) {
+      toast.error("Error submitting appointment");
       console.error("Error:", error);
       setError("Failed to submit appointment. Please try again.");
     }

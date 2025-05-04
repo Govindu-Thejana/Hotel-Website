@@ -3,6 +3,7 @@ import BookedRoomModel from '../models/bookedRoomModel.js';
 import { generateBookingId, generateConfirmationCode } from '../middleware/generators.js';
 import moment from 'moment';
 import mongoose from 'mongoose';
+import { sendBookingConfirmation } from '../services/bookingEmail.js';
 
 // Function to create a new booking
 export const createBooking = async (req, res) => {
@@ -54,9 +55,13 @@ export const createBooking = async (req, res) => {
                 continue;
             }
 
-            // Adjust check-in and check-out dates
-            const adjustedCheckIn = moment(checkIn, "MM/DD/YYYY").add(1, 'days').toDate();
-            const adjustedCheckOut = moment(checkOut, "MM/DD/YYYY").add(1, 'days').toDate();
+            let adjustedCheckIn = new Date(Date.UTC(new Date(checkIn).getFullYear(), new Date(checkIn).getMonth(), new Date(checkIn).getDate(), 14, 0, 0));
+            console.log('adjustedCheckIn:', adjustedCheckIn);
+            let adjustedCheckOut = new Date(Date.UTC(new Date(checkOut).getFullYear(), new Date(checkOut).getMonth(), new Date(checkOut).getDate(), 11, 0, 0));
+            console.log('adjustedCheckOut:', adjustedCheckOut);
+            // Adjust check-in and check-out dates to the exact start and end of the day
+            //const adjustedCheckIn = moment(checkIn, "MM/DD/YYYY").startOf('day').toDate();
+            //const adjustedCheckOut = moment(checkOut, "MM/DD/YYYY").endOf('day').toDate();
 
             // Check if room is already booked for the given dates
             const existingBooking = await BookedRoomModel.findOne({
@@ -78,7 +83,7 @@ export const createBooking = async (req, res) => {
             await session.abortTransaction();
             session.endSession();
             return res.status(400).json({
-                message: 'Some rooms are unavailable',
+                message: 'Some rooms are not available for the selected dates. Please select different dates.',
                 errors: availabilityErrors
             });
         }
@@ -125,6 +130,20 @@ export const createBooking = async (req, res) => {
         // Commit transaction if everything is successful
         await session.commitTransaction();
         session.endSession();
+
+        // Send confirmation email to customer
+        try {
+            for (const booking of bookings) {
+                await sendBookingConfirmation(booking);
+            }
+        } catch (emailError) {
+            console.error('Error sending confirmation emails:', emailError);
+            return res.status(201).json({
+                message: 'Booking created successfully, but confirmation emails failed to send',
+                bookings,
+                emailErrors: [`Failed to send confirmation email for booking ${booking.bookingConfirmationCode}`]
+            });
+        }
 
         return res.status(201).json({
             message: 'Booking created successfully',
@@ -409,50 +428,170 @@ export const getAvailableRooms = async (req, res) => {
     }
 };
 
-// Backend controller function
-export const getBookingsCountFromToday = async (req, res) => {
+
+
+// Get booking by confirmation code
+export const getBookingByConfirmationCode = async (req, res) => {
     try {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0); // Set to start of the day
+        const confirmationCode = req.params.confirmationCode;
+        console.log('Confirmation Code:', confirmationCode);
 
-        const bookingsCount = await BookedRoomModel.countDocuments({
-            createdAt: { $gte: today } // Uses the timestamp from mongoose timestamps
-        });
+        if (!confirmationCode) {
+            return res.status(400).json({ message: 'Confirmation code is required' });
+        }
 
-        res.status(200).json({ count: bookingsCount });
+        const booking = await BookedRoomModel.findOne({ bookingConfirmationCode: confirmationCode }).populate('roomId');
+
+        if (!booking) {
+            return res.status(404).json({ message: 'Booking not found. Please check your confirmation code.' });
+        }
+
+        // Format response data to include all necessary booking information
+        const bookingData = {
+            _id: booking._id,
+            confirmationCode: booking.bookingConfirmationCode,
+            bookingId: booking.bookingId,
+            status: booking.status || 'Confirmed', // Default to 'Confirmed' if status is not set
+            guestName: booking.fullName,
+            email: booking.email,
+            phone: booking.phone,
+            checkIn: booking.checkIn,
+            checkOut: booking.checkOut,
+            roomType: booking.roomId ? booking.roomId.roomType : 'N/A',
+            roomNumber: booking.roomId ? booking.roomId.roomId : 'N/A',
+            guests: booking.guests,
+            totalPrice: booking.totalAmount,
+            addons: booking.addons,
+            cancellationPolicy: booking.roomId ? booking.roomId.cancellationPolicy : 'N/A',
+            createdAt: booking.createdAt
+        };
+
+        res.status(200).json(bookingData);
     } catch (error) {
+        console.error('Error retrieving booking by confirmation code:', error);
         res.status(500).json({
-            message: 'Error retrieving today\'s booking count',
+            message: 'Error retrieving booking',
+
             error: error.message
         });
     }
 };
 
-// Function to get bookings from today onwards
-export const getBookingsFromTodayOnwards = async () => {
+
+// Cancel booking by ID
+export const cancelBookingById = async (req, res) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
     try {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0); // Set to start of the day
+        const { id } = req.params;
 
-        const bookings = await BookedRoomModel.find({
-            checkIn: { $gte: today }
-        }).populate('roomId');
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: 'Invalid booking ID' });
+        }
 
-        return bookings;
+        const booking = await BookedRoomModel.findById(id).session(session);
+
+        if (!booking) {
+            await session.abortTransaction();
+            session.endSession();
+            return res.status(404).json({ message: 'Booking not found' });
+        }
+        if (booking.status === 'Cancelled') {
+            await session.abortTransaction();
+            session.endSession();
+            return res.status(400).json({ message: 'Booking has already been cancelled' });
+        }
+        // Update booking status instead of deleting
+        booking.status = 'Cancelled';
+        await booking.save({ session });
+
+        // Update room availability status
+        if (booking.roomId) {
+            const room = await RoomModel.findById(booking.roomId).session(session);
+            if (room) {
+                room.isbooked = false;
+                await room.save({ session });
+            }
+        }
+
+        await session.commitTransaction();
+        session.endSession();
+
+        res.status(200).json({
+            message: 'Booking has been successfully Cancelled',
+            booking: {
+                _id: booking._id,
+                confirmationCode: booking.bookingConfirmationCode,
+                status: 'Cancelled'
+            }
+        });
     } catch (error) {
-        console.error("Error fetching bookings from today:", error);
-        throw error;
+        console.error('Error cancelling booking:', error);
+
+        await session.abortTransaction();
+        session.endSession();
+
+        res.status(500).json({
+            message: 'Error cancelling booking',
+            error: error.message
+        });
     }
 };
 
-// Get total number of bookings
-export const getTotalBookings = async () => {
-    try {
-      const count = await BookedRoomModel.countDocuments({});
-      return count;
-    } catch (error) {
-      console.error("Error counting bookings:", error);
-      throw error;
+//updateBooking by status from admin
+export const updateBookingStatus = async (req, res) => {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ message: 'Invalid booking ID' });
     }
-  };
-  
+    const { status } = req.body;
+
+    try {
+        // Validate status
+        const validStatuses = ["Confirmed", "Cancelled", "Completed"];
+        if (!status || !validStatuses.includes(status)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid status. Must be one of: Confirmed, Cancelled, Completed",
+            });
+        }
+
+        // Find the booking by booking._id
+        const booking = await BookedRoomModel.findById(id).populate("roomId", "roomId roomType");
+        if (!booking) {
+            return res.status(404).json({
+                success: false,
+                message: "Booking not found",
+            });
+        }
+
+        // Optional: Add business logic (e.g., restrict status changes)
+        /**
+         *         if (booking.status === "Cancelled" || booking.status === "Completed") {
+                    return res.status(400).json({
+                        success: false,
+                        message: `Cannot change status from ${booking.status}`,
+                    });
+                }
+         */
+
+        // Update the status
+        booking.status = status;
+        const updatedBooking = await booking.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Booking status updated successfully",
+            data: updatedBooking,
+        });
+    } catch (error) {
+        console.error("Error updating booking status:", error);
+        res.status(500).json({
+            success: false,
+            message: "Server error while updating booking status",
+        });
+    }
+};
+

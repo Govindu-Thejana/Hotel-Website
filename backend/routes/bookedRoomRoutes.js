@@ -6,8 +6,12 @@ import {
     checkRoomAvailability,
     getAllBookings,
     getBookedDatesByRoomType,
-    getAvailableRooms,
-    getTotalBookings
+
+    getBookingByConfirmationCode,
+    cancelBookingById,
+    updateBookingStatus,
+    getAvailableRooms
+
 } from '../controllers/bookingController.js';
 import { validateBookingData } from '../middleware/validateBooking.js';
 
@@ -20,6 +24,10 @@ router.get('/bookings/room/:roomType', getBookedDatesByRoomType); // Changed to 
 router.get('/availableRooms', getAvailableRooms);
 router.get('/rooms/availability', checkRoomAvailability);
 router.get('/bookings', getAllBookings);
-router.get('/bookings/totalcount', getTotalBookings);
+
+router.get('/bookings/confirmation/:confirmationCode', getBookingByConfirmationCode);
+router.put('/bookings/:id/cancel', cancelBookingById);
+router.put('/bookings/status/:id', updateBookingStatus);
+
 
 export default router;

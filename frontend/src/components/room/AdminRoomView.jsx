@@ -44,7 +44,7 @@ function AdminRoomView() {
     useEffect(() => {
         const fetchAmenities = async () => {
             try {
-                const response = await axios.get('http://localhost:5555/rooms'); // Use the same endpoint
+                const response = await axios.get('https://hotel-website-backend-drab.vercel.app/rooms'); // Use the same endpoint
                 const allAmenities = response.data.data
                     .flatMap((room) => {
                         try {

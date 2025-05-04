@@ -23,7 +23,7 @@ import RoomCreationForm from "./components/room/RoomCreationForm";
 import AdminRoomView from "./components/room/AdminRoomView";
 
 import BookingDetails from "./components/booking/BookingDetails";
-import TestUI from "./components/room/TestUI";
+import { ToastContainer } from 'react-toastify';
 import BookingPage from "./pages/bookingProcess/BookingPage";
 import CheckoutPage from "./pages/bookingProcess/CheckoutPage";
 import AddonsPage from "./pages/bookingProcess/AddonsPage";
@@ -32,10 +32,12 @@ import CartProvider from "./contexts/CartContext";
 
 import AdminGalleryView from "./components/gallery/AdminGalleryView";
 import AddImages from "./components/gallery/AddImages"
+import MyBookings from "./pages/bookingProcess/MyBookings";
 
 
 const MainLayout = ({ children }) => (
   <div>
+    <ToastContainer />
     <Header />
     {children}
     <Footer />
@@ -47,6 +49,7 @@ MainLayout.propTypes = {
 
 const AdminLayout = ({ children }) => (
   <div className="flex">
+    <ToastContainer />
     <Navbar />
     <div className="flex-grow p-4 ml-64">
       {children}
@@ -79,6 +82,8 @@ const App = () => {
           <Route path="/CompleteBooking" element={<MainLayout><CompleteBooking /></MainLayout>} />
           <Route path="/event" element={<MainLayout><Event /></MainLayout>} />
           <Route path="/gallery" element={<MainLayout><GalleryPage /></MainLayout>} />
+          <Route path="/myBookings" element={<MainLayout><MyBookings /></MainLayout>} />
+
 
           {/* Admin Routes (Separate from the main website layout) */}
           <Route path="/add-rooms" element={<AdminLayout><AddRooms /></AdminLayout>} />
@@ -95,7 +100,7 @@ const App = () => {
 
           <Route path="/gallery-test" element={<AdminLayout><AdminGalleryView /></AdminLayout>} />
           <Route path="/add-newimages" element={<AdminLayout><AddImages /></AdminLayout>} />
-  
+
         </Routes>
       </div>
     </CartProvider>

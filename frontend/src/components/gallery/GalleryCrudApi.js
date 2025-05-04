@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 export const api = axios.create({
-    baseURL: 'http://localhost:5555/gallery',  // Replace with your server URL
-  });
+  baseURL: 'https://hotel-website-backend-drab.vercel.app/gallery',  // Replace with your server URL
+});
 
 // Fetch all gallery images
 export const fetchAllImages = async () => {

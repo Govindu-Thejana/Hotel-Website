@@ -1,0 +1,518 @@
+/* Custom styling for the admin calendar */
+
+.admin-calendar {
+  width: 100% !important;
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: "Inter", sans-serif;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: none !important;
+  overflow: hidden;
+}
+
+/* General Calendar styling */
+.react-datepicker {
+  font-family: "Arial", sans-serif;
+  border: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Calendar header styling */
+.react-datepicker__header {
+  background-color: #ffffff !important;
+  border-bottom: 1px solid #f0f0f0 !important;
+  padding-top: 15px !important;
+  padding-bottom: 10px !important;
+  position: relative;
+}
+
+.react-datepicker__current-month {
+  font-size: 1.25rem !important;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.75rem;
+}
+
+/* Navigation buttons */
+.react-datepicker__navigation {
+  top: 1rem;
+  border: none;
+  background-color: #f3f4f6;
+  border-radius: 9999px;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.react-datepicker__navigation:hover {
+  background-color: #e5e7eb;
+}
+
+/* Day names row */
+.react-datepicker__day-names {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: space-around;
+}
+
+.react-datepicker__day-name {
+  color: #6b7280 !important;
+  font-weight: 600 !important;
+  margin: 0.4rem !important;
+  width: 2.5rem !important;
+  text-transform: uppercase;
+  font-size: 0.7rem !important;
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Add rounded shape and glassy effect */
+  border-radius: 50% !important;
+  background-color: rgba(240, 240, 245, 0.7);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(240, 240, 245, 0.3);
+  transition: all 0.2s ease;
+}
+
+/* Calendar month */
+.react-datepicker__month {
+  margin: 0.5rem 0 0;
+}
+
+/* Week row */
+.react-datepicker__week {
+  display: flex;
+  justify-content: space-around;
+}
+
+/* Day cells */
+.react-datepicker__day {
+  margin: 0.4rem !important;
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+  line-height: 2.5rem !important;
+  border-radius: 50% !important;
+  color: #374151 !important;
+  font-weight: 500 !important;
+  font-size: 0.95rem !important;
+  transition: all 0.2s ease;
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+  border-radius: 50% !important; /* Force rounded shape */
+  margin: 5px 2px;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  position: relative;
+
+  /* Glassy effect */
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.react-datepicker__day:hover {
+  background-color: #f3f4f6 !important;
+  color: #111827 !important;
+  background-color: rgba(200, 230, 255, 0.6) !important;
+  border-radius: 50% !important;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(200, 230, 255, 0.4);
+  color: #333;
+}
+
+/* Date with appointments */
+.has-appointments {
+  background-color: rgba(79, 70, 229, 0.15) !important;
+  font-weight: 600 !important;
+  background-color: rgba(var(--scolor-rgb, 66, 135, 245), 0.2) !important;
+  color: var(--scolor, #4287f5) !important;
+  font-weight: 500;
+  position: relative;
+  border: 1px solid rgba(var(--scolor-rgb, 66, 135, 245), 0.3) !important;
+}
+
+/* Today's date */
+.react-datepicker__day--today,
+.today {
+  background-color: #fef3c7 !important;
+  font-weight: bold !important;
+  color: #92400e !important;
+  border: 2px solid #f59e0b !important;
+  font-weight: bold;
+  color: var(--scolor, #4287f5);
+  position: relative;
+}
+
+.react-datepicker__day--today::after {
+  content: "";
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background-color: var(--scolor, #4287f5);
+  border-radius: 50%;
+}
+
+.has-appointments.today {
+  background-color: #fef3c7 !important;
+  border: 2px solid #f59e0b !important;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.3);
+}
+
+/* Selected date */
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  background-color: #4f46e5 !important;
+  color: white !important;
+  font-weight: bold !important;
+  background-color: rgba(66, 135, 245, 0.7) !important;
+  color: white !important;
+  font-weight: bold;
+  border-radius: 50% !important;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(66, 135, 245, 0.4);
+}
+
+.react-datepicker__day--selected:hover {
+  background-color: var(--color-primary-dark, #3b82f6) !important;
+}
+
+/* Outside month dates */
+.react-datepicker__day--outside-month {
+  color: #9ca3af !important;
+  opacity: 0.6;
+  color: #a0aec0 !important;
+  background-color: rgba(245, 245, 245, 0.5) !important;
+  border: 1px solid rgba(245, 245, 245, 0.1);
+}
+
+/* Appointment count badge */
+.appointment-count {
+  position: absolute;
+  bottom: 2px;
+  font-size: 0.675rem;
+  font-weight: 600;
+  color: var(--color-primary, #3b82f6);
+}
+
+.react-datepicker__day--selected .appointment-count {
+  color: white;
+}
+
+/* Calendar container */
+.calendar-container {
+  transition: all 0.3s ease;
+  /* Remove these properties:
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden; */
+}
+
+/* Appointment list */
+.appointment-list {
+  transition: all 0.3s ease;
+}
+
+.date-appointments {
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.appointment-list > div {
+  animation: slideUp 0.5s ease forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .admin-calendar {
+    max-width: 100%;
+  }
+
+  .react-datepicker__day,
+  .react-datepicker__day-name {
+    width: 2rem;
+    height: 2rem;
+    line-height: 2rem;
+  }
+
+  .appointment-legend {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* Add these styles to your existing custom-calendar.css file */
+
+.full-calendar {
+  width: 100% !important;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.full-calendar .react-datepicker__month-container {
+  width: 100%;
+}
+
+.full-calendar .react-datepicker__day {
+  margin: 0.5rem !important;
+  width: 3rem !important;
+  height: 3rem !important;
+  line-height: 3rem !important;
+  font-size: 1rem !important;
+  border: 1px solid #eaeaea;
+}
+
+.full-calendar .react-datepicker__day-name {
+  margin: 0.5rem !important;
+  width: 3rem !important;
+  height: 3rem !important;
+  line-height: 3rem !important;
+  font-size: 1rem !important;
+  background-color: rgba(247, 247, 247, 0.7);
+  border: 1px solid rgba(234, 234, 234, 0.4);
+  font-weight: bold;
+  border-radius: 50% !important; /* Ensure rounded shape in full calendar view */
+}
+
+.full-calendar .appointment-count {
+  position: absolute;
+  bottom: 5px;
+  font-size: 10px;
+  background-color: var(--scolor, #6b46c1);
+  color: white;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  border-radius: 50%;
+  text-align: center;
+}
+
+/* For the custom day rendering */
+.calendar-day-cell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Day cell layout */
+.calendar-day-cell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.day-number {
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
+}
+
+.other-month {
+  opacity: 0.5;
+}
+
+/* Appointment badge */
+.appointment-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 0.7rem;
+  background-color: #ef4444; /* Red notification color */
+  color: white;
+  border-radius: 9999px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  transform: translate(25%, -25%); /* Move slightly outside the cell */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+  top: -5px;
+  right: -5px;
+  background-color: var(--scolor, #4287f5);
+  color: white;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: transform 0.2s ease;
+}
+
+.appointment-badge:hover {
+  transform: scale(1.2) translate(25%, -25%);
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5) translate(25%, -25%);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translate(25%, -25%);
+  }
+}
+
+/* Special styling for different count numbers */
+.appointment-badge[data-count="1"] {
+  background-color: #3b82f6; /* Blue for 1 appointment */
+}
+
+.appointment-badge[data-count="2"] {
+  background-color: #8b5cf6; /* Purple for 2 appointments */
+}
+
+.appointment-badge[data-count="3"] {
+  background-color: #ec4899; /* Pink for 3 appointments */
+}
+
+.appointment-badge[data-count="4"],
+.appointment-badge[data-count="5"] {
+  background-color: #f59e0b; /* Amber for 4-5 appointments */
+}
+
+.appointment-badge[data-count="6"] ~ .appointment-badge {
+  background-color: #ef4444; /* Red for 6+ appointments */
+}
+
+/* Make the calendar responsive */
+@media (max-width: 640px) {
+  .react-datepicker__day,
+  .react-datepicker__day-name {
+    margin: 0.2rem !important;
+    width: 2rem !important;
+    height: 2rem !important;
+    line-height: 2rem !important;
+    border-radius: 50% !important; /* Ensure the rounded shape is maintained on small screens */
+  }
+
+  .full-calendar .react-datepicker__day,
+  .full-calendar .react-datepicker__day-name {
+    margin: 0.3rem !important;
+    width: 2.2rem !important;
+    height: 2.2rem !important;
+    line-height: 2.2rem !important;
+  }
+
+  .appointment-badge {
+    width: 16px;
+    height: 16px;
+    font-size: 0.65rem;
+    width: 14px;
+    height: 14px;
+    font-size: 0.5rem;
+  }
+}
+
+/* Make sure the calendar popup has a z-index higher than other elements */
+.fixed.inset-0.bg-black.bg-opacity-50 {
+  z-index: 9999;
+}
+
+/* Animation for today highlight */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(var(--scolor-rgb, 66, 135, 245), 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(var(--scolor-rgb, 66, 135, 245), 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(var(--scolor-rgb, 66, 135, 245), 0);
+  }
+}
+
+.today {
+  animation: pulse 2s infinite;
+  position: relative;
+}
+
+.today::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  z-index: -1;
+  animation: todayPulse 2s infinite;
+}
+
+@keyframes todayPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(var(--scolor-rgb, 66, 135, 245), 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(var(--scolor-rgb, 66, 135, 245), 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(var(--scolor-rgb, 66, 135, 245), 0);
+  }
+}
+
+/* Make sure the calendar fits well without the extra box */
+.admin-calendar.full-calendar {
+  box-shadow: none;
+  max-width: 100%;
+}
+
+/* Add more visual interest to the calendar selected day */
+.react-datepicker__day--selected {
+  transform: scale(1.1);
+  box-shadow: 0 0 0 2px rgba(var(--scolor-rgb, 66, 135, 245), 0.5);
+  z-index: 2;
+}

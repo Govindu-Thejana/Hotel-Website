@@ -9,7 +9,8 @@ import "react-date-range/dist/theme/default.css";
 import RoomCard from "../../components/roomBookings/RoomCard";
 import { CartContext } from "../../contexts/CartContext";
 import Cart from "../../components/roomBookings/Cart";
-import ClipLoader from "react-spinners/ClipLoader"; // Import ClipLoader
+import { toast } from "react-toastify";
+import Loader from "../../components/Loader";
 
 const RoomBookingSearchBar = () => {
   const [dateRange, setDateRange] = useState([
@@ -73,7 +74,7 @@ const RoomBookingSearchBar = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get(`http://localhost:5555/bookedRoom/bookings/room/${roomType}`);
+      const response = await axios.get(`https://hotel-website-backend-drab.vercel.app/bookedRoom/bookings/room/${roomType}`);
       const { commonBookedDates } = response.data.data;
       setCommonBookedDates(commonBookedDates.map(date => new Date(date)));
       setLoading(false);
@@ -194,11 +195,12 @@ const RoomBookingSearchBar = () => {
         roomType: tempSelectedPackage, // Use tempSelectedPackage for search
         guests: tempAdults + tempChildren,
       };
-      const response = await axios.get("http://localhost:5555/bookedRoom/availableRooms", { params });
+      const response = await axios.get("https://hotel-website-backend-drab.vercel.app/bookedRoom/availableRooms", { params });
       const availableRooms = response.data.availableRooms;
       setAvailableRooms(availableRooms);
       setLoading(false);
     } catch (err) {
+      toast.error('Error fetching available rooms');
       let errorMessage = 'Error fetching available rooms';
       if (err.response) {
         // Server responded with a status outside the 2xx range
@@ -394,53 +396,159 @@ const RoomBookingSearchBar = () => {
               inputRanges={[]}
             />
             <style jsx global>{`
-            .rdrCalendarWrapper {
-              width: 800px;
-              font-size: 14px;
-              background: white;
-            }
-            .rdrMonth {
-              width: 100%;
-              padding: 0 0.5rem;
-            }
-            .rdrDefinedRangesWrapper {
-              display: none;
-            }
-            .rdrDateRangeWrapper {
-              border-radius: 0.5rem;
-              border: 1px solid #e2e8f0;
-            }
-            .rdrDayNumber {
-              font-size: 12px;
-            }
-            .rdrSelected {
-              border-radius: 1.5rem;
-            }
-            .rdrDay {
-              height: 3rem;
-            }
-            .rdrDayPassive {
-              opacity: 0 !important;
-              visibility: hidden;
-              pointer-events: none;
-            }
-            .rdrDayPassive .rdrDayNumber {
-              display: none;
-            }
-            .blocked-day {
-              background-color: #ff0000 !important;
-              color: white !important;
-              opacity: 0.7 !important;
-              pointer-events: none;
-              text-decoration: line-through;
-            }
-            .blocked-day .rdrDayNumber span {
-              color: white !important;
-            }
-            .rdrMonths .rdrMonth {
-              padding: 0 8px;
-            }
-          `}</style>
+  /* Define base scaling variables */
+  :root {
+    --base-size: 1rem; /* Base font size */
+    --calendar-width: 100%;
+    --max-calendar-width: 800px;
+    --day-size: 3rem;
+    --font-scale: 1;
+    --range-color: #3182ce;
+  }
+
+  .rdrCalendarWrapper {
+    width: var(--calendar-width);
+    max-width: var(--max-calendar-width);
+    font-size: calc(var(--base-size) * var(--font-scale));
+    background: white;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+  }
+
+  .rdrMonth {
+    width: 100%;
+    padding: 0 calc(var(--base-size) * 0.5);
+  }
+
+  .rdrDefinedRangesWrapper {
+    display: none;
+  }
+
+  .rdrDateRangeWrapper {
+    border-radius: 0.5rem;
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+  }
+
+  .rdrDayNumber {
+    font-size: calc(var(--base-size) * 0.75 * var(--font-scale));
+    font-weight: 500;
+  }
+
+  /* Ensure no gaps between days */
+  .rdrDay {
+    height: var(--day-size);
+    width: calc(var(--day-size) * 1.142);
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  /* Core range elements that control appearance */
+  .rdrInRange {
+    background-color: var(--range-color) !important;
+    color: white !important;
+  }
+
+  .rdrStartEdge {
+    background-color: var(--range-color) !important;
+    border-top-left-radius: 1.5rem !important;
+    border-bottom-left-radius: 1.5rem !important;
+  }
+
+  .rdrEndEdge {
+    background-color: var(--range-color) !important;
+    border-top-right-radius: 1.5rem !important;
+    border-bottom-right-radius: 1.5rem !important;
+  }
+
+  /* Fix for day number colors */
+  .rdrDayStartOfRange .rdrDayNumber span,
+  .rdrDayInRange .rdrDayNumber span,
+  .rdrDayEndOfRange .rdrDayNumber span {
+    color: white !important;
+  }
+
+  /* Fix for hover states */
+  .rdrDay:hover:not(.rdrDayPassive):not(.blocked-day) {
+    background: #f1f5f9;
+    border-radius: calc(var(--day-size) * 0.5);
+  }
+
+  /* Hide inactive days */
+  .rdrDayPassive {
+    opacity: 0 !important;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .rdrDayPassive .rdrDayNumber {
+    display: none;
+  }
+
+  /* Blocked day styling */
+  .blocked-day {
+    background-color: #ff0000 !important;
+    color: white !important;
+    opacity: 0.7 !important;
+    pointer-events: none;
+    text-decoration: line-through;
+  }
+
+  .blocked-day .rdrDayNumber span {
+    color: white !important;
+  }
+
+  .rdrMonths .rdrMonth {
+    padding: 0 calc(var(--base-size) * 0.5);
+  }
+
+  .rdrMonthAndYearWrapper {
+    padding: calc(var(--base-size) * 0.5);
+  }
+
+  .rdrNextPrevButton {
+    width: calc(var(--day-size) * 0.8);
+    height: calc(var(--day-size) * 0.8);
+    border-radius: 50%;
+    background: #f1f5f9;
+  }
+
+  /* Dynamic scaling based on screen size */
+  @media (max-width: 768px) {
+    :root {
+      --font-scale: 0.9;
+      --day-size: 2.5rem;
+      --max-calendar-width: 100%;
+    }
+    
+    .rdrMonthsHorizontal {
+      flex-direction: column;
+    }
+  }
+
+  @media (max-width: 480px) {
+    :root {
+      --font-scale: 0.75;
+      --day-size: 2rem;
+    }
+    
+    .rdrMonthName {
+      font-size: calc(var(--base-size) * 0.875 * var(--font-scale));
+    }
+    
+    .rdrMonthAndYearPickers select {
+      padding: calc(var(--base-size) * 0.25);
+    }
+  }
+
+  @media (max-width: 360px) {
+    :root {
+      --font-scale: 0.65;
+      --day-size: 1.8rem;
+    }
+  }
+`}</style>
             <div className="flex justify-between items-center mt-4">
               <p className="text-xs text-gray-600">Select check-in and check-out dates on the calendar</p>
               <div className="flex">
@@ -464,8 +572,8 @@ const RoomBookingSearchBar = () => {
 
         <div className="mt-10 w-full">
           {loading ? (
-            <div className="flex justify-center  min-h-screen">
-              <ClipLoader size={100} color={"#3182ce"} loading={loading} />
+            <div className=" min-h-screen">
+              <Loader color={"#3182ce"} loading={loading} />
             </div>
           ) : error ? (
             <div>{error}</div>
@@ -480,7 +588,7 @@ const RoomBookingSearchBar = () => {
               </div>
             </div>
           ) : (
-            <div className=" bg-blue-300">"No rooms available for the selected dates"</div>
+            <div className=" bg-blue-300">No rooms available for the selected dates</div>
           )}
         </div>
       </div>

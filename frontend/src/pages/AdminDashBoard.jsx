@@ -26,6 +26,7 @@ const quickStatsData = [
   { label: 'Revenue', value: '$45,670', color: 'purple' }
 ];
 
+
 const roomStatusData = [
   { roomNumber: '101', status: 'Available', type: 'Standard' },
   { roomNumber: '102', status: 'Booked', type: 'Deluxe' },
@@ -44,6 +45,7 @@ const AdminDashboard = () => {
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
+
   };
 
   return (

@@ -14,7 +14,7 @@ const Footer = () => {
                             </h3>
                         </div>
                         <p className="mt-4 text-gray-400 text-sm">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                            Experience unparalleled luxury and comfort at Suneragira Grand Hotel.
                         </p>
                     </div>
 
@@ -67,7 +67,7 @@ const Footer = () => {
 
                 {/* Footer Copyright */}
                 <div className="mt-6 text-center text-gray-400 text-sm">
-                    &copy; 2023 Suneragira Grand Hotel. All Rights Reserved.
+                    &copy; 2025 Suneragira Grand Hotel. All Rights Reserved.
                 </div>
 
             </div>

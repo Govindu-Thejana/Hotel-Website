@@ -34,7 +34,7 @@ const RoomCard = ({ room, onAddToCart }) => {
                     <img
                         src={
                             room.images && room.images[currentImageIndex]
-                                ? `http://localhost:5555/${room.images[currentImageIndex].replace(/\\/g, '/')}`
+                                ? room.images[currentImageIndex] // Directly using Cloudinary URL
                                 : '/default-image.jpg' // Fallback image if images array is undefined or empty
                         }
                         alt={`Room ${room.roomId}`}

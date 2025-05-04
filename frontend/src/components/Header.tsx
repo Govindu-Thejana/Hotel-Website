@@ -5,11 +5,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 // Navigation links
 const navigation = [
-    { name: 'Home', href: '/', current: false },
-    { name: 'Accommodation', href: '/accommodation', current: false },
-    { name: 'Weddings', href: '/weddings', current: false },
-    { name: 'Events', href: '/event', current: false },
-    { name: 'Gallery', href: '/gallery', current: false },
+    { name: 'HOME', href: '/', current: false },
+    { name: 'ACCOMODATION', href: '/accommodation', current: false },
+    { name: 'WEDDINGS', href: '/weddings', current: false },
+    { name: 'EVENTS', href: '/event', current: false },
+    { name: 'GALLERY', href: '/gallery', current: false },
 ];
 
 function classNames(...classes) {
@@ -91,7 +91,7 @@ const Header = () => {
                         <div className="sm:text-sm sm:flex lg:flex">
                             <button onClick={handleBooking}
                                 className="bg-scolor hover:text-pcolor text-white font-semibold py-1 px-3 sm:py-2 sm:px-4 text-sm sm:text-base">
-                                Book Now
+                                BOOK NOW
                             </button>
                         </div>
                     </div>

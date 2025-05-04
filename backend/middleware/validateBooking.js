@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 export const validateBookingData = (req, res, next) => {
     const {
         prefix,
@@ -41,11 +42,19 @@ export const validateBookingData = (req, res, next) => {
         }
 
         // Validate dates
-        const checkInDate = new Date(checkIn);
-        const checkOutDate = new Date(checkOut);
-        const today = new Date();
+        console.log('checkIn:', checkIn);
+        console.log('checkOut:', checkOut);
 
-        if (checkInDate < today) {
+        //Manually adjust the date
+        let checkInDate = new Date(Date.UTC(new Date(checkIn).getFullYear(), new Date(checkIn).getMonth(), new Date(checkIn).getDate()));
+        console.log('checkInDate after:', checkInDate);
+        let checkOutDate = new Date(Date.UTC(new Date(checkOut).getFullYear(), new Date(checkOut).getMonth(), new Date(checkOut).getDate()));
+        console.log('checkOutDate after:', checkOutDate);
+
+        const todayColombo = DateTime.now().setZone("Asia/Colombo").startOf("day"); //get today date using luxon library
+        console.log('todayColombo:', todayColombo);
+
+        if (checkInDate < todayColombo) {
             return res.status(400).json({
                 message: 'Check-in date cannot be in the past'
             });

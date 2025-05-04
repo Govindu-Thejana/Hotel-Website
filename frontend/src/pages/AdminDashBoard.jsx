@@ -1,13 +1,5 @@
 import React, { useState } from 'react';
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer
-} from 'recharts';
-import {
   Calendar,
   Users,
   Bell,
@@ -56,8 +48,6 @@ const AdminDashboard = () => {
 
   return (
     <div className={`flex min-h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-100'}`}>
-
-
       {/* Main Content Area */}
       <div className="flex-1 p-6 overflow-auto">
         <h2 className="text-2xl font-bold text-blue-800 mb-6">Dashboard Overview</h2>
@@ -103,30 +93,32 @@ const AdminDashboard = () => {
           {quickStatsData.map((stat, index) => (
             <div
               key={index}
-              className={`bg-white p-4 rounded-lg shadow-md border-l-4 border-${stat.color}-500 ${isDarkMode ? 'bg-gray-800 text-white' : ''
-                }`}
+              className={`bg-white p-4 rounded-lg shadow-md border-l-4 ${stat.color === 'blue' ? 'border-blue-500' :
+                stat.color === 'green' ? 'border-green-500' :
+                  stat.color === 'yellow' ? 'border-yellow-500' :
+                    stat.color === 'purple' ? 'border-purple-500' : 'border-gray-500'
+                } ${isDarkMode ? 'bg-gray-800 text-white' : ''}`}
             >
               <h3 className="text-gray-500 text-sm">{stat.label}</h3>
-              <p className="text-2xl font-bold text-gray-800">{stat.value}</p>
+              <p className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{stat.value}</p>
             </div>
           ))}
         </div>
 
         {/* Analytics & Room Status */}
         <div className="grid grid-cols-2 gap-6">
-          {/* Booking Trends Chart */}
+          {/* Booking Trends Chart Placeholder */}
           <div className={`p-4 rounded-lg shadow-md ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
             <h3 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
               Booking Trends
             </h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={bookingTrendsData}>
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                <Line type="monotone" dataKey="bookings" stroke="#8884d8" />
-              </LineChart>
-            </ResponsiveContainer>
+            <div className="flex items-center justify-center h-[300px] bg-gray-100 rounded border border-dashed border-gray-300">
+              <div className="text-center">
+                <BarChart2 size={48} className="mx-auto mb-2 text-gray-400" />
+                <p className="text-gray-500">Chart will appear here after installing recharts</p>
+                <p className="text-sm text-gray-400 mt-2">Run: npm install recharts</p>
+              </div>
+            </div>
           </div>
 
           {/* Room Status */}
@@ -147,12 +139,10 @@ const AdminDashboard = () => {
                   <tr key={index} className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     <td>{room.roomNumber}</td>
                     <td>
-                      <span className={`
-                        px-2 py-1 rounded text-xs 
+                      <span className={`px-2 py-1 rounded text-xs 
                         ${room.status === 'Available' ? 'bg-green-100 text-green-800' :
                           room.status === 'Booked' ? 'bg-yellow-100 text-yellow-800' :
-                            'bg-red-100 text-red-800'}
-                      `}>
+                            'bg-red-100 text-red-800'}`}>
                         {room.status}
                       </span>
                     </td>

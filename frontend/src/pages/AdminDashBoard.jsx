@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState, Suspense, lazy } from 'react';
 // Use lazy loading for recharts to avoid initial load issues
 import {
@@ -11,6 +12,19 @@ import 'react-toastify/dist/ReactToastify.css';
 
 // Lazy load charts to avoid dependency resolution issues
 const ChartComponent = lazy(() => import('../components/ChartComponent'));
+=======
+import React, { useState } from 'react';
+import {
+  Calendar,
+  Users,
+  Bell,
+  Search,
+  Sun,
+  Moon,
+  BarChart2,
+  FileText
+} from 'lucide-react';
+>>>>>>> 4ca9aa7d960cc96e5fb7c6443898ad475c508021
 
 // Sample Data Structures
 const bookingTrendsData = [
@@ -28,6 +42,10 @@ const quickStatsData = [
   { label: 'Revenue', value: '$45,670', color: 'purple' }
 ];
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4ca9aa7d960cc96e5fb7c6443898ad475c508021
 const roomStatusData = [
   { roomNumber: '101', status: 'Available', type: 'Standard' },
   { roomNumber: '102', status: 'Booked', type: 'Deluxe' },
@@ -46,6 +64,7 @@ const AdminDashboard = () => {
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
+<<<<<<< HEAD
   };
 
   const handleNotificationClick = () => {
@@ -57,11 +76,17 @@ const AdminDashboard = () => {
       pauseOnHover: true,
       draggable: true,
     });
+=======
+
+>>>>>>> 4ca9aa7d960cc96e5fb7c6443898ad475c508021
   };
 
   return (
     <div className={`flex min-h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-100'}`}>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4ca9aa7d960cc96e5fb7c6443898ad475c508021
       {/* Main Content Area */}
       <div className="flex-1 p-6 overflow-auto">
         <h2 className="text-2xl font-bold text-blue-800 mb-6">Dashboard Overview</h2>
@@ -93,7 +118,11 @@ const AdminDashboard = () => {
             >
               {isDarkMode ? <Sun /> : <Moon />}
             </button>
+<<<<<<< HEAD
             <div className="relative cursor-pointer" onClick={handleNotificationClick}>
+=======
+            <div className="relative">
+>>>>>>> 4ca9aa7d960cc96e5fb7c6443898ad475c508021
               <Bell className={isDarkMode ? 'text-white' : 'text-gray-700'} />
               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1">
                 3
@@ -121,14 +150,28 @@ const AdminDashboard = () => {
 
         {/* Analytics & Room Status */}
         <div className="grid grid-cols-2 gap-6">
+<<<<<<< HEAD
           {/* Booking Trends Chart */}
+=======
+          {/* Booking Trends Chart Placeholder */}
+>>>>>>> 4ca9aa7d960cc96e5fb7c6443898ad475c508021
           <div className={`p-4 rounded-lg shadow-md ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
             <h3 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
               Booking Trends
             </h3>
+<<<<<<< HEAD
             <Suspense fallback={<div className="h-[300px] flex items-center justify-center">Loading chart...</div>}>
               <ChartComponent data={bookingTrendsData} isDarkMode={isDarkMode} />
             </Suspense>
+=======
+            <div className="flex items-center justify-center h-[300px] bg-gray-100 rounded border border-dashed border-gray-300">
+              <div className="text-center">
+                <BarChart2 size={48} className="mx-auto mb-2 text-gray-400" />
+                <p className="text-gray-500">Chart will appear here after installing recharts</p>
+                <p className="text-sm text-gray-400 mt-2">Run: npm install recharts</p>
+              </div>
+            </div>
+>>>>>>> 4ca9aa7d960cc96e5fb7c6443898ad475c508021
           </div>
 
           {/* Room Status */}

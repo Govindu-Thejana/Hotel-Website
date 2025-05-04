@@ -429,6 +429,7 @@ export const getAvailableRooms = async (req, res) => {
 };
 
 
+
 // Get booking by confirmation code
 export const getBookingByConfirmationCode = async (req, res) => {
     try {
@@ -470,10 +471,12 @@ export const getBookingByConfirmationCode = async (req, res) => {
         console.error('Error retrieving booking by confirmation code:', error);
         res.status(500).json({
             message: 'Error retrieving booking',
+
             error: error.message
         });
     }
 };
+
 
 // Cancel booking by ID
 export const cancelBookingById = async (req, res) => {
@@ -591,3 +594,4 @@ export const updateBookingStatus = async (req, res) => {
         });
     }
 };
+

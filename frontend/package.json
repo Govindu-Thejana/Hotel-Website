@@ -1,5 +1,6 @@
 {
   "name": "frontend",
+  "authors":"govindu,yasiru,nimesh,pasan",
   "private": true,
   "version": "0.0.0",
   "type": "module",

@@ -1,0 +1,16 @@
+.whatsapp-float {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 50;
+  }
+  
+  .whatsapp-icon {
+    width: 48px;
+    height: 48px;
+    transition: transform 0.2s;
+  }
+  
+  .whatsapp-icon:hover {
+    transform: scale(1.1);
+  }

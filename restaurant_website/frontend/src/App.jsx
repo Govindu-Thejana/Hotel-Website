@@ -8,6 +8,7 @@ import PlaceOrder from './pages/placeOrder/PlaceOrder';
 import Footer from './components/footer/Footer';
 import LoginPopup from './components/LoginPopup/LoginPopup';
 import { ToastContainer, toast } from 'react-toastify';
+import WhatsAppFloat from './components/WhatsappFloat/WhatsappFloat';
 
 const App = () => {
   const [showLogin, setShowLogin] = React.useState(false);
@@ -24,6 +25,7 @@ const App = () => {
           <Route path='/order' element={<PlaceOrder />} />
         </Routes>
       </div>
+      <WhatsAppFloat />
       <Footer />
     </>
   );

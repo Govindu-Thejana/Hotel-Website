@@ -34,7 +34,7 @@ import AdminGalleryView from "./components/gallery/AdminGalleryView";
 import AddImages from "./components/gallery/AddImages"
 import MyBookings from "./pages/bookingProcess/MyBookings";
 import { useEffect } from "react";
-import { Navigate } from 'react-router-dom';
+
 
 const MainLayout = ({ children }) => (
   <div>

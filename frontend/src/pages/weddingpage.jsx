@@ -9,8 +9,8 @@ import SearchBar from "../components/roomBookingSearchBar";
 
 const WeddingPage = () => {
   return (
-    <div className="bg-gray-100">
-      {/* Hero Section */}
+    <div className="bg-white">
+      {/* Hero Section - Enhanced with better overlay */}
       <section className="relative">
         {/* Background image */}
         <img
@@ -19,68 +19,92 @@ const WeddingPage = () => {
           className="w-full h-screen object-cover"
         />
 
-        {/* Overlay with logo */}
-        <div className="absolute inset-0 bg-black bg-opacity-10 flex items-center justify-center">
+        {/* Enhanced overlay with gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/40 flex flex-col items-center justify-center">
           <div className="text-center flex flex-col items-center justify-center">
             <img
               alt="Suneragira Hotel"
               src="/images/logo.png"
-              className="h-24 md:h-40 lg:h-48 w-auto px-5" // Responsive logo size
+              className="h-24 md:h-40 lg:h-48 w-auto px-5"
             />
+            <h1 className="text-white font-serif italic text-2xl md:text-3xl lg:text-4xl mt-6 max-w-3xl mx-auto px-4">
+              Create Your Perfect Wedding Day at Hotel Suneragira
+            </h1>
           </div>
         </div>
 
         {/* Search Bar at the bottom */}
-        <div className="absolute bottom-0 left-0 right-0 bg-opacity-80 px-10">
+        <div className="absolute bottom-0 left-0 right-0 bg-opacity-80 px-4 sm:px-10">
           <SearchBar />
         </div>
       </section>
 
-      {/* Our Story Section */}
+      {/* Main content wrapper */}
       <section className="container mx-auto py-16 px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-serif mb-2 text-pcolor">OUR STORY</h2>
-          <p className="mt-4 text-gray-600 max-w-7xl mx-auto text-lg leading-relaxed">
+        {/* Our Story Section - Enhanced */}
+        <div className="text-center mb-16">
+          <h2 className="text-sm uppercase text-scolor italic tracking-widest mb-2">
+            Experience Excellence
+          </h2>
+          <h2 className="text-4xl font-serif mb-4 text-gray-800">OUR STORY</h2>
+          <div className="w-24 h-1 bg-scolor mx-auto mb-8"></div>
+          <p className="text-gray-600 max-w-4xl mx-auto text-lg leading-relaxed">
             Your perfect event starts here. We are the leading event and wedding
             planner in Sri Lanka, or wherever else your special day is taking
             place. Our team designs, plans, and creates both budget-friendly and
-            luxurious weddings and events for clients. We’ve honed our skills to
+            luxurious weddings and events for clients. We've honed our skills to
             offer a range of services to accommodate the diversity of our
             clients. We are the team and wedding planner that people trust with
             their most exclusive affairs, offering comprehensive planning.
           </p>
         </div>
 
-        {/* Dream Day Section */}
-        <section>
-          <div className="container py-20 mx-auto p-4">
-            <div className="flex flex-col md:flex-row backdrop-blur-sm shadow-lg overflow-hidden rounded-lg">
-              {/* Image section */}
-              <div className="md:w-2/3">
-                <img
-                  src="https://banuphotography.com/wp-content/uploads/2021/06/mannar-wedding-77.jpg"
-                  alt="Luxurious hotel room"
-                  className="w-full h-full object-cover transform transition-transform duration-500 hover:scale-105" // Added hover effect
-                />
+        {/* Dream Day Section - Enhanced */}
+        <section className="mb-20">
+          <div className="flex flex-col md:flex-row shadow-xl overflow-hidden rounded-xl border border-gray-100">
+            {/* Image section with improved styling */}
+            <div className="md:w-2/3 relative overflow-hidden">
+              <img
+                src="https://banuphotography.com/wp-content/uploads/2021/06/mannar-wedding-77.jpg"
+                alt="Luxurious wedding venue"
+                className="w-full h-full object-cover transform transition-transform duration-500 hover:scale-105"
+              />
+              <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm py-1 px-3 rounded-full shadow-md">
+                <span className="text-xs font-medium text-scolor">
+                  Featured Venue
+                </span>
               </div>
+            </div>
 
-              {/* Text section */}
-              <div className="md:w-1/3 p-8 flex flex-col justify-center bg-white">
-                <h2 className="text-3xl font-serif mb-4 text-gray-800">
-                  WE MAKE YOUR DREAM DAY COME TRUE
-                </h2>
-                <p className="text-gray-600 mb-6 text-lg leading-relaxed">
-                  At The Hotel Nirvana in our region, Hotel Somewhere offers a
-                  variety of accommodation options to cater to both leisure
-                  travelers and business professionals alike. Whether you seek
-                  the comforts of a well-appointed deluxe room or the grandeur
-                  of an executive suite, our hotel provides a range of luxurious
-                  living spaces to ensure a memorable stay.
-                </p>
-                <button className="bg-scolor text-white py-3 px-6 rounded-md hover:bg-pcolor transition duration-300 transform hover:scale-105">
-                  FIND OUT MORE
-                </button>
-              </div>
+            {/* Text section with improved styling */}
+            <div className="md:w-1/3 p-6 md:p-10 flex flex-col justify-center bg-white">
+              <h2 className="text-3xl font-serif mb-6 text-gray-800">
+                WE MAKE YOUR DREAM DAY COME TRUE
+              </h2>
+              <div className="w-16 h-1 bg-scolor mb-6"></div>
+              <p className="text-gray-600 mb-8 text-base md:text-lg leading-relaxed">
+                At Hotel Suneragira, we offer a variety of wedding options to
+                cater to both intimate celebrations and grand affairs. Whether
+                you seek the comforts of a classic ceremony or the grandeur of
+                an executive reception, our hotel provides a range of luxurious
+                settings to ensure a memorable celebration.
+              </p>
+              <button className="bg-scolor text-white py-3 px-6 rounded-md hover:bg-pcolor transition duration-300 transform hover:shadow-lg flex items-center justify-center gap-2">
+                <span>DISCOVER MORE</span>
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </section>
@@ -103,106 +127,187 @@ const WeddingPage = () => {
         {/* Packages Section */}
         <WeddingPackages />
 
-        {/* Planners Section */}
-        <section className="container mx-auto py-16">
-          <div className="text-center mb-12">
-            <h2 className="text-sm uppercase text-scolor italic tracking-widest">
+        {/* Planners Section - Enhanced */}
+        <section className="py-20">
+          <div className="text-center mb-16">
+            <h2 className="text-sm uppercase text-scolor italic tracking-widest mb-2">
               OUR TEAM
             </h2>
-            <h2 className="text-4xl font-serif">Meet Our Planners</h2>
+            <h2 className="text-4xl font-serif mb-4">
+              Meet Our Wedding Specialists
+            </h2>
+            <div className="w-24 h-1 bg-scolor mx-auto mb-8"></div>
+            <p className="text-gray-600 max-w-3xl mx-auto">
+              Our expert wedding planners bring years of experience and a
+              passion for perfection to every celebration they organize.
+            </p>
           </div>
 
           <WeddingPlanners />
         </section>
 
-        {/* Past Weddings Section */}
-        <section className="container mx-auto py-16 px-4 md:px-0">
-          <div className="text-center mb-12">
-            <h2 className="text-sm uppercase text-scolor italic tracking-widest">
+        {/* Past Weddings Section - Enhanced */}
+        <section className="py-20">
+          <div className="text-center mb-16">
+            <h2 className="text-sm uppercase text-scolor italic tracking-widest mb-2">
               PAST WEDDINGS
             </h2>
-            <h2 className="text-4xl font-serif">Visit Our Gallery</h2>
+            <h2 className="text-4xl font-serif mb-4">Visit Our Gallery</h2>
+            <div className="w-24 h-1 bg-scolor mx-auto mb-8"></div>
+            <p className="text-gray-600 max-w-3xl mx-auto">
+              Browse our collection of beautiful weddings that showcase the
+              artistry and attention to detail that define Hotel Suneragira's
+              celebrations.
+            </p>
           </div>
 
           <PastWeddings />
 
-          <div className="text-center mt-12">
+          <div className="text-center mt-16">
             <a
               href="/gallery"
-              className="bg-scolor text-white py-3 px-6 rounded-md shadow-lg hover:bg-pcolor transition duration-300 transform hover:scale-105"
+              className="bg-scolor text-white py-3 px-8 rounded-md shadow-lg hover:bg-pcolor transition duration-300 transform hover:shadow-xl flex items-center justify-center gap-2 mx-auto inline-flex"
             >
-              View Full Gallery
+              <span>View Full Gallery</span>
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
+              </svg>
             </a>
           </div>
         </section>
 
-        {/* Customer Reviews Section */}
-        <section className="bg-[#f8f3ed] py-16">
+        {/* Customer Reviews Section - Enhanced */}
+        <section className="bg-white py-20 px-4 border-t border-b border-gray-100">
           <div className="container mx-auto text-center">
-            <h3 className="text-sm uppercase tracking-widest text-[#d7bfa3] mb-2">
-              Our Customer Review
-            </h3>
-            <h2 className="text-4xl font-serif text-[#333] mb-6">
-              What Our Client Says
+            <h2 className="text-sm uppercase text-scolor italic tracking-widest mb-2">
+              TESTIMONIALS
             </h2>
+            <h2 className="text-4xl font-serif mb-4">What Our Client Says</h2>
+            <div className="w-24 h-1 bg-scolor mx-auto mb-8"></div>
 
-            <div className="flex justify-center mb-4">
-              <div className="flex">
-                {[...Array(5)].map((_, i) => (
-                  <FaStar key={i} className="text-yellow-400 w-6 h-6" />
-                ))}
+            <div className="max-w-4xl mx-auto bg-gray-50 p-10 rounded-xl shadow-lg relative mt-16 mb-16">
+              <div className="absolute -top-10 left-1/2 transform -translate-x-1/2">
+                <div className="w-20 h-20 rounded-full border-4 border-white overflow-hidden shadow-lg">
+                  <img
+                    src="https://img.freepik.com/free-photo/portrait-masculinity-portrait-handsome-young-bearded-man-while-standing-against-grey-wall_231208-7770.jpg?t=st=1727781593~exp=1727785193~hmac=f8e1894e2f82c5f0bdde25c0da774039ea57924d831c6fca9cbcdc92d108f68d&w=360"
+                    alt="Jackson Dean"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-center mb-6 mt-6">
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <FaStar
+                      key={i}
+                      className="text-yellow-400 w-5 h-5 mx-0.5"
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <p className="text-gray-600 text-lg font-light italic mb-8 relative">
+                <span className="text-4xl text-scolor/20 absolute -top-4 -left-2">
+                  "
+                </span>
+                The team made my wedding day absolutely magical. Their attention
+                to detail and professionalism were unmatched!
+                <span className="text-4xl text-scolor/20 absolute -bottom-8 -right-2">
+                  "
+                </span>
+              </p>
+
+              <h4 className="text-xl font-medium text-gray-800">
+                Jackson Dean
+              </h4>
+              <span className="text-sm text-scolor">Wedding Client</span>
+
+              {/* Elegant Dots for Slide Indicators */}
+              <div className="mt-8 flex justify-center gap-2">
+                <span className="block w-8 h-1 rounded-full bg-scolor"></span>
+                <span className="block w-2 h-1 rounded-full bg-gray-300"></span>
+                <span className="block w-2 h-1 rounded-full bg-gray-300"></span>
               </div>
             </div>
-
-            <p className="text-gray-600 max-w-2xl mx-auto italic mb-12">
-              "The team made my wedding day absolutely magical. Their attention
-              to detail and professionalism were unmatched!"
-            </p>
-
-            {/* Client Info */}
-            <div className="flex justify-center items-center">
-              <img
-                src="https://img.freepik.com/free-photo/portrait-masculinity-portrait-handsome-young-bearded-man-while-standing-against-grey-wall_231208-7770.jpg?t=st=1727781593~exp=1727785193~hmac=f8e1894e2f82c5f0bdde25c0da774039ea57924d831c6fca9cbcdc92d108f68d&w=360"
-                alt="Jackson Dean"
-                className="w-12 h-12 rounded-full border-2 border-gray-300"
-              />
-              <div className="ml-4">
-                <h4 className="text-xl font-medium text-gray-800">
-                  Jackson Dean
-                </h4>
-                <span className="text-sm text-gray-500">Guest</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Dots for Slide Indicators */}
-          <div className="mt-8 flex justify-center space-x-2">
-            <span className="block w-2 h-2 rounded-full bg-gray-400"></span>
-            <span className="block w-2 h-2 rounded-full bg-gray-600"></span>
-            <span className="block w-2 h-2 rounded-full bg-gray-400"></span>
           </div>
         </section>
 
-        {/* Appointment Form Section */}
-        <section className="bg-white py-16">
-          <div className="container mx-auto text-center">
-            <AppointmentForm />
+        {/* Appointment Form Section - Enhanced and Highlighted */}
+        <section className="bg-gradient-to-b from-white via-gray-50 to-white py-20 relative">
+          {/* Decorative elements */}
+          <div className="absolute top-0 right-0 w-40 h-40 bg-scolor/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+          <div className="absolute bottom-0 left-0 w-24 h-24 bg-pcolor/5 rounded-full translate-y-1/3 -translate-x-1/3"></div>
+
+          <div className="container mx-auto text-center mb-12 relative">
+            <div className="inline-block bg-scolor text-white px-6 py-2 rounded-full mb-6 shadow-md">
+              <h2 className="text-sm uppercase tracking-widest font-medium">
+                LIMITED AVAILABILITY
+              </h2>
+            </div>
+
+            <h2 className="text-4xl font-serif mb-4 text-gray-800">
+              Book Your Wedding Consultation
+            </h2>
+            <div className="w-24 h-1 bg-scolor mx-auto mb-8"></div>
+            <p className="text-gray-600 max-w-3xl mx-auto mb-10">
+              Secure your special day by scheduling a personalized consultation
+              with our expert wedding planners. Begin your journey to a perfect
+              celebration today.
+            </p>
+
+            {/* Highlight border */}
+            <div className="max-w-5xl mx-auto border-2 border-scolor/20 p-1 rounded-2xl shadow-lg">
+              <div className="bg-white p-6 md:p-10 rounded-xl relative">
+                {/* Corner decorations */}
+                <div className="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-scolor/40 rounded-tl-lg"></div>
+                <div className="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-scolor/40 rounded-br-lg"></div>
+
+                <AppointmentForm />
+
+                {/* Added call-to-action */}
+                <div className="mt-8 pt-6 border-t border-gray-100 text-center">
+                  <p className="text-gray-500 mb-2">
+                    Prefer to speak with someone directly?
+                  </p>
+                  <a
+                    href="tel:+1234567890"
+                    className="text-lg font-medium text-scolor hover:underline"
+                  >
+                    Call us: +1 (234) 567-890
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* Stress Handling Section */}
-        <section className="bg-gray-100 py-16">
+        {/* Stress Handling Section - Enhanced */}
+        <section className="bg-gray-50 py-20">
           <div className="container mx-auto text-center">
-            <h2 className="text-4xl font-serif mb-6">
-              Handling Stress for Event Success
+            <h2 className="text-sm uppercase text-scolor italic tracking-widest mb-2">
+              STRESS-FREE PLANNING
             </h2>
-            <p className="text-lg text-scolor-700 mb-12">
-              Planning an event can be stressful, but we're here to make the
-              process as smooth and stress-free as possible.
+            <h2 className="text-4xl font-serif mb-4">
+              Creating Your Perfect Day
+            </h2>
+            <div className="w-24 h-1 bg-scolor mx-auto mb-8"></div>
+            <p className="text-gray-600 max-w-3xl mx-auto mb-16">
+              Planning a wedding can be overwhelming, but our experienced team
+              is here to make the process enjoyable and stress-free.
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-              {/* Stress Handling Tips */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
               {[
                 {
                   title: "Professional Coordination",
@@ -247,91 +352,108 @@ const WeddingPage = () => {
               ))}
             </div>
 
-            {/* Contact Information */}
-            <div className="mt-12">
-              <h3 className="text-2xl font-semibold text-scolor-600 mb-4">
-                Get in Touch
+            {/* Contact Information - Enhanced */}
+            <div className="mt-20 bg-white p-10 rounded-xl shadow-lg max-w-4xl mx-auto">
+              <h3 className="text-2xl font-serif text-gray-800 mb-6">
+                Connect With Our Wedding Team
               </h3>
-              <div className="flex flex-col items-center">
-                <p className="text-gray-600 mb-2 flex items-center">
-                  <FaPhoneAlt className="text-scolor-600 mr-2" />
-                  Phone:{" "}
-                  <a
-                    href="tel:+1234567890"
-                    className="text-scolor-600 font-semibold hover:underline"
-                  >
-                    +1 (234) 567-890
-                  </a>
-                </p>
-                <p className="text-gray-600 mb-2 flex items-center">
-                  <FaEnvelope className="text-scolor-600 mr-2" />
-                  Email:{" "}
-                  <a
-                    href="mailto:info@example.com"
-                    className="text-scolor-600 font-semibold hover:underline"
-                  >
-                    info@example.com
-                  </a>
-                </p>
+              <div className="flex flex-col md:flex-row items-center justify-center gap-8">
+                <div className="bg-gray-50 p-6 rounded-lg flex items-center gap-4">
+                  <div className="bg-scolor/10 p-3 rounded-full">
+                    <FaPhoneAlt className="text-scolor w-5 h-5" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-sm text-gray-500 mb-1">
+                      Call Us Directly
+                    </p>
+                    <a
+                      href="tel:+1234567890"
+                      className="text-lg font-medium text-gray-800 hover:text-scolor"
+                    >
+                      +1 (234) 567-890
+                    </a>
+                  </div>
+                </div>
+                <div className="bg-gray-50 p-6 rounded-lg flex items-center gap-4">
+                  <div className="bg-scolor/10 p-3 rounded-full">
+                    <FaEnvelope className="text-scolor w-5 h-5" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-sm text-gray-500 mb-1">Email Us</p>
+                    <a
+                      href="mailto:weddings@suneragira.com"
+                      className="text-lg font-medium text-gray-800 hover:text-scolor"
+                    >
+                      weddings@suneragira.com
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Testimonials Section */}
-        <section className="bg-white py-16 px-4 md:px-8 lg:px-16">
+        {/* Testimonials Section - Updated to match the above style */}
+        <section className="bg-white py-20">
           <div className="container mx-auto text-center">
-            <h2 className="text-4xl font-serif mb-12">What Our Clients Say</h2>
+            <h2 className="text-sm uppercase text-scolor italic tracking-widest mb-2">
+              CLIENT EXPERIENCES
+            </h2>
+            <h2 className="text-4xl font-serif mb-4">What Our Clients Say</h2>
+            <div className="w-24 h-1 bg-scolor mx-auto mb-12"></div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[
-                {
-                  name: "John Doe",
-                  image:
-                    "https://img.freepik.com/free-photo/people-smiling-men-handsome-cheerful_1187-6057.jpg?t=st=1727781311~exp=1727784911~hmac=18cc1c8bc5fd0766e4fd635bd6ccc962b5af6821def69ebeface4f0925209ff7&w=740",
-                  review:
-                    "The team made my event stress-free and an absolute success. Their attention to detail and professionalism were top-notch!",
-                  rating: 4,
-                },
-                {
-                  name: "Jane Smith",
-                  image:
-                    "https://img.freepik.com/free-photo/confident-young-man-walking-european-city-street_158595-4692.jpg?t=st=1727781396~exp=1727784996~hmac=fb68aaa6999be81a11e88663e39980c4768fe96d91a0642a4212695f6b8c0714&w=360",
-                  review:
-                    "From start to finish, the coordination was flawless. I couldn't have asked for a better event planning experience.",
-                  rating: 5,
-                },
-                {
-                  name: "Michael Lee",
-                  image:
-                    "https://img.freepik.com/free-photo/happy-handsome-brutal-bearder-man-wearing-warm-red-winter-trendy-fleece-hoodie_343596-2716.jpg?t=st=1727781422~exp=1727785022~hmac=f3c933072ecc685c5a7c10e80dbc3ad66bd2dd946bacb7ffc9df8d672e7011b2&w=996",
-                  review:
-                    "The team was exceptional! Their packages were perfect for my needs and they delivered beyond my expectations.",
-                  rating: 5,
-                },
-              ].map((testimonial, index) => (
-                <div
-                  key={index}
-                  className="bg-gray-50 p-8 rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105"
-                >
-                  <div className="mb-4">
+            <div className="max-w-4xl mx-auto">
+              {/* Featured testimonial in spotlight style */}
+              <div className="bg-gray-50 p-10 rounded-xl shadow-lg relative mb-16">
+                <div className="absolute -top-10 left-1/2 transform -translate-x-1/2">
+                  <div className="w-20 h-20 rounded-full border-4 border-white overflow-hidden shadow-lg">
                     <img
-                      src={testimonial.image}
-                      alt={testimonial.name}
-                      className="w-16 h-16 rounded-full mx-auto"
+                      src="https://img.freepik.com/free-photo/confident-young-man-walking-european-city-street_158595-4692.jpg?t=st=1727781396~exp=1727784996~hmac=fb68aaa6999be81a11e88663e39980c4768fe96d91a0642a4212695f6b8c0714&w=360"
+                      alt="Jane Smith"
+                      className="w-full h-full object-cover"
                     />
                   </div>
-                  <h3 className="text-xl font-semibold text-scolor-600 mb-2">
-                    {testimonial.name}
-                  </h3>
-                  <p className="text-gray-600 mb-4">{testimonial.review}</p>
-                  <div className="text-yellow-400">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <FaStar key={i} className="inline-block w-5 h-5" />
+                </div>
+
+                <div className="flex justify-center mb-6 mt-6">
+                  <div className="flex">
+                    {[...Array(5)].map((_, i) => (
+                      <FaStar
+                        key={i}
+                        className="text-yellow-400 w-5 h-5 mx-0.5"
+                      />
                     ))}
                   </div>
                 </div>
-              ))}
+
+                <p className="text-gray-600 text-lg font-light italic mb-8 relative">
+                  <span className="text-4xl text-scolor/20 absolute -top-4 -left-2">
+                    "
+                  </span>
+                  From start to finish, the coordination was flawless. I
+                  couldn't have asked for a better event planning experience.
+                  <span className="text-4xl text-scolor/20 absolute -bottom-8 -right-2">
+                    "
+                  </span>
+                </p>
+
+                <h4 className="text-xl font-medium text-gray-800">
+                  Jane Smith
+                </h4>
+                <span className="text-sm text-scolor">Wedding Client</span>
+
+                {/* Elegant Dots for Slide Indicators */}
+                <div className="mt-8 flex justify-center gap-2">
+                  <span className="block w-2 h-1 rounded-full bg-gray-300"></span>
+                  <span className="block w-8 h-1 rounded-full bg-scolor"></span>
+                  <span className="block w-2 h-1 rounded-full bg-gray-300"></span>
+                </div>
+              </div>
+
+              {/* Hidden testimonials (you could add a carousel functionality later) */}
+              <div className="hidden">
+                {/* ...existing code with the array mapping... */}
+              </div>
             </div>
           </div>
         </section>

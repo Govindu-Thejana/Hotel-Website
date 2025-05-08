@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import {
   Calendar,
   Users,
@@ -8,41 +9,82 @@ import {
   Moon,
   BarChart2,
   FileText,
+  Clock,
 } from 'lucide-react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// Sample Data Structures
-const bookingTrendsData = [
-  { month: 'Jan', bookings: 40 },
-  { month: 'Feb', bookings: 30 },
-  { month: 'Mar', bookings: 50 },
-  { month: 'Apr', bookings: 45 },
-  { month: 'May', bookings: 60 },
-];
-
-const quickStatsData = [
-  { label: 'Total Bookings', value: '452', color: 'blue' },
-  { label: 'Rooms Occupied', value: '87', color: 'green' },
-  { label: 'Pending Requests', value: '12', color: 'yellow' },
-  { label: 'Revenue', value: '$45,670', color: 'purple' },
-];
-
-const roomStatusData = [
-  { roomNumber: '101', status: 'Available', type: 'Standard' },
-  { roomNumber: '102', status: 'Booked', type: 'Deluxe' },
-  { roomNumber: '103', status: 'Maintenance', type: 'Suite' },
-];
-
-const notificationsData = [
-  { id: 1, message: 'New booking for Room 205', time: '2m ago' },
-  { id: 2, message: 'Maintenance required for Room 103', time: '1h ago' },
-  { id: 3, message: 'Upcoming event: Wedding Booking', time: '3h ago' },
-];
-
 const AdminDashboard = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [bookings, setBookings] = useState([]);
+  const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [appointmentsLoading, setAppointmentsLoading] = useState(true);
+
+  // Format date function
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
+
+  // Fetch bookings data
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        const response = await axios.get('http://localhost:5555/bookedRoom/bookings');
+        setBookings(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching bookings:', error);
+        toast.error('Failed to fetch bookings data');
+        setLoading(false);
+      }
+    };
+
+    const fetchAppointments = async () => {
+      try {
+        const response = await axios.get('http://localhost:5555/appointments/');
+        setAppointments(response.data);
+        setAppointmentsLoading(false);
+      } catch (error) {
+        console.error('Error fetching appointments:', error);
+        toast.error('Failed to fetch appointments data');
+        setAppointmentsLoading(false);
+      }
+    };
+
+    fetchBookings();
+    fetchAppointments();
+  }, []);
+
+  // Sample Data Structure for booking trends
+  const bookingTrendsData = [
+    { month: 'Jan', bookings: 40 },
+    { month: 'Feb', bookings: 30 },
+    { month: 'Mar', bookings: 50 },
+    { month: 'Apr', bookings: 45 },
+    { month: 'May', bookings: 60 },
+  ];
+
+  // Dynamic quickStatsData using only the Total Bookings stat
+  const quickStatsData = [
+    {
+      label: 'Total Bookings',
+      value: loading ? '...' : bookings.length.toString(),
+      color: 'blue'
+    }
+  ];
+
+  const notificationsData = [
+    { id: 1, message: 'New booking for Room 205', time: '2m ago' },
+    { id: 2, message: 'Maintenance required for Room 103', time: '1h ago' },
+    { id: 3, message: 'Upcoming event: Wedding Booking', time: '3h ago' },
+  ];
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
@@ -59,11 +101,24 @@ const AdminDashboard = () => {
     });
   };
 
+  // Helper function to get status color class
+  const getStatusColor = (status) => {
+    switch (status.toLowerCase()) {
+      case 'confirmed':
+        return 'bg-green-100 text-green-800';
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'cancelled':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
   return (
     <div
-      className={`flex min-h-screen ${
-        isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-100'
-      }`}
+      className={`flex min-h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-100'
+        }`}
     >
       {/* Main Content Area */}
       <div className="flex-1 p-6 overflow-auto">
@@ -79,11 +134,10 @@ const AdminDashboard = () => {
               placeholder="Search bookings, rooms, customers..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className={`w-full p-2 pl-10 rounded-lg ${
-                isDarkMode
-                  ? 'bg-gray-800 text-white border-gray-700'
-                  : 'bg-white border-gray-200'
-              }`}
+              className={`w-full p-2 pl-10 rounded-lg ${isDarkMode
+                ? 'bg-gray-800 text-white border-gray-700'
+                : 'bg-white border-gray-200'
+                }`}
             />
             <Search
               className="absolute left-3 top-3 text-gray-400"
@@ -95,11 +149,10 @@ const AdminDashboard = () => {
           <div className="flex items-center space-x-4">
             <button
               onClick={toggleDarkMode}
-              className={`p-2 rounded-full ${
-                isDarkMode
-                  ? 'bg-gray-700 text-yellow-400'
-                  : 'bg-gray-200 text-gray-700'
-              }`}
+              className={`p-2 rounded-full ${isDarkMode
+                ? 'bg-gray-700 text-yellow-400'
+                : 'bg-gray-200 text-gray-700'
+                }`}
             >
               {isDarkMode ? <Sun /> : <Moon />}
             </button>
@@ -116,28 +169,17 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Quick Stats */}
-        <div className="grid grid-cols-4 gap-4 mb-6">
+        {/* Quick Stats - Now with only Total Bookings */}
+        <div className="mb-6">
           {quickStatsData.map((stat, index) => (
             <div
               key={index}
-              className={`bg-white p-4 rounded-lg shadow-md border-l-4 ${
-                stat.color === 'blue'
-                  ? 'border-blue-500'
-                  : stat.color === 'green'
-                  ? 'border-green-500'
-                  : stat.color === 'yellow'
-                  ? 'border-yellow-500'
-                  : stat.color === 'purple'
-                  ? 'border-purple-500'
-                  : 'border-gray-500'
-              } ${isDarkMode ? 'bg-gray-800 text-white' : ''}`}
+              className={`bg-white p-4 rounded-lg shadow-md border-l-4 ${stat.color === 'blue' ? 'border-blue-500' : 'border-gray-500'
+                } ${isDarkMode ? 'bg-gray-800 text-white' : ''}`}
             >
               <h3 className="text-gray-500 text-sm">{stat.label}</h3>
               <p
-                className={`text-2xl font-bold ${
-                  isDarkMode ? 'text-white' : 'text-gray-800'
-                }`}
+                className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}
               >
                 {stat.value}
               </p>
@@ -145,17 +187,15 @@ const AdminDashboard = () => {
           ))}
         </div>
 
-        {/* Analytics & Room Status */}
+        {/* Analytics & Appointments */}
         <div className="grid grid-cols-2 gap-6">
           <div
-            className={`p-4 rounded-lg shadow-md ${
-              isDarkMode ? 'bg-gray-800' : 'bg-white'
-            }`}
+            className={`p-4 rounded-lg shadow-md ${isDarkMode ? 'bg-gray-800' : 'bg-white'
+              }`}
           >
             <h3
-              className={`text-lg font-semibold mb-4 ${
-                isDarkMode ? 'text-white' : 'text-gray-800'
-              }`}
+              className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'
+                }`}
             >
               Booking Trends
             </h3>
@@ -176,83 +216,100 @@ const AdminDashboard = () => {
             </div>
           </div>
 
-          {/* Room Status */}
+          {/* Appointments Section - Replacing Room Status */}
           <div
-            className={`p-4 rounded-lg shadow-md ${
-              isDarkMode ? 'bg-gray-800' : 'bg-white'
-            }`}
+            className={`p-4 rounded-lg shadow-md ${isDarkMode ? 'bg-gray-800' : 'bg-white'
+              }`}
           >
             <h3
-              className={`text-lg font-semibold mb-4 ${
-                isDarkMode ? 'text-white' : 'text-gray-800'
-              }`}
+              className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'
+                }`}
             >
-              Room Status
+              Recent Appointments
             </h3>
-            <table className="w-full">
-              <thead>
-                <tr className="text-left border-b">
-                  <th>Room</th>
-                  <th>Status</th>
-                  <th>Type</th>
-                </tr>
-              </thead>
-              <tbody>
-                {roomStatusData.map((room, index) => (
-                  <tr
-                    key={index}
-                    className={`${
-                      isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                    }`}
-                  >
-                    <td>{room.roomNumber}</td>
-                    <td>
-                      <span
-                        className={`px-2 py-1 rounded text-xs ${
-                          room.status === 'Available'
-                            ? 'bg-green-100 text-green-800'
-                            : room.status === 'Booked'
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : 'bg-red-100 text-red-800'
-                        }`}
+            {appointmentsLoading ? (
+              <div className="flex justify-center items-center h-64">
+                <p className="text-gray-500">Loading appointments...</p>
+              </div>
+            ) : appointments.length === 0 ? (
+              <div className="text-center py-8">
+                <Calendar className="mx-auto mb-3 text-gray-400" size={40} />
+                <p className="text-gray-500">No appointments found</p>
+              </div>
+            ) : (
+              <div className="overflow-y-auto max-h-[300px]">
+                <table className="w-full">
+                  <thead className="sticky top-0 bg-white dark:bg-gray-800">
+                    <tr className="text-left border-b">
+                      <th className="pb-2">Name</th>
+                      <th className="pb-2">Date & Time</th>
+                      <th className="pb-2">Reason</th>
+                      <th className="pb-2">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {appointments.slice(0, 5).map((appointment, index) => (
+                      <tr
+                        key={appointment._id}
+                        className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'} 
+                        ${index !== appointments.length - 1 ? 'border-b' : ''}`}
                       >
-                        {room.status}
-                      </span>
-                    </td>
-                    <td>{room.type}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                        <td className="py-3">{appointment.name}</td>
+                        <td className="py-3">
+                          <div className="flex items-center">
+                            <span className="mr-1">{formatDate(appointment.date)}</span>
+                            <Clock size={14} className="mr-1 text-gray-400" />
+                            <span>{appointment.time}</span>
+                          </div>
+                        </td>
+                        <td className="py-3">{appointment.reason}</td>
+                        <td className="py-3">
+                          <span
+                            className={`px-2 py-1 rounded text-xs ${getStatusColor(appointment.status)}`}
+                          >
+                            {appointment.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {appointments.length > 5 && (
+                  <div className="text-center mt-4">
+                    <button
+                      className={`text-blue-500 hover:text-blue-700 text-sm font-medium ${isDarkMode ? 'text-blue-400 hover:text-blue-300' : ''}`}
+                    >
+                      View all {appointments.length} appointments
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
         {/* Notifications */}
         <div
-          className={`mt-6 p-4 rounded-lg shadow-md ${
-            isDarkMode ? 'bg-gray-800' : 'bg-white'
-          }`}
+          className={`mt-6 p-4 rounded-lg shadow-md ${isDarkMode ? 'bg-gray-800' : 'bg-white'
+            }`}
         >
           <h3
-            className={`text-lg font-semibold mb-4 ${
-              isDarkMode ? 'text-white' : 'text-gray-800'
-            }`}
+            className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'
+              }`}
           >
             Notifications
           </h3>
           {notificationsData.map((notification) => (
             <div
               key={notification.id}
-              className={`p-3 border-b last:border-b-0 ${
-                isDarkMode
-                  ? 'border-gray-700 hover:bg-gray-700'
-                  : 'hover:bg-gray-100'
-              }`}
+              className={`p-3 border-b last:border-b-0 ${isDarkMode
+                ? 'border-gray-700 hover:bg-gray-700'
+                : 'hover:bg-gray-100'
+                }`}
             >
               <p
-                className={`${
-                  isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                }`}
+                className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                  }`}
               >
                 {notification.message}
               </p>

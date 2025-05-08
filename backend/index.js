@@ -7,6 +7,7 @@ import weddingRoute from "./routes/weddingRoute.js";
 import appointments from './routes/appointments.js';
 import paypalRoutes from './routes/paypalRoutes.js';
 import stripeRoutes from './routes/stripeRoutes.js';
+import userRoutes from './routes/auth.js'
 
 import galleryRoute from './routes/galleryRoute.js';
 
@@ -55,7 +56,7 @@ app.use('/wedding', weddingRoute);
 app.use('/paypal', paypalRoutes);
 
 app.use("/checkout", stripeRoutes); // Use the handler from the stripe module
-
+app.use('/users', userRoutes);
 
 // Connect to MongoDB and start the server
 mongoose

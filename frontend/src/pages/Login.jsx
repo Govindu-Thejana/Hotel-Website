@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState(""); // Renamed from username
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -17,22 +17,27 @@ const Login = () => {
         setSuccessMessage("");
 
         try {
-            const response = await axios.post("https://hotel-website-backend-drab.vercel.app/auth/admin/login", {
-                username,
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+            const response = await axios.post(`${backendUrl}/users/login`, {
+                email,
                 password,
             });
 
             if (response.data.token) {
-                localStorage.setItem("adminToken", response.data.token);
-                alert("Admin login successful");
-                navigate("/admin-package");
+                // ✅ Store in sessionStorage
+                sessionStorage.setItem("token", response.data.token);
+                sessionStorage.setItem("isAdmin", response.data.isAdmin);
+
+                alert("Login successful");
+                navigate("/admin-dashboard");
             } else {
                 setErrorMessage("Invalid login response. Please try again.");
             }
         } catch (error) {
             console.error("Login failed", error);
             setErrorMessage(
-                error.response?.data?.message || "Invalid admin credentials. Please try again."
+                error.response?.data?.message || "Invalid credentials. Please try again."
             );
         } finally {
             setLoading(false);
@@ -45,13 +50,14 @@ const Login = () => {
         setSuccessMessage("");
 
         try {
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-            const response = await axios.post("https://hotel-website-backend-drab.vercel.app/auth/admin/forgot-password", {
-                email: "14992pasan@gmail.com",
+            const response = await axios.post(`${backendUrl}/auth/admin/forgot-password`, {
+                email,
             });
 
             if (response.data.message === "Email sent successfully") {
-                setSuccessMessage("Password has been sent to your email.");
+                setSuccessMessage("Password reset email sent.");
             } else {
                 setErrorMessage("Failed to send the password. Please try again.");
             }
@@ -77,16 +83,16 @@ const Login = () => {
                     <p className="mb-4 text-green-600 text-sm text-center">{successMessage}</p>
                 )}
                 <div className="mb-5">
-                    <label htmlFor="username" className="block mb-2 text-sm font-medium text-pcolor">
-                        Username
+                    <label htmlFor="email" className="block mb-2 text-sm font-medium text-pcolor">
+                        Email
                     </label>
                     <input
-                        type="text"
-                        id="username"
+                        type="email"
+                        id="email"
                         className="bg-gray-50 border border-gray-300 text-pcolor text-sm rounded-lg focus:ring-pcolor focus:border-pcolor block w-full p-2.5"
-                        placeholder="admin"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        placeholder="admin@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         required
                     />
                 </div>
@@ -98,7 +104,7 @@ const Login = () => {
                         type="password"
                         id="password"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-pcolor focus:border-pcolor block w-full p-2.5"
-                        placeholder=""
+                        placeholder="••••••••"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required

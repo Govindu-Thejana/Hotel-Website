@@ -1,19 +1,35 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BedDouble, LayoutDashboard, Search, LogOut } from 'lucide-react';
 import { TbPackages, TbMessage2Down } from "react-icons/tb";
 import { BsBuildingFillCheck } from "react-icons/bs";
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+
+const backendUrl = "http://localhost:5000"; // Change as per your backend
 
 const Navbar = () => {
     const currentPath = window.location.pathname;
-    const navigate = useNavigate(); // To handle navigation programmatically
+    const navigate = useNavigate();
 
-    // Define handleLogout function
+    const adminToken = sessionStorage.getItem("adminToken");
+
+    // Redirect to login if token is invalid
+    useEffect(() => {
+        const validateToken = async () => {
+            if (adminToken) {
+                navigate("/admin-dashboard");
+                return;
+            }
+            
+        };
+
+        validateToken();
+    }, [adminToken, navigate]);
+
     const handleLogout = () => {
-        // Remove the admin token from localStorage
-        localStorage.removeItem("adminToken");
-
-        // Navigate to the login page
+        sessionStorage.removeItem("token");
+        sessionStorage.removeItem("isAdmin");
         navigate("/login");
     };
 
@@ -54,20 +70,17 @@ const Navbar = () => {
             icon: <Search className="w-5 h-5" />
         },
         {
-            // Use the handleLogout function for the logout button
             label: "Logout",
             icon: <LogOut className="w-5 h-5" />,
             className: "text-red-500 hover:text-red-600",
-            onClick: handleLogout // Attach onClick for logout item
+            onClick: handleLogout
         }
     ];
 
     return (
         <div>
-            {/* Sidebar */}
             <aside className="fixed top-0 left-0 z-40 w-64 h-screen bg-white dark:bg-gray-800 shadow-lg sm:translate-x-0">
                 <div className="h-full px-4 py-6 overflow-y-auto">
-                    {/* Logo and Hotel Name */}
                     <div className="flex flex-col items-center mb-8 space-y-4">
                         <div className="w-32 h-32 rounded-lg overflow-hidden shadow-lg">
                             <img
@@ -81,17 +94,16 @@ const Navbar = () => {
                         </h1>
                     </div>
 
-                    {/* Navigation Items */}
                     <nav className="space-y-2">
                         {navItems.map((item) => {
                             const isActive = currentPath === item.href;
                             return (
                                 <a
-                                    key={item.href}
-                                    href={item.href}
-                                    onClick={item.onClick || undefined} // Attach onClick for logout item
+                                    key={item.href || item.label}
+                                    href={item.href || "#"}
+                                    onClick={item.onClick || undefined}
                                     className={`flex items-center px-4 py-3 rounded-lg transition-colors duration-200 
-                                    ${isActive
+                                        ${isActive
                                             ? 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-200'
                                             : 'hover:bg-gray-100 dark:hover:bg-gray-700'
                                         } ${item.className || 'text-gray-700 dark:text-gray-200'}`}

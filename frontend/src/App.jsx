@@ -33,7 +33,8 @@ import CartProvider from "./contexts/CartContext";
 import AdminGalleryView from "./components/gallery/AdminGalleryView";
 import AddImages from "./components/gallery/AddImages"
 import MyBookings from "./pages/bookingProcess/MyBookings";
-
+import { useEffect } from "react";
+import { Navigate } from 'react-router-dom';
 
 const MainLayout = ({ children }) => (
   <div>
@@ -59,6 +60,13 @@ const AdminLayout = ({ children }) => (
 AdminLayout.propTypes = {
   children: PropTypes.node.isRequired,
 };
+
+// const ProtectedAdminRoute = ({ children }) => {
+//   const isAdmin = localStorage.getItem("isAdmin"); // Or use auth context if you have one
+
+//   return isAdmin === "true" ? children : <Navigate to="/login" />;
+// };
+
 
 
 
@@ -86,8 +94,9 @@ const App = () => {
 
 
           {/* Admin Routes (Separate from the main website layout) */}
-          <Route path="/add-rooms" element={<AdminLayout><AddRooms /></AdminLayout>} />
-          <Route path="/admin-dashboard" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
+
+          <Route path="/add-rooms" element={<AdminLayout><AddRooms /></AdminLayout> } />
+          <Route path="/admin-dashboard" element={ <AdminLayout><AdminDashboard /></AdminLayout>} />
           <Route path="/room-management" element={<AdminLayout><RoomManagement /></AdminLayout>} />
           <Route path="/edit-room/:roomId" element={<AdminLayout><EditRoom /></AdminLayout>} />
           <Route path="/admin-appointment" element={<AdminLayout><AdminAppointment /></AdminLayout>} />

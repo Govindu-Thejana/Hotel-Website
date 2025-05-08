@@ -7,7 +7,7 @@ import RoomFilter from "../components/room/RoomFilter";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 
-const RoomManagement = () => {
+const RoomManagement = ({}) => {
     // State variables
     const [rooms, setRooms] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);

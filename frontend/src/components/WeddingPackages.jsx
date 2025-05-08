@@ -1,128 +1,122 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Heart, ChevronRight, Star } from 'lucide-react';
-import Modal from '../components/Modal';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import Modal from "../components/Modal";
 
 const WeddingPackages = () => {
-    const [wedding, setWedding] = useState([]);
-    const [error, setError] = useState('');
-    const [selectedPackage, setSelectedPackage] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+  const [wedding, setWedding] = useState([]);
+  const [error, setError] = useState("");
+  const [selectedPackage, setSelectedPackage] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-    useEffect(() => {
-        const fetchWedding = async () => {
-            try {
-                const response = await axios.get('https://hotel-website-backend-drab.vercel.app/wedding');
-                if (response.status === 200) {
-                    setWedding(response.data.data || response.data);
-                } else {
-                    setError('Failed to fetch wedding packages');
-                }
-            } catch (err) {
-                setError('Failed to fetch wedding packages');
-            }
-        };
+  // Wedding images array as fallbacks
+  const weddingImages = [
+    "/images/weddinggroup.png",
+    "/images/bridal.png",
+    "/images/weddinggroup.png",
+  ];
 
-        fetchWedding();
-    }, []);
-
-    const openModal = (item) => {
-        setSelectedPackage(item);
-        setIsModalOpen(true);
+  useEffect(() => {
+    const fetchWedding = async () => {
+      try {
+        const response = await axios.get(
+          "https://hotel-website-backend-drab.vercel.app/wedding"
+        );
+        if (response.status === 200) {
+          setWedding(response.data.data || response.data);
+        } else {
+          setError("Failed to fetch wedding packages");
+        }
+      } catch (err) {
+        setError("Failed to fetch wedding packages");
+      }
     };
 
-    const closeModal = () => {
-        setIsModalOpen(false);
-        setSelectedPackage(null);
-    };
+    fetchWedding();
+  }, []);
 
-    return (
-        <div className="min-h-screen py-16 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-7xl mx-auto">
-                <div className="text-center mb-16">
-                    <div className="flex items-center justify-center mb-4">
-                        <h2 className="text-4xl font-serif text-gray-900">WEDDING PACKAGES</h2>
-                    </div>
-                </div>
+  const openModal = (item) => {
+    setSelectedPackage(item);
+    setIsModalOpen(true);
+  };
 
-                {error && (
-                    <div className="text-red-600 text-center mb-8">{error}</div>
-                )}
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedPackage(null);
+  };
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                    {wedding.map((item) => (
-                        <div
-                            key={item._id}
-                            className="group relative bg-white rounded-2xl shadow-xl overflow-hidden transform hover:-translate-y-2 transition-all duration-300"
-                        >
-                            <div className="absolute top-4 right-4 z-10">
-                                <div className="bg-white/90 backdrop-blur-sm rounded-full p-2">
-
-
-                                    <Heart className="w-6 h-6 text-pcolor" />
-
-                                </div>
-                            </div>
-
-                            <div className="aspect-w-16 aspect-h-9 bg-gray-200">
-                                <img
-                                    src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800"
-                                    alt={item.packagename}
-                                    className="w-full h-64 object-cover"
-                                />
-                            </div>
-
-                            <div className="p-8">
-                                <div className="flex items-center mb-4">
-                                    <div className="flex space-x-1">
-                                        {[...Array(5)].map((_, i) => (
-                                            <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-                                        ))}
-                                    </div>
-                                </div>
-
-                                <h3 className="text-2xl font-semibold text-gray-900 mb-2">
-                                    {item.packagename}
-                                </h3>
-
-
-
-                                <p className="text-3xl font-bold text-scolor mb-6">
-
-                                    Rs.{item.price.toLocaleString()}
-                                </p>
-
-                                <div className="space-y-3 mb-8">
-                                    {(item.Description || "").split(',').map((desc, index) => (
-                                        <div key={index} className="flex items-center text-gray-600">
-
-
-                                            <ChevronRight className="w-5 h-5 text-pcolor mr-2" />
-
-                                            <span>{desc.trim()}</span>
-                                        </div>
-                                    ))}
-                                </div>
-
-                                <button
-                                    onClick={() => openModal(item)}
-                                    className="w-full bg-scolor text-white py-3 px-6 rounded-lg font-semibold hover:bg-pcolor transition-all duration-300 shadow-lg hover:shadow-xl"
-                                >
-                                    View Details
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+  return (
+    <section className="py-16 bg-gray-100">
+      <h2 className="text-center text-4xl font-serif text-gray-800 mb-10">
+        WEDDING PACKAGES
+      </h2>
+      <div className="container mx-auto px-6 lg:px-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {error ? (
+            <div className="col-span-full text-center text-red-500">
+              {error}
             </div>
+          ) : wedding.length > 0 ? (
+            wedding.map((item, index) => (
+              <div
+                key={item._id}
+                className="relative group rounded-lg overflow-hidden shadow-lg h-[400px] transition-transform duration-300 hover:scale-[1.02]"
+              >
+                {/* Background Image (Fixed to the card) */}
+                <div
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                  style={{
+                    backgroundImage: `url(${
+                      weddingImages[index % weddingImages.length]
+                    })`,
+                    backgroundPosition: "center",
+                    backgroundSize: "cover",
+                  }}
+                >
+                  {/* Overlay for better readability */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                </div>
 
-            <Modal
-                isOpen={isModalOpen}
-                onClose={closeModal}
-                packageDetails={selectedPackage}
-            />
+                {/* Content */}
+                <div className="absolute bottom-0 left-0 right-0 p-6 text-white z-10">
+                  <h3 className="font-serif text-xl font-medium mb-2">
+                    {item.packagename}
+                  </h3>
+                  <p className="text-white/80 text-sm mb-4 line-clamp-2">
+                    {item.Description ? item.Description.split(",")[0] : ""}
+                  </p>
+
+                  <div className="flex justify-between items-center">
+                    <div className="text-lg font-semibold">
+                      Rs.{item.price ? item.price.toLocaleString() : "0"}{" "}
+                      <span className="text-xs font-normal text-white/70">
+                        per event
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => openModal(item)}
+                      className="bg-scolor hover:bg-pcolor text-white text-sm py-2 px-4 rounded transition-colors duration-300"
+                    >
+                      View Details
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="col-span-full text-center text-gray-500">
+              No wedding packages available.
+            </div>
+          )}
         </div>
-    );
+      </div>
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        packageDetails={selectedPackage}
+      />
+    </section>
+  );
 };
 
 export default WeddingPackages;

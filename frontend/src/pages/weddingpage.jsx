@@ -87,10 +87,15 @@ const WeddingPage = () => {
 
         {/* Services Section */}
         <div className="text-center mb-12">
-          <h2 className="text-sm uppercase text-scolor italic tracking-widest">
+          <h2 className="text-sm uppercase text-scolor italic tracking-widest mb-2">
             QUALITY SERVICES ARE KEY TO OUR SUCCESS
           </h2>
-          <h2 className="text-4xl font-serif">Our Services</h2>
+          <h2 className="text-4xl font-serif mb-4">Our Services</h2>
+          <div className="w-24 h-1 bg-scolor mx-auto mb-6"></div>
+          <p className="text-gray-600 max-w-3xl mx-auto">
+            Discover our range of exceptional wedding services designed to
+            create your perfect celebration at Hotel Suneragira.
+          </p>
         </div>
 
         <WeddingServices />

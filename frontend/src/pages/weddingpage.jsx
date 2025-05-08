@@ -168,7 +168,7 @@ const WeddingPage = () => {
               href="/gallery"
               className="bg-scolor text-white py-3 px-8 rounded-md shadow-lg hover:bg-pcolor transition duration-300 transform hover:shadow-xl flex items-center justify-center gap-2 mx-auto inline-flex"
             >
-              <span>View Full Gallery</span>
+              <span>Gallery</span>
               <svg
                 className="w-4 h-4"
                 fill="none"
@@ -199,7 +199,7 @@ const WeddingPage = () => {
               <div className="absolute -top-10 left-1/2 transform -translate-x-1/2">
                 <div className="w-20 h-20 rounded-full border-4 border-white overflow-hidden shadow-lg">
                   <img
-                    src="https://img.freepik.com/free-photo/portrait-masculinity-portrait-handsome-young-bearded-man-while-standing-against-grey-wall_231208-7770.jpg?t=st=1727781593~exp=1727785193~hmac=f8e1894e2f82c5f0bdde25c0da774039ea57924d831c6fca9cbcdc92d108f68d&w=360"
+                    src="https://scontent.fcmb1-2.fna.fbcdn.net/v/t1.6435-9/127866405_1425232394352214_6703902721038537610_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=f727a1&_nc_ohc=VPJpo2r-AS0Q7kNvwHfS3x_&_nc_oc=AdlnDC4kW54Hmrzy8UCtapVUFD6_TH8JYoXZQoWip5Q9T-kp072Z3NNHQWiBtaZPh2k&_nc_zt=23&_nc_ht=scontent.fcmb1-2.fna&_nc_gid=4FUI893Z0A9h_9IKTa0RfA&oh=00_AfKh2Whd3lb4jrACpQxltlDB6y3ZHXDQ7N6r14wXteWxgw&oe=6843AA11"
                     alt="Jackson Dean"
                     className="w-full h-full object-cover"
                   />
@@ -229,7 +229,7 @@ const WeddingPage = () => {
               </p>
 
               <h4 className="text-xl font-medium text-gray-800">
-                Jackson Dean
+                Namal Abeynayaka
               </h4>
               <span className="text-sm text-scolor">Wedding Client</span>
 
@@ -284,7 +284,7 @@ const WeddingPage = () => {
                     href="tel:+1234567890"
                     className="text-lg font-medium text-scolor hover:underline"
                   >
-                    Call us: +1 (234) 567-890
+                    Call us: 0377 223 224
                   </a>
                 </div>
               </div>
@@ -370,7 +370,7 @@ const WeddingPage = () => {
                       href="tel:+1234567890"
                       className="text-lg font-medium text-gray-800 hover:text-scolor"
                     >
-                      +1 (234) 567-890
+                      +94 0377 223 22
                     </a>
                   </div>
                 </div>
@@ -384,7 +384,7 @@ const WeddingPage = () => {
                       href="mailto:weddings@suneragira.com"
                       className="text-lg font-medium text-gray-800 hover:text-scolor"
                     >
-                      weddings@suneragira.com
+                      suneragirahotel@gmail.com
                     </a>
                   </div>
                 </div>
@@ -408,7 +408,7 @@ const WeddingPage = () => {
                 <div className="absolute -top-10 left-1/2 transform -translate-x-1/2">
                   <div className="w-20 h-20 rounded-full border-4 border-white overflow-hidden shadow-lg">
                     <img
-                      src="https://img.freepik.com/free-photo/confident-young-man-walking-european-city-street_158595-4692.jpg?t=st=1727781396~exp=1727784996~hmac=fb68aaa6999be81a11e88663e39980c4768fe96d91a0642a4212695f6b8c0714&w=360"
+                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKwI-k5fJidvvfMxQX63jiTxY9bHuLp33-eQ&s"
                       alt="Jane Smith"
                       className="w-full h-full object-cover"
                     />
@@ -438,7 +438,7 @@ const WeddingPage = () => {
                 </p>
 
                 <h4 className="text-xl font-medium text-gray-800">
-                  Jane Smith
+                  Kasun Gangadara
                 </h4>
                 <span className="text-sm text-scolor">Wedding Client</span>
 

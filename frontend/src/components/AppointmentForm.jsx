@@ -22,10 +22,17 @@ const AppointmentForm = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Update formData when selectedDate changes
+  // Update formData when selectedDate changes - Improved to prevent timezone issues
   useEffect(() => {
     if (selectedDate) {
-      const formattedDate = selectedDate.toISOString().split("T")[0];
+      // Create a date without time component to avoid timezone issues
+      const year = selectedDate.getFullYear();
+      const month = String(selectedDate.getMonth() + 1).padStart(2, "0");
+      const day = String(selectedDate.getDate()).padStart(2, "0");
+      const formattedDate = `${year}-${month}-${day}`;
+
+      console.log("Setting formatted date:", formattedDate);
+
       setFormData((prev) => ({
         ...prev,
         date: formattedDate,
@@ -68,7 +75,7 @@ const AppointmentForm = () => {
     }
   };
 
-  // Update booked slots when date changes - with improved error handling and proper time normalization
+  // Update booked slots when date changes - Fixed timezone issue
   useEffect(() => {
     if (!formData.date) {
       setBookedSlots([]);
@@ -76,16 +83,21 @@ const AppointmentForm = () => {
     }
 
     try {
+      // Use the date directly without adjustment to fix the day shift issue
+      console.log("Checking appointments for date:", formData.date);
+
       const selectedDateAppointments = existingAppointments.filter((app) => {
         if (!app.date) return false;
 
-        const appDate = new Date(app.date);
-        const selectedDate = new Date(formData.date);
+        // Compare dates without timezone influence
+        const formattedDate = formData.date;
+        const appDateStr = app.date.split("T")[0]; // Extract YYYY-MM-DD part only
 
-        return (
-          appDate.toDateString() === selectedDate.toDateString() &&
-          app.status === "confirmed"
+        console.log(
+          `Comparing: app date=${appDateStr}, selected date=${formattedDate}`
         );
+
+        return appDateStr === formattedDate && app.status === "confirmed";
       });
 
       console.log("Selected date appointments:", selectedDateAppointments);
@@ -265,18 +277,22 @@ const AppointmentForm = () => {
   // Get today's date as a Date object for DatePicker
   const today = new Date();
 
-  // Function to check if a date has appointments
+  // Function to check if a date has appointments - Fixed version
   const getAppointmentsForDate = (date) => {
     if (!date) return [];
 
+    // Format the date to YYYY-MM-DD for consistent string comparison
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const dateString = `${year}-${month}-${day}`;
+
     return existingAppointments.filter((app) => {
-      const appDate = new Date(app.date);
-      return (
-        appDate.getDate() === date.getDate() &&
-        appDate.getMonth() === date.getMonth() &&
-        appDate.getFullYear() === date.getFullYear() &&
-        app.status === "confirmed"
-      );
+      if (!app.date) return false;
+
+      // Compare date strings directly to avoid timezone issues
+      const appDateStr = app.date.split("T")[0];
+      return appDateStr === dateString && app.status === "confirmed";
     });
   };
 
@@ -812,8 +828,7 @@ const AppointmentForm = () => {
                   {formData.date && bookedSlots.length > 0 && (
                     <div className="mt-2 p-2 bg-amber-50 border border-amber-200 rounded-md">
                       <p className="text-xs text-amber-700 flex items-start">
-                        <FaTimes className="text-red-500 mt-0.5 mr-2 flex-shrink-0" />
-                        <span>
+                        <span className="text-amber-600 font-medium">
                           <strong>Note:</strong> {bookedSlots.length} time slot
                           {bookedSlots.length !== 1 ? "s" : ""} on this date{" "}
                           {bookedSlots.length !== 1 ? "are" : "is"} already

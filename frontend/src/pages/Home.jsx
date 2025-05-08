@@ -173,13 +173,13 @@ const Home = () => {
             <div className="lg:ml-4">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-2xl sm:text-3xl font-serif text-gray-900 uppercase">
-                  Executive Room
+                  <span className="text-scolor">Executive</span> Room
                 </h2>
                 <div className="flex">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-400 fill-yellow-400"
+                      className="w-3 h-3 sm:w-4 sm:h-4 text-scolor fill-scolor"
                     />
                   ))}
                 </div>
@@ -189,7 +189,7 @@ const Home = () => {
 
               {/* Occupancy & Size - made responsive for mobile */}
               <div className="flex items-center gap-3 sm:gap-8 mt-4 text-gray-700">
-                <div className="flex items-center gap-2 sm:gap-3 bg-gray-50 p-2 sm:p-3 rounded-lg shadow-sm">
+                <div className="flex items-center gap-2 sm:gap-3 bg-scolor/5 p-2 sm:p-3 rounded-lg shadow-sm">
                   <span className="text-base sm:text-lg bg-scolor/10 p-1.5 sm:p-2 rounded-full">
                     👤
                   </span>
@@ -197,7 +197,7 @@ const Home = () => {
                     2 Adults
                   </span>
                 </div>
-                <div className="flex items-center gap-2 sm:gap-3 bg-gray-50 p-2 sm:p-3 rounded-lg shadow-sm">
+                <div className="flex items-center gap-2 sm:gap-3 bg-scolor/5 p-2 sm:p-3 rounded-lg shadow-sm">
                   <span className="text-base sm:text-lg bg-scolor/10 p-1.5 sm:p-2 rounded-full">
                     📏
                   </span>
@@ -208,7 +208,7 @@ const Home = () => {
               </div>
 
               {/* Room Description - adjusted for mobile */}
-              <p className="text-gray-600 mt-4 sm:mt-6 text-sm sm:text-base font-serif leading-relaxed border-l-2 border-scolor/30 pl-4">
+              <p className="text-gray-600 mt-4 sm:mt-6 text-sm sm:text-base font-serif leading-relaxed border-l-2 border-scolor pl-4">
                 Designed with the needs of business travelers in mind. Offering
                 exclusive access to the Business Lounge, guests can enjoy
                 24-hour coffee and tea service, complimentary breakfast, and
@@ -218,24 +218,16 @@ const Home = () => {
               {/* Amenities Grid - improved for small screens */}
               <div className="grid grid-cols-1 xs:grid-cols-2 gap-2 sm:gap-4 mt-6 sm:mt-8">
                 {[
-                  { icon: "☕", text: "Coffee & Tea", bg: "bg-amber-50" },
-                  {
-                    icon: "🍳",
-                    text: "Complimentary Breakfast",
-                    bg: "bg-emerald-50",
-                  },
-                  { icon: "🍸", text: "Evening Cocktails", bg: "bg-purple-50" },
-                  {
-                    icon: "💼",
-                    text: "Business Lounge Access",
-                    bg: "bg-blue-50",
-                  },
+                  { icon: "☕", text: "Coffee & Tea" },
+                  { icon: "🍳", text: "Complimentary Breakfast" },
+                  { icon: "🍸", text: "Evening Cocktails" },
+                  { icon: "💼", text: "Business Lounge Access" },
                 ].map((amenity, index) => (
                   <div
                     key={index}
-                    className={`flex items-center gap-2 sm:gap-3 ${amenity.bg} p-2 sm:p-3 rounded-lg transition-transform hover:scale-105 duration-300`}
+                    className="flex items-center gap-2 sm:gap-3 bg-scolor/5 p-2 sm:p-3 rounded-lg transition-transform hover:scale-105 duration-300"
                   >
-                    <span className="text-base sm:text-lg bg-white/80 p-1.5 sm:p-2 rounded-full shadow-sm">
+                    <span className="text-base sm:text-lg bg-white p-1.5 sm:p-2 rounded-full shadow-sm text-scolor">
                       {amenity.icon}
                     </span>
                     <span className="text-xs sm:text-sm font-medium text-gray-700">
@@ -264,14 +256,14 @@ const Home = () => {
               </div>
 
               {/* Enhanced Room Navigation - adjusted for mobile */}
-              <div className="mt-6 sm:mt-8 flex items-center justify-between border-t pt-3 sm:pt-4 border-gray-100">
+              <div className="mt-6 sm:mt-8 flex items-center justify-between border-t pt-3 sm:pt-4 border-scolor/10">
                 <div className="text-gray-500 text-xs sm:text-sm italic">
-                  <span className="font-bold text-gray-900">01</span> /{" "}
+                  <span className="font-bold text-scolor">01</span> /{" "}
                   <span>11</span> rooms
                 </div>
                 <div className="flex gap-1 sm:gap-2">
-                  <button className="p-1.5 sm:p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors">
-                    <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 rotate-180 text-gray-600" />
+                  <button className="p-1.5 sm:p-2 rounded-full bg-scolor/10 hover:bg-scolor/20 transition-colors">
+                    <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 rotate-180 text-scolor" />
                   </button>
                   <button className="p-1.5 sm:p-2 rounded-full bg-scolor hover:bg-pcolor transition-colors">
                     <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-white" />

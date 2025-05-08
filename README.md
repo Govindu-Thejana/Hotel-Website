@@ -18,7 +18,7 @@ Welcome to the **Hotel Management Website** repository! This project is a compre
 - Option to **book rooms with or without immediate payment**.
 - **Email confirmation** with booking details.
 
-✅ **Add Add-Ons:**
+✅ **Add Add-Ons: **
 - Users can enhance their stay with optional add-ons (**breakfast, spa, airport transfers**).
 - Add-ons can be adjusted before finalizing the reservation.
 

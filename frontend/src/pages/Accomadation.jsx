@@ -116,9 +116,7 @@ const Accommodation = () => {
                   </p>
                 </div>
                 <div className="mt-6">
-                  <button className="text-white bg-scolor/80 hover:bg-scolor transition duration-300 py-2 px-4 rounded-md text-sm uppercase tracking-wider font-light">
-                    Learn More
-                  </button>
+                  
                 </div>
               </div>
             </div>
@@ -147,9 +145,7 @@ const Accommodation = () => {
                   </p>
                 </div>
                 <div className="mt-6">
-                  <button className="text-white border border-white/30 hover:bg-scolor hover:border-transparent transition duration-300 py-2 px-5 rounded text-sm tracking-wide font-medium">
-                    View Details
-                  </button>
+                  
                 </div>
               </div>
             </div>
@@ -178,9 +174,7 @@ const Accommodation = () => {
                   </p>
                 </div>
                 <div className="mt-6">
-                  <button className="text-white bg-scolor/80 hover:bg-scolor transition duration-300 py-2 px-4 rounded-md text-sm uppercase tracking-wider font-light">
-                    Learn More
-                  </button>
+                  
                 </div>
               </div>
             </div>

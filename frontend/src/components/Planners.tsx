@@ -43,9 +43,6 @@ const WeddingPlanners = () => {
               she excels at creating beautiful concepts while working within
               clients' budgets. She enjoys the diversity each wedding offers.
             </p>
-            <button className="mt-5 bg-transparent border border-scolor text-scolor hover:bg-scolor hover:text-white px-4 py-2 rounded-md text-sm transition-colors duration-300">
-              Book Consultation
-            </button>
           </div>
         </div>
 
@@ -85,9 +82,6 @@ const WeddingPlanners = () => {
               skills that ensure seamless event coordination and client
               satisfaction.
             </p>
-            <button className="mt-5 bg-transparent border border-scolor text-scolor hover:bg-scolor hover:text-white px-4 py-2 rounded-md text-sm transition-colors duration-300">
-              Book Consultation
-            </button>
           </div>
         </div>
 
@@ -126,9 +120,6 @@ const WeddingPlanners = () => {
               With his dedicated team of experts, he ensures every detail is
               meticulously crafted to create unforgettable celebrations.
             </p>
-            <button className="mt-5 bg-transparent border border-scolor text-scolor hover:bg-scolor hover:text-white px-4 py-2 rounded-md text-sm transition-colors duration-300">
-              Book Consultation
-            </button>
           </div>
         </div>
       </div>

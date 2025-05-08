@@ -38,12 +38,12 @@ const PastWeddings = () => {
               </p>
             </div>
             <div className="absolute top-0 left-0 right-0 p-4 flex justify-end opacity-0 group-hover:opacity-100 transition-all duration-500">
-              <button
-                onClick={handleViewGallery}
+              <a
+                href="/gallery"
                 className="bg-white/20 backdrop-blur-sm hover:bg-white/50 text-white px-3 py-1 rounded-full text-xs transition-all duration-300"
               >
                 View Gallery
-              </button>
+              </a>
             </div>
           </div>
 
@@ -67,12 +67,12 @@ const PastWeddings = () => {
               </p>
             </div>
             <div className="absolute top-0 left-0 right-0 p-4 flex justify-end opacity-0 group-hover:opacity-100 transition-all duration-500">
-              <button
-                onClick={handleViewGallery}
+              <a
+                href="/gallery"
                 className="bg-white/20 backdrop-blur-sm hover:bg-white/50 text-white px-3 py-1 rounded-full text-xs transition-all duration-300"
               >
                 View Gallery
-              </button>
+              </a>
             </div>
           </div>
         </div>
@@ -102,12 +102,12 @@ const PastWeddings = () => {
               <p className="text-white/80 text-sm mt-2 max-w-md opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
                 Grand Ballroom • 250 Guests • Traditional & Modern Fusion
               </p>
-              <button
-                onClick={handleViewGallery}
-                className="mt-4 bg-white/20 backdrop-blur-sm hover:bg-scolor text-white px-4 py-2 rounded-md text-sm transition-all duration-300 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0"
+              <a
+                href="/gallery"
+                className="mt-4 bg-white/20 backdrop-blur-sm hover:bg-scolor text-white px-4 py-2 rounded-md text-sm transition-all duration-300 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 inline-block"
               >
                 View Wedding Story
-              </button>
+              </a>
             </div>
           </div>
         </div>
@@ -134,12 +134,12 @@ const PastWeddings = () => {
               </p>
             </div>
             <div className="absolute top-0 left-0 right-0 p-4 flex justify-end opacity-0 group-hover:opacity-100 transition-all duration-500">
-              <button
-                onClick={handleViewGallery}
+              <a
+                href="/gallery"
                 className="bg-white/20 backdrop-blur-sm hover:bg-white/50 text-white px-3 py-1 rounded-full text-xs transition-all duration-300"
               >
                 View Gallery
-              </button>
+              </a>
             </div>
           </div>
 
@@ -163,12 +163,12 @@ const PastWeddings = () => {
               </p>
             </div>
             <div className="absolute top-0 left-0 right-0 p-4 flex justify-end opacity-0 group-hover:opacity-100 transition-all duration-500">
-              <button
-                onClick={handleViewGallery}
+              <a
+                href="/gallery"
                 className="bg-white/20 backdrop-blur-sm hover:bg-white/50 text-white px-3 py-1 rounded-full text-xs transition-all duration-300"
               >
                 View Gallery
-              </button>
+              </a>
             </div>
           </div>
         </div>
@@ -176,9 +176,9 @@ const PastWeddings = () => {
 
       {/* View more button */}
       <div className="mt-12 text-center">
-        <button
-          onClick={handleViewGallery}
-          className="bg-transparent border-2 border-scolor hover:bg-scolor text-scolor hover:text-white px-6 py-2 rounded-md transition-all duration-300 group flex items-center mx-auto"
+        <a
+          href="/gallery"
+          className="bg-transparent border-2 border-scolor hover:bg-scolor text-scolor hover:text-white px-6 py-2 rounded-md transition-all duration-300 group flex items-center mx-auto inline-flex"
         >
           <span className="mr-2">View More Weddings</span>
           <svg
@@ -194,7 +194,7 @@ const PastWeddings = () => {
               d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"
             />
           </svg>
-        </button>
+        </a>
       </div>
     </div>
   );

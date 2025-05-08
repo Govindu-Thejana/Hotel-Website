@@ -254,22 +254,6 @@ const Home = () => {
                   Find Out More
                 </a>
               </div>
-
-              {/* Enhanced Room Navigation - adjusted for mobile */}
-              <div className="mt-6 sm:mt-8 flex items-center justify-between border-t pt-3 sm:pt-4 border-scolor/10">
-                <div className="text-gray-500 text-xs sm:text-sm italic">
-                  <span className="font-bold text-scolor">01</span> /{" "}
-                  <span>11</span> rooms
-                </div>
-                <div className="flex gap-1 sm:gap-2">
-                  <button className="p-1.5 sm:p-2 rounded-full bg-scolor/10 hover:bg-scolor/20 transition-colors">
-                    <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 rotate-180 text-scolor" />
-                  </button>
-                  <button className="p-1.5 sm:p-2 rounded-full bg-scolor hover:bg-pcolor transition-colors">
-                    <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                  </button>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -489,7 +473,7 @@ const Home = () => {
             <div className="group bg-white rounded-xl overflow-hidden shadow-xl transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl border border-gray-100">
               <div className="relative overflow-hidden">
                 <img
-                  src="/images/sigiria.jpg"
+                  src="https://scontent.fcmb1-2.fna.fbcdn.net/v/t39.30808-6/475181283_1029964142502543_7890619866188138190_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=JJ4_1CtnLLcQ7kNvwEPhmtR&_nc_oc=AdlScN4otdxtnH79ms-tYIzlMWXWrXjxbDanjTNCX1kar4rQDtWZRHVLzNbH29wBxFo&_nc_zt=23&_nc_ht=scontent.fcmb1-2.fna&_nc_gid=nLS7t--IAzeYJsKZGbbPog&oh=00_AfIOTBM2wja68aUTGe4dS5PWf6O0E_MbfK--BkprQYfH5A&oe=68220938"
                   alt="Sigiriya"
                   className="w-full h-48 sm:h-56 md:h-64 object-cover transform transition-transform duration-500 group-hover:scale-110"
                 />
@@ -511,26 +495,37 @@ const Home = () => {
               </div>
               <div className="p-4 sm:p-6">
                 <h3 className="text-xl sm:text-2xl font-serif mb-2 sm:mb-3">
-                  Sigiriya
+                  Magalla Wewa
                 </h3>
                 <p className="text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base line-clamp-2">
-                  Ancient palace and fortress complex with stunning views and
-                  rich historical significance
+                  Magalla Wewa is a tranquil reservoir located in the Galle
+                  District of Sri Lanka. Known for its scenic beauty, it is a
+                  popular spot for locals and visitors seeking a peaceful
+                  environment. The reservoir is surrounded by lush greenery and
+                  provides opportunities for birdwatching, fishing, and nature
+                  walks. Its serene waters and proximity to the bustling Galle
+                  town make it a peaceful getaway for those looking to escape
+                  the city.
                 </p>
                 <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-gray-500 mb-4 sm:mb-6">
                   <div className="flex items-center gap-1 sm:gap-2 bg-gray-50 py-1.5 sm:py-2 px-2 sm:px-3 rounded-lg">
                     <Clock className="w-3 h-3 sm:w-4 sm:h-4 text-scolor" />
-                    <span className="text-xs sm:text-sm">3-4 hours</span>
+                    <span className="text-xs sm:text-sm">5 minutes</span>
                   </div>
                   <div className="flex items-center gap-1 sm:gap-2 bg-gray-50 py-1.5 sm:py-2 px-2 sm:px-3 rounded-lg">
                     <Star className="w-3 h-3 sm:w-4 sm:h-4 text-scolor" />
                     <span className="text-xs sm:text-sm">Must Visit</span>
                   </div>
                 </div>
-                <button className="w-full bg-scolor text-white py-2.5 sm:py-3 rounded-lg flex items-center justify-center gap-1 sm:gap-2 transition-all duration-300 hover:bg-pcolor shadow-md hover:shadow-lg text-xs sm:text-sm">
+                <a
+                  href="https://maps.app.goo.gl/4aXzCdfDstCseCwn9"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full bg-scolor text-white py-2.5 sm:py-3 rounded-lg flex items-center justify-center gap-1 sm:gap-2 transition-all duration-300 hover:bg-pcolor shadow-md hover:shadow-lg text-xs sm:text-sm"
+                >
                   Explore Location
                   <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
-                </button>
+                </a>
               </div>
             </div>
 
@@ -576,10 +571,15 @@ const Home = () => {
                     <span className="text-xs sm:text-sm">Cultural</span>
                   </div>
                 </div>
-                <button className="w-full bg-scolor text-white py-2.5 sm:py-3 rounded-lg flex items-center justify-center gap-1 sm:gap-2 transition-all duration-300 hover:bg-pcolor shadow-md hover:shadow-lg text-xs sm:text-sm">
+                <a
+                  href="https://maps.app.goo.gl/zqujn5i5Q8ztHsaD9"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full bg-scolor text-white py-2.5 sm:py-3 rounded-lg flex items-center justify-center gap-1 sm:gap-2 transition-all duration-300 hover:bg-pcolor shadow-md hover:shadow-lg text-xs sm:text-sm"
+                >
                   Explore Location
                   <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
-                </button>
+                </a>
               </div>
             </div>
 
@@ -624,10 +624,15 @@ const Home = () => {
                     <span className="text-xs sm:text-sm">Historical</span>
                   </div>
                 </div>
-                <button className="w-full bg-scolor text-white py-2.5 sm:py-3 rounded-lg flex items-center justify-center gap-1 sm:gap-2 transition-all duration-300 hover:bg-pcolor shadow-md hover:shadow-lg text-xs sm:text-sm">
+                <a
+                  href="https://maps.app.goo.gl/grDfvK8k2Y8muEf38"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full bg-scolor text-white py-2.5 sm:py-3 rounded-lg flex items-center justify-center gap-1 sm:gap-2 transition-all duration-300 hover:bg-pcolor shadow-md hover:shadow-lg text-xs sm:text-sm"
+                >
                   Explore Location
                   <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
-                </button>
+                </a>
               </div>
             </div>
           </div>

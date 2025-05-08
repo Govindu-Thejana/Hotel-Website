@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const AdminDashboard = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -117,8 +118,7 @@ const AdminDashboard = () => {
 
   return (
     <div
-      className={`flex min-h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-100'
-        }`}
+      className={`flex min-h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-100'}`}
     >
       {/* Main Content Area */}
       <div className="flex-1 p-6 overflow-auto">
@@ -136,8 +136,7 @@ const AdminDashboard = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
               className={`w-full p-2 pl-10 rounded-lg ${isDarkMode
                 ? 'bg-gray-800 text-white border-gray-700'
-                : 'bg-white border-gray-200'
-                }`}
+                : 'bg-white border-gray-200'}`}
             />
             <Search
               className="absolute left-3 top-3 text-gray-400"
@@ -151,8 +150,7 @@ const AdminDashboard = () => {
               onClick={toggleDarkMode}
               className={`p-2 rounded-full ${isDarkMode
                 ? 'bg-gray-700 text-yellow-400'
-                : 'bg-gray-200 text-gray-700'
-                }`}
+                : 'bg-gray-200 text-gray-700'}`}
             >
               {isDarkMode ? <Sun /> : <Moon />}
             </button>
@@ -174,13 +172,10 @@ const AdminDashboard = () => {
           {quickStatsData.map((stat, index) => (
             <div
               key={index}
-              className={`bg-white p-4 rounded-lg shadow-md border-l-4 ${stat.color === 'blue' ? 'border-blue-500' : 'border-gray-500'
-                } ${isDarkMode ? 'bg-gray-800 text-white' : ''}`}
+              className={`bg-white p-4 rounded-lg shadow-md border-l-4 ${stat.color === 'blue' ? 'border-blue-500' : 'border-gray-500'} ${isDarkMode ? 'bg-gray-800 text-white' : ''}`}
             >
               <h3 className="text-gray-500 text-sm">{stat.label}</h3>
-              <p
-                className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}
-              >
+              <p className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                 {stat.value}
               </p>
             </div>
@@ -190,40 +185,55 @@ const AdminDashboard = () => {
         {/* Analytics & Appointments */}
         <div className="grid grid-cols-2 gap-6">
           <div
-            className={`p-4 rounded-lg shadow-md ${isDarkMode ? 'bg-gray-800' : 'bg-white'
-              }`}
+            className={`p-4 rounded-lg shadow-md ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}
           >
             <h3
-              className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'
-                }`}
+              className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}
             >
               Booking Trends
             </h3>
 
-            <div className="flex items-center justify-center h-[300px] bg-gray-100 rounded border border-dashed border-gray-300">
-              <div className="text-center">
-                <BarChart2
-                  size={48}
-                  className="mx-auto mb-2 text-gray-400"
-                />
-                <p className="text-gray-500">
-                  Chart will appear here after installing recharts
-                </p>
-                <p className="text-sm text-gray-400 mt-2">
-                  Run: npm install recharts
-                </p>
-              </div>
+            <div className="h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={bookingTrendsData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke={isDarkMode ? "#555" : "#ccc"} />
+                  <XAxis 
+                    dataKey="month" 
+                    stroke={isDarkMode ? "#aaa" : "#666"}
+                  />
+                  <YAxis 
+                    stroke={isDarkMode ? "#aaa" : "#666"}
+                    label={{ 
+                      value: 'Number of Bookings', 
+                      angle: -90, 
+                      position: 'insideLeft',
+                      style: { textFill: isDarkMode ? "#aaa" : "#666" } 
+                    }}
+                  />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: isDarkMode ? "#333" : "#fff",
+                      color: isDarkMode ? "#fff" : "#333",
+                      border: `1px solid ${isDarkMode ? "#555" : "#ccc"}`
+                    }}
+                  />
+                  <Bar 
+                    dataKey="bookings" 
+                    name="Orders" 
+                    fill="#4299e1" 
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           </div>
 
           {/* Appointments Section - Replacing Room Status */}
           <div
-            className={`p-4 rounded-lg shadow-md ${isDarkMode ? 'bg-gray-800' : 'bg-white'
-              }`}
+            className={`p-4 rounded-lg shadow-md ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}
           >
             <h3
-              className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'
-                }`}
+              className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}
             >
               Recent Appointments
             </h3>
@@ -237,7 +247,7 @@ const AdminDashboard = () => {
                 <p className="text-gray-500">No appointments found</p>
               </div>
             ) : (
-              <div className="overflow-y-auto max-h-[300px]">
+              <div className="overflow-y-auto max-h-72">
                 <table className="w-full">
                   <thead className="sticky top-0 bg-white dark:bg-gray-800">
                     <tr className="text-left border-b">
@@ -264,9 +274,7 @@ const AdminDashboard = () => {
                         </td>
                         <td className="py-3">{appointment.reason}</td>
                         <td className="py-3">
-                          <span
-                            className={`px-2 py-1 rounded text-xs ${getStatusColor(appointment.status)}`}
-                          >
+                          <span className={`px-2 py-1 rounded text-xs ${getStatusColor(appointment.status)}`}>
                             {appointment.status}
                           </span>
                         </td>
@@ -276,9 +284,7 @@ const AdminDashboard = () => {
                 </table>
                 {appointments.length > 5 && (
                   <div className="text-center mt-4">
-                    <button
-                      className={`text-blue-500 hover:text-blue-700 text-sm font-medium ${isDarkMode ? 'text-blue-400 hover:text-blue-300' : ''}`}
-                    >
+                    <button className={`text-blue-500 hover:text-blue-700 text-sm font-medium ${isDarkMode ? 'text-blue-400 hover:text-blue-300' : ''}`}>
                       View all {appointments.length} appointments
                     </button>
                   </div>
@@ -290,12 +296,10 @@ const AdminDashboard = () => {
 
         {/* Notifications */}
         <div
-          className={`mt-6 p-4 rounded-lg shadow-md ${isDarkMode ? 'bg-gray-800' : 'bg-white'
-            }`}
+          className={`mt-6 p-4 rounded-lg shadow-md ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}
         >
           <h3
-            className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'
-              }`}
+            className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}
           >
             Notifications
           </h3>
@@ -304,13 +308,9 @@ const AdminDashboard = () => {
               key={notification.id}
               className={`p-3 border-b last:border-b-0 ${isDarkMode
                 ? 'border-gray-700 hover:bg-gray-700'
-                : 'hover:bg-gray-100'
-                }`}
+                : 'hover:bg-gray-100'}`}
             >
-              <p
-                className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                  }`}
-              >
+              <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                 {notification.message}
               </p>
               <span className="text-sm text-gray-500">{notification.time}</span>

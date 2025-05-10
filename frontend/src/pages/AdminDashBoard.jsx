@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Calendar,
   Users,
@@ -40,9 +41,12 @@ const notificationsData = [
   { id: 3, message: 'Upcoming event: Wedding Booking', time: '3h ago' },
 ];
 
+
+
 const AdminDashboard = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);

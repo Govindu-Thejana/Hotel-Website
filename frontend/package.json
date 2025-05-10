@@ -11,13 +11,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@material-tailwind/react": "^2.1.4",
+    "@mui/material": "^7.1.0",
     "axios": "^1.5.1",
     "date-fns": "^2.30.0",
     "flowbite": "^1.8.1",
     "flowbite-react": "^0.6.4",
+    "framer-motion": "^12.10.1",
+    "jwt-decode": "^4.0.0",
     "lucide-react": "^0.302.0",
     "react": "18.2.0",
     "react-date-range": "^1.4.0",

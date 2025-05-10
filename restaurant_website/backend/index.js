@@ -25,6 +25,8 @@ const server = app.listen(3000, () => {
 
 // WebSocket Server Setup
 const wss = new WebSocketServer({ server });
+// Add ping interval - this keeps connections alive
+const PING_INTERVAL = 30000; // 30 seconds
 
 app.use(cors({
 
@@ -43,11 +45,18 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // WebSocket Connection Handling
 wss.on('connection', (ws) => {
     console.log('New WebSocket client connected');
-
+    
+    ws.isAlive = true;
+    // Set up ping-pong to keep connection alive
+    ws.on('pong', () => {
+        ws.isAlive = true;
+    });
+    // Send welcome message
     ws.send(JSON.stringify({ message: "Connected to order updates" }));
 
     const changeStream = Order.watch();
     changeStream.on('change', (change) => {
+        // Existing order change handling code...
         console.log('Order change detected:', change);
         let updateData;
         switch (change.operationType) {
@@ -67,7 +76,11 @@ wss.on('connection', (ws) => {
             default:
                 return;
         }
-        ws.send(JSON.stringify(updateData));
+        
+        // Check if connection is still alive before sending
+        if (ws.readyState === ws.OPEN) {
+            ws.send(JSON.stringify(updateData));
+        }
     });
 
     ws.on('close', () => {
@@ -78,6 +91,24 @@ wss.on('connection', (ws) => {
     ws.on('error', (error) => {
         console.error('WebSocket error:', error);
     });
+});
+
+// Setup the interval for pinging clients
+const pingInterval = setInterval(() => {
+    wss.clients.forEach((ws) => {
+        if (ws.isAlive === false) {
+            console.log('Terminating inactive connection');
+            return ws.terminate();
+        }
+        
+        ws.isAlive = false;
+        ws.ping();
+    });
+}, PING_INTERVAL);
+
+// Clean up interval on server close
+wss.on('close', () => {
+    clearInterval(pingInterval);
 });
 
 // JWT Middleware and other routes remain the same

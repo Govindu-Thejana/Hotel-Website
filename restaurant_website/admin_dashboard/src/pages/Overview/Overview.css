@@ -1,113 +1,235 @@
-/* Overview.css */
-
 .ov-container {
     padding: 20px;
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
-}
-
-.ov-header {
+  }
+  
+  .ov-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-}
-
-.ov-header h3 {
+  }
+  
+  .ov-header h3 {
     color: #333;
-}
-
-.ov-button-group button {
+  }
+  
+  .ov-button-group {
+    display: flex;
+    align-items: center;
+  }
+  
+  .ov-button-group button {
     margin-left: 10px;
     padding: 8px 12px;
     border: none;
     cursor: pointer;
     border-radius: 5px;
     font-weight: bold;
-}
-
-.ov-calendar-btn {
+  }
+  
+  .ov-notification-wrapper {
+    position: relative;
+  }
+  
+  .ov-notification-btn {
+    background-color: #6c757d;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    font-size: 18px;
+  }
+  
+  .ov-notification-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    font-weight: bold;
+  }
+  
+  .ov-notification-dropdown {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 1000;
+  }
+  
+  .ov-notification-header {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .ov-notification-header h4 {
+    margin: 0;
+    font-size: 16px;
+  }
+  
+  .ov-notification-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .ov-notification-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .ov-notification-success {
+    background-color: #e6f4ea;
+  }
+  
+  .ov-notification-info {
+    background-color: #e7f3fe;
+  }
+  
+  .ov-notification-warn {
+    background-color: #fff3e0;
+  }
+  
+  .ov-notification-error {
+    background-color: #ffe6e6;
+  }
+  
+  .ov-notification-content {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .ov-notification-message {
+    font-size: 14px;
+  }
+  
+  .ov-notification-timestamp {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+  }
+  
+  .ov-notification-clear {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+  
+  .ov-notification-empty {
+    padding: 10px;
+    text-align: center;
+    color: #666;
+  }
+  
+  .ov-calendar-btn {
     background-color: #007bff;
     color: white;
-}
-
-.ov-refresh-btn {
+  }
+  
+  .ov-refresh-btn {
     background-color: #28a745;
     color: white;
-}
-
-.ov-summary-cards {
+  }
+  
+  .ov-summary-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 15px;
     margin-bottom: 20px;
-}
-
-.ov-summary-card {
+  }
+  
+  .ov-summary-card {
     background: white;
     padding: 40px;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: center;
-}
-
-.ov-summary-label {
+  }
+  
+  .ov-summary-label {
     font-weight: bold;
     margin-bottom: 5px;
-}
-
-.ov-summary-value {
+  }
+  
+  .ov-summary-value {
     font-size: 18px;
     color: #007bff;
-}
-
-.ov-recent-orders {
+  }
+  
+  .ov-recent-orders {
     background: white;
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.ov-recent-header {
+  }
+  
+  .ov-recent-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
-}
-
-.ov-orders-table {
+  }
+  
+  .ov-orders-table {
     width: 100%;
     border-collapse: collapse;
-}
-
-.ov-table-header, .ov-order-row {
+  }
+  
+  .ov-table-header,
+  .ov-order-row {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     padding: 10px;
     border-bottom: 1px solid #ddd;
-}
-
-.ov-table-header span {
+  }
+  
+  .ov-table-header span {
     font-weight: bold;
-}
-
-.ov-order-row:hover {
+  }
+  
+  .ov-order-row:hover {
     background-color: #f1f1f1;
     cursor: pointer;
-}
-
-.ov-status {
+  }
+  
+  .ov-status {
     padding: 5px 10px;
     border-radius: 5px;
     text-align: center;
     font-weight: bold;
-}
-
-.ov-status-pending { background: orange; color: white; }
-.ov-status-delivered { background: green; color: white; }
-.ov-status-cancelled { background: red; color: white; }
-
-.ov-popup-overlay {
+  }
+  
+  .ov-status-pending {
+    background: orange;
+    color: white;
+  }
+  .ov-status-delivered {
+    background: green;
+    color: white;
+  }
+  .ov-status-cancelled {
+    background: red;
+    color: white;
+  }
+  
+  .ov-popup-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -117,25 +239,25 @@
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.ov-popup-content {
+  }
+  
+  .ov-popup-content {
     background: white;
     padding: 20px;
     border-radius: 5px;
     width: 50%;
-}
-
-.ov-close-btn {
+  }
+  
+  .ov-close-btn {
     background: red;
     color: white;
     padding: 5px 10px;
     border: none;
     cursor: pointer;
     border-radius: 5px;
-}
-
-.ov-calendar-overlay {
+  }
+  
+  .ov-calendar-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -145,11 +267,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.ov-calendar-content {
+  }
+  
+  .ov-calendar-content {
     background: white;
     padding: 20px;
     border-radius: 5px;
     width: 40%;
-}
+  }

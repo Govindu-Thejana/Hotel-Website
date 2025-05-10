@@ -1,5 +1,6 @@
 {
   "name": "frontend",
+  "authors": "govindu,yasiru,nimesh,pasan",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -23,16 +24,18 @@
     "framer-motion": "^12.10.1",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.302.0",
-    "react": "^18.2.0",
+    "react": "18.2.0",
     "react-date-range": "^1.4.0",
     "react-datepicker": "^4.21.0",
-    "react-dom": "^18.2.0",
+    "react-dom": "18.2.0",
     "react-icons": "^4.11.0",
+    "react-redux": "^9.2.0",
     "react-responsive": "^9.0.2",
     "react-router-dom": "^6.16.0",
     "react-spinners": "^0.13.8",
     "react-toastify": "^9.1.3",
-    "recharts": "^2.10.3"
+    "recharts": "^2.15.3",
+    "ws": "^8.18.2"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",

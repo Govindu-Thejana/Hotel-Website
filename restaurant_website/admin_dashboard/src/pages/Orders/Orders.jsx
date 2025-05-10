@@ -9,12 +9,12 @@ const Orders = ({ url }) => {
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [searchField, setSearchField] = useState('all'); // New state for search field
 
   const fetchAllOrders = async () => {
     setLoading(true);
     try {
       const response = await axios.get(`${url}/api/orders/`);
-      console.log(response.data.data);
       setOrders(response.data.data);
       setFilteredOrders(response.data.data);
     } catch (error) {
@@ -61,25 +61,58 @@ const Orders = ({ url }) => {
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
+
     if (term === '') {
       setFilteredOrders(orders);
     } else {
-      const filtered = orders.filter(order =>
-        order.name.toLowerCase().includes(term) ||
-        order.email.toLowerCase().includes(term)
-      );
+      const filtered = orders.filter(order => {
+        switch (searchField) {
+          case 'orderId':
+            return order._id.toLowerCase().includes(term);
+          case 'name':
+            return order.name.toLowerCase().includes(term);
+          case 'email':
+            return order.email.toLowerCase().includes(term);
+          case 'status':
+            return order.status.toLowerCase().includes(term);
+          case 'paymentMethod':
+            return order.paymentMethod.toLowerCase().includes(term);
+          case 'city':
+            return order.shippingAddress?.city.toLowerCase().includes(term);
+          case 'totalAmount':
+            return order.totalAmount.toString().includes(term);
+          case 'orderType':
+            return order.orderType?.toLowerCase().includes(term);
+          case 'itemName':
+            return order.items.some(item => item.name.toLowerCase().includes(term));
+          case 'scheduleDateTime':
+            return order.scheduleDateTime?.toLowerCase().includes(term);
+          case 'all':
+          default:
+            return (
+              order._id.toLowerCase().includes(term) ||
+              order.name.toLowerCase().includes(term) ||
+              order.email.toLowerCase().includes(term) ||
+              order.status.toLowerCase().includes(term) ||
+              order.paymentMethod.toLowerCase().includes(term) ||
+              order.shippingAddress?.city.toLowerCase().includes(term) ||
+              order.totalAmount.toString().includes(term) ||
+              order.orderType?.toLowerCase().includes(term) ||
+              order.scheduleDateTime?.toLowerCase().includes(term) ||
+              order.items.some(item => item.name.toLowerCase().includes(term))
+            );
+        }
+      });
       setFilteredOrders(filtered);
     }
   };
 
-  // Define status styles
   const getStatusStyles = (status) => {
     switch (status) {
       case 'Pending':
         return { backgroundColor: '#FFD700', borderColor: '#FFA500' };
       case 'Processing':
         return { backgroundColor: '#87CEEB', borderColor: '#4682B4' };
-
       case 'Delivered':
         return { backgroundColor: '#32CD32', borderColor: '#228B22' };
       case 'Cancelled':
@@ -97,13 +130,32 @@ const Orders = ({ url }) => {
     <div className='orders-container'>
       <div className="orders-header">
         <h3>Orders Management</h3>
-        <input
-          type="search"
-          placeholder="Search by name or email"
-          value={searchTerm}
-          onChange={handleSearch}
-          className="search-bar"
-        />
+        <div className="search-controls">
+          <select
+            value={searchField}
+            onChange={(e) => setSearchField(e.target.value)}
+            className="search-field-select"
+          >
+            <option value="all">All Fields</option>
+            <option value="orderId">Order ID</option>
+            <option value="name">Name</option>
+            <option value="email">Email</option>
+            <option value="status">Status</option>
+            <option value="paymentMethod">Payment Method</option>
+            <option value="city">City</option>
+            <option value="totalAmount">Total Amount</option>
+            <option value="orderType">Order Type</option>
+            <option value="itemName">Item Name</option>
+            <option value="scheduleDateTime">Schedule Date/Time</option>
+          </select>
+          <input
+            type="search"
+            placeholder={`Search by ${searchField === 'all' ? 'any field' : searchField}`}
+            value={searchTerm}
+            onChange={handleSearch}
+            className="search-bar"
+          />
+        </div>
       </div>
 
       {loading ? (
@@ -119,6 +171,9 @@ const Orders = ({ url }) => {
               </div>
               <div className="order-details">
                 <div className="customer-info">
+                  <p><strong>Order Id:</strong> {order._id}</p>
+                  <p><strong>Delivery:</strong> {order.orderType || 'N/A'}</p>
+                  <p><strong>Time:</strong> {order.scheduleDateTime || ''}</p>
                   <p><strong>Name:</strong> {order.name}</p>
                   <p><strong>Email:</strong> {order.email}</p>
                   {order.phoneNumber && <p><strong>Phone:</strong> {order.phoneNumber}</p>}

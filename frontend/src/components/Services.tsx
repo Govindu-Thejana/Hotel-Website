@@ -3,107 +3,161 @@ import React from "react";
 const WeddingServices = () => {
   return (
     <div>
-      <div className="relative bg-gradient-to-r from-gray-200 to-gray-400 py-12 px-8">
+      {/* Services Grid with updated styling */}
+      <div className="relative bg-gradient-to-r from-white to-gray-100 py-16 px-4 sm:px-8">
         <div className="container mx-auto max-w-screen-xl">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-              <img
-                src="/images/Camera.png"
-                alt="Camera & Video"
-                className="mx-auto mb-4"
-              />
-
-              <h3 className="text-2xl text-scolor font-semibold mb-2">Camera & Video</h3>
-              <p className="text-gray-600">
-                Gravida ullamcorper lectus vitae tristique cursus tempor rutrum.
-              </p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-              <img
-                src="/images/Cake.png"
-                alt="Wedding Cake"
-                className="mx-auto mb-4"
-              />
-              <h3 className="text-2xl text-scolor font-semibold mb-2">Wedding Cake</h3>
-              <p className="text-gray-600">
-                Consectetur arcu egestas tortor metus eleifend estacinia quis.
-              </p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-              <img
-                src="/images/Floral.png"
-                alt="Floral Design"
-                className="mx-auto mb-4"
-              />
-              <h3 className="text-2xl text-scolor font-semibold mb-2">Floral Design</h3>
-              <p className="text-gray-600">
-                Sed pretium quisque tempor ultricies enim nam quisque mattis.
-              </p>
-            </div>
-            <div className="bg-white text-scolor p-6 rounded-lg shadow-lg text-center">
-              <img
-                src="/images/Location.png"
-                alt="Stunning Locations"
-                className="mx-auto mb-4"
-              />
-              <h3 className="text-2xl text-scolor font-semibold mb-2">
-                Stunning Locations
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {/* Camera & Video */}
+            <div className="bg-white p-6 md:p-8 rounded-lg shadow-lg text-center transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl border border-gray-100">
+              <div className="bg-gray-50 p-4 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">
+                <img
+                  src="/images/Camera.png"
+                  alt="Camera & Video"
+                  className="mx-auto h-12"
+                />
+              </div>
+              <h3 className="text-2xl text-scolor font-serif mb-3">
+                Photography & Videography
               </h3>
+              <div className="w-12 h-0.5 bg-scolor mx-auto mb-4"></div>
               <p className="text-gray-600">
-                Eget netus ultricies scelerisque nunc id tempor lacinia tempor.
+                Professional photography and videography services to capture
+                every precious moment of your special day.
               </p>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-              <img
-                src="/images/Music.png"
-                alt="Music Party"
-                className="mx-auto mb-4"
-              />
-              <h3 className="text-2xl text-scolor font-semibold mb-2">Music Party</h3>
+
+            {/* Wedding Cake */}
+            <div className="bg-white p-6 md:p-8 rounded-lg shadow-lg text-center transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl border border-gray-100">
+              <div className="bg-gray-50 p-4 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">
+                <img
+                  src="/images/Cake.png"
+                  alt="Wedding Cake"
+                  className="mx-auto h-12"
+                />
+              </div>
+              <h3 className="text-2xl text-scolor font-serif mb-3">
+                Gourmet Wedding Cakes
+              </h3>
+              <div className="w-12 h-0.5 bg-scolor mx-auto mb-4"></div>
               <p className="text-gray-600">
-                Nulla diam mattis fringilla massa ac duis facilisi consequat
-                mauris.
+                Exquisitely designed custom wedding cakes created by our master
+                pastry chefs to delight your guests.
               </p>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-              <img
-                src="/images/Frock.png"
-                alt="Wedding Dress"
-                className="mx-auto mb-4"
-              />
-              <h3 className="text-2xl text-scolor font-semibold mb-2">Wedding Dress</h3>
+
+            {/* Floral Design */}
+            <div className="bg-white p-6 md:p-8 rounded-lg shadow-lg text-center transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl border border-gray-100">
+              <div className="bg-gray-50 p-4 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">
+                <img
+                  src="/images/Floral.png"
+                  alt="Floral Design"
+                  className="mx-auto h-12"
+                />
+              </div>
+              <h3 className="text-2xl text-scolor font-serif mb-3">
+                Floral Artistry
+              </h3>
+              <div className="w-12 h-0.5 bg-scolor mx-auto mb-4"></div>
               <p className="text-gray-600">
-                Tristique in porttitor nunc massa a sit neque lectus feugiat.
+                Stunning floral arrangements and decorations tailored to your
+                wedding theme and personal preferences.
+              </p>
+            </div>
+
+            {/* Stunning Locations */}
+            <div className="bg-white p-6 md:p-8 rounded-lg shadow-lg text-center transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl border border-gray-100">
+              <div className="bg-gray-50 p-4 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">
+                <img
+                  src="/images/Location.png"
+                  alt="Stunning Locations"
+                  className="mx-auto h-12"
+                />
+              </div>
+              <h3 className="text-2xl text-scolor font-serif mb-3">
+                Elegant Venues
+              </h3>
+              <div className="w-12 h-0.5 bg-scolor mx-auto mb-4"></div>
+              <p className="text-gray-600">
+                Choose from our selection of beautifully appointed indoor and
+                outdoor venues perfect for ceremonies and receptions.
+              </p>
+            </div>
+
+            {/* Music Party */}
+            <div className="bg-white p-6 md:p-8 rounded-lg shadow-lg text-center transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl border border-gray-100">
+              <div className="bg-gray-50 p-4 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">
+                <img
+                  src="/images/Music.png"
+                  alt="Music Party"
+                  className="mx-auto h-12"
+                />
+              </div>
+              <h3 className="text-2xl text-scolor font-serif mb-3">
+                Premium Entertainment
+              </h3>
+              <div className="w-12 h-0.5 bg-scolor mx-auto mb-4"></div>
+              <p className="text-gray-600">
+                Professional DJs, live bands, and entertainment options to
+                create the perfect atmosphere for your celebration.
+              </p>
+            </div>
+
+            {/* Wedding Dress */}
+            <div className="bg-white p-6 md:p-8 rounded-lg shadow-lg text-center transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl border border-gray-100">
+              <div className="bg-gray-50 p-4 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">
+                <img
+                  src="/images/Frock.png"
+                  alt="Wedding Dress"
+                  className="mx-auto h-12"
+                />
+              </div>
+              <h3 className="text-2xl text-scolor font-serif mb-3">
+                Bridal Services
+              </h3>
+              <div className="w-12 h-0.5 bg-scolor mx-auto mb-4"></div>
+              <p className="text-gray-600">
+                Bridal suite amenities, styling services, and personal
+                attendants to ensure you look and feel your best.
               </p>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="text-center mb-8 md:mb-12">
-        <h2 className="text-3xl md:text-4xl py-6 md:py-10 font-serif">Our Partners</h2>
-      </div>
-      <div className="flex flex-col sm:flex-row flex-wrap justify-center items-center gap-6 sm:gap-4 md:gap-6 lg:gap-8 px-4 sm:px-6 md:px-8 lg:px-12">
-        <img
-          src="/images/FloralStudio.png"
-          alt="Floral Studio"
-          className="w-full max-w-[200px] sm:max-w-[160px] md:max-w-[200px] lg:max-w-[240px] transition-transform hover:scale-105"
-        />
-        <img
-          src="/images/WeddingStudio.png"
-          alt="Wedding Studio"
-          className="w-full max-w-[200px] sm:max-w-[160px] md:max-w-[200px] lg:max-w-[240px] transition-transform hover:scale-105"
-        />
-        <img
-          src="/images/FloralStudio1.png"
-          alt="Floral Studio 2"
-          className="w-full max-w-[200px] sm:max-w-[160px] md:max-w-[200px] lg:max-w-[240px] transition-transform hover:scale-105"
-        />
-        <img
-          src="/images/WeddingStudio1.png"
-          alt="Other Studio"
-          className="w-full max-w-[200px] sm:max-w-[160px] md:max-w-[200px] lg:max-w-[240px] transition-transform hover:scale-105"
-        />
+      {/* Partners Section with improved styling */}
+      <div className="bg-white py-16 px-4">
+        <div className="container mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-serif text-gray-800 mb-4">
+              Our Trusted Partners
+            </h2>
+            <div className="w-24 h-1 bg-scolor mx-auto mb-6"></div>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              We collaborate with the finest vendors in the industry to ensure
+              your wedding day exceeds all expectations.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 lg:gap-16">
+            {[
+              { src: "/images/FloralStudio.png", alt: "Floral Studio" },
+              { src: "/images/WeddingStudio.png", alt: "Wedding Studio" },
+              { src: "/images/FloralStudio1.png", alt: "Floral Studio 2" },
+              { src: "/images/WeddingStudio1.png", alt: "Other Studio" },
+            ].map((partner, index) => (
+              <div
+                key={index}
+                className="filter grayscale hover:grayscale-0 transition-all duration-300 hover:scale-105"
+              >
+                <img
+                  src={partner.src}
+                  alt={partner.alt}
+                  className="w-auto h-16 md:h-20"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -7,7 +7,7 @@
     "start": "node index.js",
     "dev": "nodemon index.js"
   },
-  "author": "",
+  "authors":"govindu,yasiru,nimesh,pasan",
   "license": "ISC",
   "description": "",
   "dependencies": {
